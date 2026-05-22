@@ -20,17 +20,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/")
 async def root():
     return {
         "message": "Bem-vindo à API do KeepUnB!",
         "status": "healthy",
-        "docs": "/docs"
+        "docs": "/docs",
     }
+
 
 @app.get("/api/v1/health")
 async def health_check():
-    return {
-        "status": "healthy",
-        "service": "keepunb-backend"
-    }
+    return {"status": "healthy", "service": "keepunb-backend"}
