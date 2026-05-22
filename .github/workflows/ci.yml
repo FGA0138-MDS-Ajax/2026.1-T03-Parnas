@@ -1,0 +1,21 @@
+# CI/CD Pipeline — KeepUnB
+# Executa lint + testes em todo PR para developer.
+
+name: CI
+
+on:
+  pull_request:
+    branches: [developer]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # TODO: Configurar steps de lint (ruff) e testes (pytest)
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # TODO: Configurar steps de lint (eslint) e testes (jest)
