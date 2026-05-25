@@ -1,0 +1,13 @@
+site_name: KeepUnB - Documentação
+
+
+nav:
+  - Início: index.md
+  - Sprint 3:
+      - Fluxo: sprint3/fluxo.md
+      - Permissões: sprint3/permissoes.md
+      - Endpoints: sprint3/endpoints.md
+      - Execução Local: sprint3/execucao-local.md
+
+theme:
+  name: material # baixei o tema material(pip install mkdocs-material)
