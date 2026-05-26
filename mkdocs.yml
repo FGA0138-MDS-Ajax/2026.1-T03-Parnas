@@ -3,7 +3,13 @@ site_name: Documentação
 nav:
   - Instruções mkdocs: "index.md"
   - Atas de Reunião:
-    - Ata 1: "atas-reuniao/ata-reuniao-1.md"
+      - Ata 1: "atas-reuniao/ata-reuniao-1.md"
+  - Sprint 3:
+      
+      - Fluxo: "sprint3/fluxo.md"
+      - Permições: "sprint3/permissoes.md"
+      - Execução Local: "sprint3/execucao-local.md"
+      - Endpoints: "sprint3/endpoints.md"
 
 theme:
   name: material
