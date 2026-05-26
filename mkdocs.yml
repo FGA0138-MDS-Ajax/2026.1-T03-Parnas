@@ -4,6 +4,8 @@ nav:
   - Instruções mkdocs: "index.md"
   - Atas de Reunião:
       - Ata 1: "atas-reuniao/ata-reuniao-1.md"
+  - Documento de Visão: "doc visao/visao.md"
+  - Documento de Arquitetura: "doc arq/arq.md"
   - Sprint 3:
       
       - Fluxo: "sprint3/fluxo.md"
