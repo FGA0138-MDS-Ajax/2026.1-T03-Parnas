@@ -1,7 +1,7 @@
 # PROJECT GUIDELINES — KeepUnB
 
 > **Versão:** 1.0  
-> **Última atualização:** 2026-05-22  
+> **Última atualização:** 2026-05-28  
 > **Responsável:** Carlos Costa — Arquiteto de Software  
 > **Propósito:** Servir como referência única de convenções técnicas para a equipe de desenvolvimento e agentes de IA.
 
@@ -255,8 +255,8 @@ frontend/
 
 | Item             | Convenção                                         |
 | ---------------- | ------------------------------------------------- |
-| Formatação       | `black` (line-length=88)                          |
-| Linting          | `ruff`                                            |
+| Formatação       | `black` (line-length=88) [Apenas Local / Opcional] |
+| Linting          | `ruff` [Apenas Local / Opcional]                  |
 | Tipagem          | Type hints obrigatórios em funções públicas        |
 | Nomenclatura     | `snake_case` para funções/variáveis, `PascalCase` para classes |
 | Docstrings       | Google Style (obrigatórias em services e routers)  |
@@ -382,7 +382,7 @@ docker compose exec backend alembic history
 - **Cobertura mínima:** 80% para código novo (backend e frontend).
 - **PR bloqueado** se cobertura ficar abaixo de 80%.
 - **Níveis:** Unitários, Integração e Sistema (E2E).
-- **CI/CD:** GitHub Actions executa lint + testes em todo PR para `developer`.
+- **CI/CD:** GitHub Actions executa testes no backend e lint no frontend em todo PR para `developer`.
 
 ---
 
