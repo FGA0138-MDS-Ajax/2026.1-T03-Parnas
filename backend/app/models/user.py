@@ -1,10 +1,16 @@
-# user.py — TODO: Implementar modelo SQLAlchemy
-
-from sqlalchemy import Boolean, CheckConstraint, DateTime, String
+import enum
+from sqlalchemy import Boolean, CheckConstraint, DateTime, String, Enum
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
 
 from app.core.database import Base
+
+
+class UserRole(str, enum.Enum):
+    SOLICITANTE = "SOLICITANTE"
+    GERENTE = "GERENTE"
+    TECNICO = "TECNICO"
+    ADMIN = "ADMIN"
 
 
 class User(Base):
@@ -27,6 +33,10 @@ class User(Base):
     )
 
     senha_hash: Mapped[str] = mapped_column(String(255), nullable=False)
+
+    role: Mapped[UserRole] = mapped_column(
+        Enum(UserRole), nullable=False, default=UserRole.SOLICITANTE
+    )
 
     ativo: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 

@@ -1,1 +1,2 @@
-# __init__.py — TODO: Implementar modelo SQLAlchemy
+from app.models.user import User
+from app.models.ticket import Ticket
