@@ -6,6 +6,8 @@ nav:
       - Ata 1: "atas-reuniao/ata-reuniao-1.md"
   - Documento de Visão: "visao/visao.md"
   - Documento de Arquitetura: "arq/arq.md"
+  - Banco de Dados:
+      - Diagrama do banco de dados: "diagrama-relacionamento-inicial.md"
   - Sprint 3:
       
       - Fluxo: "sprint3/fluxo.md"
