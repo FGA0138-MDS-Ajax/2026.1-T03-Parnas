@@ -1,6 +1,6 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.models.user import User
+from app.models.user import User, UserRole
 
 class UserRepository:
     @staticmethod
@@ -12,3 +12,10 @@ class UserRepository:
     async def get_by_matricula(db: AsyncSession, matricula: str) -> User | None:
         result = await db.execute(select(User).where(User.matricula == matricula))
         return result.scalars().first()
+
+    @staticmethod
+    async def get_available_technicians(db: AsyncSession) -> list[User]:
+        result = await db.execute(
+            select(User).where(User.role == UserRole.TECNICO, User.ativo == True)
+        )
+        return list(result.scalars().all())
