@@ -45,9 +45,18 @@ AsyncSessionLocal = async_sessionmaker(
 # O pytest-asyncio gerenciará automaticamente o ciclo de vida do loop de eventos para cada teste.
 
 
+_db_initialized = False
+
+
 @pytest.fixture
 async def db_session() -> AsyncGenerator[AsyncSession, None]:
     """Fornece uma sessão de banco limpa para cada teste e garante isolamento absoluto."""
+    global _db_initialized
+    if not _db_initialized:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        _db_initialized = True
+
     async with AsyncSessionLocal() as session:
         yield session
         # Limpeza pós-teste: primeiro limpa qualquer estado de transação falha ou pendente

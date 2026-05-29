@@ -10,6 +10,21 @@ on:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:16
+        env:
+          POSTGRES_USER: keepunb
+          POSTGRES_PASSWORD: changeme
+          POSTGRES_DB: keepunb_dev
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -22,6 +37,10 @@ jobs:
         run: pip install -r requirements.txt
       - name: Test with pytest
         working-directory: ./backend
+        env:
+          DATABASE_URL: postgresql+asyncpg://keepunb:changeme@localhost:5432/keepunb_dev
+          SECRET_KEY: changeme-secret-key
+          ACCESS_TOKEN_EXPIRE_MINUTES: 30
         run: pytest
 
   frontend:
