@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_db
 from app.core.dependencies import get_current_user, require_role
 from app.models.user import User, UserRole
-from app.schemas.ticket import TicketCreate, TicketResponse
+from app.schemas.ticket import TicketCreate, TicketResponse, TicketAssign, TicketUpdateStatus
 from app.services.ticket_service import TicketService
 
 router = APIRouter(prefix="/api/v1/tickets", tags=["tickets"])
@@ -30,3 +30,28 @@ async def get_open_tickets(
     db: AsyncSession = Depends(get_db),
 ):
     return await TicketService.get_open_tickets(db)
+
+@router.get("/assigned-to-me", response_model=list[TicketResponse])
+async def get_assigned_tickets(
+    current_user: User = Depends(require_role([UserRole.TECNICO])),
+    db: AsyncSession = Depends(get_db),
+):
+    return await TicketService.get_tickets_by_technician(db, current_user.matricula)
+
+@router.patch("/{ticket_id}/assign", response_model=TicketResponse)
+async def assign_ticket(
+    ticket_id: int,
+    assignment: TicketAssign,
+    current_user: User = Depends(require_role([UserRole.GERENTE])),
+    db: AsyncSession = Depends(get_db),
+):
+    return await TicketService.assign_technician(db, ticket_id, assignment.tecnico_id)
+
+@router.patch("/{ticket_id}/status", response_model=TicketResponse)
+async def update_ticket_status(
+    ticket_id: int,
+    status_update: TicketUpdateStatus,
+    current_user: User = Depends(require_role([UserRole.TECNICO])),
+    db: AsyncSession = Depends(get_db),
+):
+    return await TicketService.update_ticket_status(db, ticket_id, status_update.status, current_user.matricula)
