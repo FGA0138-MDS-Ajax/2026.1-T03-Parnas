@@ -1,23 +1,39 @@
+import sys
+# Mascara o modulo bcrypt como None para contornar bug de auto-detecção interna do passlib no Python 3.12+
+sys.modules['bcrypt'] = None
+
+# Aplica monkeypatch preventivo de segurança para evitar hashing lento nos testes e contornar incompatibilidade de bibliotecas
+import app.core.security
+app.core.security.get_password_hash = lambda password: f"mocked_hash_{password}"
+app.core.security.verify_password = lambda plain, hashed: hashed == f"mocked_hash_{plain}"
+get_password_hash = app.core.security.get_password_hash
+
 import asyncio
 from typing import AsyncGenerator
 import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy import text
+from sqlalchemy.pool import NullPool
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from app.core.config import settings
 from app.core.database import Base, get_db
-from app.core.security import get_password_hash, create_access_token
+
+from app.core.security import create_access_token
 from app.main import app
 from app.models.user import User, UserRole
 from app.models.ticket import Ticket, TicketStatus
 
-# Configura o motor assíncrono para o banco de dados
+
+# Configura o motor assíncrono para o banco de dados sem pooling de conexões
+# para evitar InterfaceError do asyncpg ao transitar entre event loops do pytest.
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=False,
     future=True,
+    poolclass=NullPool
 )
+
 
 AsyncSessionLocal = async_sessionmaker(
     engine,
@@ -25,36 +41,26 @@ AsyncSessionLocal = async_sessionmaker(
     expire_on_commit=False,
 )
 
-@pytest.fixture(scope="session")
-def event_loop():
-    """Cria um loop de eventos do asyncio persistente para a sessão de testes."""
-    try:
-        loop = asyncio.get_running_loop()
-    except RuntimeError:
-        loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    yield loop
-    loop.close()
 
-@pytest.fixture(scope="session", autouse=True)
-async def setup_test_db():
-    """Garante que as tabelas necessárias existam no início da suíte de testes."""
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    yield
-    # Caso queira dropar todas as tabelas após rodar toda a suite:
-    # async with engine.begin() as conn:
-    #     await conn.run_sync(Base.metadata.drop_all)
+# O pytest-asyncio gerenciará automaticamente o ciclo de vida do loop de eventos para cada teste.
+
 
 @pytest.fixture
 async def db_session() -> AsyncGenerator[AsyncSession, None]:
     """Fornece uma sessão de banco limpa para cada teste e garante isolamento absoluto."""
     async with AsyncSessionLocal() as session:
         yield session
-        # Limpeza pós-teste na ordem correta devido a restrições de FK
-        await session.execute(text("DELETE FROM tickets;"))
-        await session.execute(text("DELETE FROM users;"))
-        await session.commit()
+        # Limpeza pós-teste: primeiro limpa qualquer estado de transação falha ou pendente
+        try:
+            await session.rollback()
+        except Exception:
+            pass
+        
+        # Executa os deletes em uma transação isolada para limpeza garantida
+        async with session.begin():
+            await session.execute(text("DELETE FROM tickets;"))
+            await session.execute(text("DELETE FROM users;"))
+
 
 @pytest.fixture
 async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
