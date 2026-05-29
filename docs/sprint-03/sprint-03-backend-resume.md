@@ -1,6 +1,6 @@
-# Resumo da Implementação do Backend — Sprint 3 (Tarefas 1 a 6)
+# Resumo da Implementação do Backend — Sprint 3 (Tarefas 1 a 10)
 
-Este documento descreve o estado atual da implementação do backend para a Sprint 3 do **KeepUnB**, englobando as tarefas de **1 a 6**. O desenvolvimento seguiu rigorosamente os padrões técnicos descritos em `PROJECT_GUIDELINES.md` e a arquitetura MVC adaptada para FastAPI.
+Este documento descreve o estado atual da implementação do backend para a Sprint 3 do **KeepUnB**, englobando todas as tarefas de **1 a 10**. O desenvolvimento seguiu rigorosamente os padrões técnicos descritos em `PROJECT_GUIDELINES.md` e a arquitetura MVC adaptada para FastAPI.
 
 ---
 
@@ -37,7 +37,7 @@ Este documento descreve o estado atual da implementação do backend para a Spri
     *   `local` (String(200))
     *   `tipo_manutencao` (String(100))
     *   `descricao` (Text)
-    *   `status` (Enum `TicketStatus`): `ABERTO`, `ATRIBUIDO`, `EM_ANDAMENTO`, `CONCLUIDO`, `CANCELADO`
+    *   `status` (Enum `TicketStatus`): `ABERTO`, `ATRIBUIDO`, `EM_ANDAMENTO`, `CONCLUIDO`, `CANCELADO`, `NAO_INICIADO`
     *   `solicitante_id` (String(9) - Chave Estrangeira apontando para `users.matricula`)
     *   `tecnico_id` (String(9) - Chave Estrangeira opcional apontando para `users.matricula`, inicia como `None`)
     *   `created_at` e `updated_at` (DateTime com Timezone)
@@ -92,44 +92,89 @@ Este documento descreve o estado atual da implementação do backend para a Spri
 
 ---
 
+### 🔧 Tarefa 7 — Criar Rota para Listar Técnicos Disponíveis
+*   **Descrição**: Permite que o gerente liste os técnicos ativos cadastrados para realizar atribuições.
+*   **Rota**: `GET /api/v1/technicians/available`
+*   **Critérios de aceite cobertos**:
+    *   Acesso restrito exclusivamente ao perfil `GERENTE`.
+    *   Retorna apenas usuários cuja `role == UserRole.TECNICO` e que estejam com a conta ativa (`ativo == True`).
+*   **Arquivo do Router**: [technicians.py](file:///home/carloshf/keep-unb/backend/app/routers/technicians.py)
+
+---
+
+### 🤝 Tarefa 8 — Criar Rota para Atribuir Técnico a Chamado
+*   **Descrição**: Permite que o gerente atribua um técnico disponível a um chamado que esteja no status aberto.
+*   **Rota**: `PATCH /api/v1/tickets/{id}/assign`
+*   **Payload de entrada**: `tecnico_id` (matrícula do técnico)
+*   **Critérios de aceite cobertos**:
+    *   Restrito exclusivamente ao perfil `GERENTE`.
+    *   O chamado recebe o `tecnico_id` correspondente.
+    *   O status do chamado é automaticamente alterado de `ABERTO` para `ATRIBUIDO`.
+    *   Lança erro `400 Bad Request` caso o técnico especificado não exista, não esteja ativo ou não tenha a role de `TECNICO`.
+
+---
+
+### 🛠️ Tarefa 9 — Criar Rota para Técnico Visualizar seus Chamados
+*   **Descrição**: Permite que o técnico consulte a lista de chamados que foram atribuídos a ele.
+*   **Rota**: `GET /api/v1/tickets/assigned-to-me`
+*   **Critérios de aceite cobertos**:
+    *   Restrito exclusivamente a usuários com perfil `TECNICO`.
+    *   Filtra e retorna apenas chamados atribuídos à matrícula do técnico logado.
+    *   Garante que o técnico não visualize os chamados associados a outros técnicos.
+
+---
+
+### 🔄 Tarefa 10 — Criar Rota para Técnico Atualizar Status
+*   **Descrição**: Permite que o técnico alterne o andamento e conclusão do chamado sob sua responsabilidade.
+*   **Rota**: `PATCH /api/v1/tickets/{id}/status`
+*   **Payload de entrada**: `status` (Enum `TicketStatus`, tipicamente `EM_ANDAMENTO` ou `CONCLUIDO`)
+*   **Critérios de aceite cobertos**:
+    *   Restrito exclusivamente ao perfil `TECNICO`.
+    *   Garante que o técnico só consiga atualizar chamados atribuídos a ele mesmo, retornando `403 Forbidden` caso tente alterar um chamado de terceiros.
+    *   Suporta transições de status válidas do fluxo da manutenção.
+
+---
+
 ## 🗂️ 3. Estrutura de Arquivos Criados/Modificados
-Abaixo está o mapa de onde cada parte das tarefas reside no backend:
+Abaixo está o mapa completo de onde cada parte das tarefas reside no backend:
 
 ```
 backend/
 ├── app/
 │   ├── core/
-│   │   ├── config.py                 # (Modificado) Configurações globais (Pydantic Settings)
-│   │   ├── database.py               # (Modificado) Gerenciamento do Engine e dependência get_db
-│   │   ├── security.py               # (Criado) Hashing de senhas e Tokens JWT
-│   │   └── dependencies.py           # (Criado) Injeção de dependências (Autenticação/Roles)
+│   │   ├── config.py                 # Configurações globais (Pydantic Settings)
+│   │   ├── database.py               # Gerenciamento do Engine e dependência get_db
+│   │   ├── security.py               # Hashing de senhas e Tokens JWT
+│   │   └── dependencies.py           # Injeção de dependências (Autenticação/Roles)
 │   │
 │   ├── models/
-│   │   ├── __init__.py               # (Modificado) Exportação unificada de User e Ticket
-│   │   ├── user.py                   # (Modificado) Mapeamento físico de User + Enum UserRole
-│   │   └── ticket.py                 # (Criado) Mapeamento físico de Ticket + Enum TicketStatus
+│   │   ├── __init__.py               # Exportação unificada de User e Ticket
+│   │   ├── user.py                   # Mapeamento físico de User + Enum UserRole
+│   │   └── ticket.py                 # Mapeamento físico de Ticket + Enum TicketStatus
 │   │
 │   ├── schemas/
-│   │   ├── auth.py                   # (Criado) Schemas de login e token JWT
-│   │   ├── user.py                   # (Criado) Schema de resposta de usuário
-│   │   └── ticket.py                 # (Criado) Schemas de criação e resposta do Ticket
+│   │   ├── auth.py                   # Schemas de login e token JWT
+│   │   ├── user.py                   # Schemas de resposta de usuário e técnicos
+│   │   └── ticket.py                 # Schemas de criação, atribuição e atualização de status
 │   │
 │   ├── repositories/
-│   │   ├── user_repository.py        # (Modificado) Queries de busca do usuário (email/matrícula)
-│   │   └── ticket_repository.py      # (Criado) Queries para inserção, get_by_user e get_open
+│   │   ├── user_repository.py        # Queries de busca do usuário e busca de técnicos ativos
+│   │   └── ticket_repository.py      # Queries para inserção, get_by_user, get_open e updates
 │   │
 │   ├── services/
-│   │   ├── auth_service.py           # (Modificado) Lógica de validação de login
-│   │   └── ticket_service.py         # (Criado) Orquestração de regras de chamados
+│   │   ├── auth_service.py           # Lógica de validação de login
+│   │   ├── user_service.py           # Lógica de listagem de técnicos disponíveis
+│   │   └── ticket_service.py         # Orquestração de regras de chamados (criação, atribuição e status)
 │   │
 │   ├── routers/
-│   │   ├── auth.py                   # (Modificado) Rota de login
-│   │   ├── users.py                  # (Modificado) Rota de perfil (/me)
-│   │   └── tickets.py                # (Criado) Rotas de criação e listagem (/me e /open)
+│   │   ├── auth.py                   # Rota de login
+│   │   ├── users.py                  # Rota de perfil (/me)
+│   │   ├── technicians.py            # Rota para técnicos disponíveis (/available)
+│   │   └── tickets.py                # Rotas de chamados (criação, listagem, atribuição e status)
 │   │
-│   └── main.py                       # (Modificado) Ponto de entrada do FastAPI incluindo os routers
+│   └── main.py                       # Ponto de entrada do FastAPI registrando todos os routers
 │
-└── requirements.txt                  # (Modificado) Adicionado email-validator para Pydantic
+└── requirements.txt                  # Dependências do projeto backend
 ```
 
 ---
@@ -144,7 +189,12 @@ Com a inicialização automática do FastAPI, todas as rotas documentam-se na es
     *   `POST /api/v1/auth/login` -> Recebe email e senha e emite o token JWT.
 2.  **Users**:
     *   `GET /api/v1/users/me` -> Retorna o perfil completo do usuário logado (requer Bearer Token).
-3.  **Tickets**:
+3.  **Technicians**:
+    *   `GET /api/v1/technicians/available` -> Retorna técnicos ativos cadastrados (apenas Gerente logado).
+4.  **Tickets**:
     *   `POST /api/v1/tickets` -> Criação de chamado (apenas Solicitante logado).
     *   `GET /api/v1/tickets/me` -> Histórico do solicitante (apenas Solicitante logado).
     *   `GET /api/v1/tickets/open` -> Fila de chamados abertos (apenas Gerente logado).
+    *   `PATCH /api/v1/tickets/{id}/assign` -> Atribuição de técnico a chamado (apenas Gerente logado).
+    *   `GET /api/v1/tickets/assigned-to-me` -> Chamados atribuídos ao técnico (apenas Técnico logado).
+    *   `PATCH /api/v1/tickets/{id}/status` -> Atualização do progresso do chamado (apenas Técnico logado).
