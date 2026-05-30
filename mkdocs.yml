@@ -12,8 +12,9 @@ nav:
       
       - Fluxo: "sprint3/fluxo.md"
       - Permições: "sprint3/permissoes.md"
-      - Execução Local: "sprint3/execucao-local.md"
       - Endpoints: "sprint3/endpoints.md"
+      - Execução Local: "sprint3/execucao-local.md"
+      
 
 theme:
   name: material
