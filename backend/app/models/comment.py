@@ -16,12 +16,12 @@ class Comment(Base):
         Integer, primary_key=True, index=True, autoincrement=True
     )
 
-    ticket_id: Mapped[str] = mapped_column(
-        String(9), ForeignKey("tickets.id"), nullable = False
-    )
-
     user_id: Mapped[str] = mapped_column(
         String(9), ForeignKey("users.matricula"), nullable = False
+    )
+
+    ticket_id: Mapped[str] = mapped_column(
+        String(9), ForeignKey("tickets.id"), nullable = False
     )
 
     mensagem: Mapped[str] = mapped_column(Text, nullable = False)

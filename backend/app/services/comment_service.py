@@ -22,6 +22,7 @@ from app.schemas.comment import CommentCreate
 # Bem simples
 
 class CommentService:
+
     #Criar um comentário
     #Eu passo como argumentos:
     #   A sessão de banco de dados
@@ -33,11 +34,27 @@ class CommentService:
         db: AsyncSession, 
         comment_in: CommentCreate, 
         user: User,
-        ticket: Ticket
+        ticket_id: int
         ) -> Comment:
-        return await CommentRepository.create(db, comment_in, user.matricula, ticket.id)
+        return await CommentRepository.create(db, comment_in, user.matricula, ticket_id)
 
-    #Ocultar um comentário
+    #Obter os comentários de um usuário
+    async def get_user_comments(
+        db: AsyncSession,
+        user_id: str
+        ) -> Comment:
+
+        return await CommentRepository.get_by_matricula(db, user_id)
+
+    #Obter os comentários de um ticket
+    async def get_ticket_comments(
+        db: AsyncSession,
+        ticket_id: int
+        ) -> Comment:
+
+        return await CommentRepository.get_by_ticket_id(db, ticket_id)
+
+    #Ocultar/revelar um comentário
     #Eu passo como argumentos:
     #   A sessão de banco de dados
     #   O ID do comentário alvo
