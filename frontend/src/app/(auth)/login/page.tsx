@@ -14,7 +14,7 @@ export default function LoginPage() {
     { email: 'admin@gmail.com', senha: '123', perfil: 'admin', rota: '/admin/usuarios' },
     { email: 'solicitante@gmail.com', senha: '123', perfil: 'solicitante', rota: '/solicitante' },
     { email: 'tecnico@gmail.com', senha: '123', perfil: 'tecnico', rota: '/tecnico/fila' },
-    { email: 'gerente@gmail.com', senha: '123', perfil: 'gerente', rota: '/gerente' },
+    { email: 'gerente@gmail.com', senha: '123', perfil: 'gerente', rota: '/gerente/painel' },
   ];
 
   const handleLogin = (e: React.FormEvent) => {
