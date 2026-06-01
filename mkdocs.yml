@@ -38,6 +38,7 @@ nav:
   - Documentação:
       - Documento de Visão: "visao/visao.md"
       - Documento de Arquitetura: "arq/arq.md"
+      - Identidade Visual: "identidade_visual.md"
       - Sobre o banco de dados: "banco-de-dados/diagrama-relacionamento-inicial.md"
 
   - Nossas reuniões:
