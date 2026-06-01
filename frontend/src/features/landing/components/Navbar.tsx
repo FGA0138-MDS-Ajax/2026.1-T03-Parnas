@@ -5,11 +5,13 @@ import './landing.css';
 export default function Navbar() {
   return (
     <nav className="nav-container">
-      <div className="nav-logo">Keep<span>UnB</span></div>
-      <ul className="nav-links">
-        <li><a href="#features">Funcionalidades</a></li>
-      </ul>
-      <Link href="/login" className="nav-cta">Começar agora</Link>
+      <div className="nav-logo">
+        <img src="/keep-unb-ln.png" alt="KeepUnB Logo" className="logo-img" />
+      </div>
+      <div className="nav-right">
+        <a href="#features" className="nav-link-item">Funcionalidades</a>
+        <Link href="/login" className="nav-cta">Login</Link>
+      </div>
     </nav>
   );
 }
