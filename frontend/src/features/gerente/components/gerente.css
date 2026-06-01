@@ -1149,9 +1149,17 @@
   border-color: #EF4444;
 }
 
+/* Botão de hambúrguer e cabeçalho mobile por padrão ocultos no desktop */
+.hamburger-menu {
+  display: none;
+}
+.sidebar-header-mobile {
+  display: contents;
+}
+
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideUp {
@@ -1180,44 +1188,179 @@
   .gerente-layout {
     flex-direction: column;
   }
-  .gerente-sidebar {
+
+  /* Exibe o hambúrguer no mobile */
+  .hamburger-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--white);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background-color 0.2s, transform 0.2s;
+  }
+  .hamburger-menu:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+  .hamburger-menu:active {
+    transform: scale(0.95);
+  }
+
+  .sidebar-header-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: 100%;
-    height: auto;
-    position: relative;
-    padding: 1.5rem;
   }
+
   .sidebar-logo {
-    margin-bottom: 1.5rem;
+    margin-bottom: 0 !important;
+    padding: 0 !important;
   }
-  .sidebar-menu {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
+
+  /* A sidebar vira o cabeçalho superior fixo */
+  .gerente-sidebar {
+    width: 100% !important;
+    height: 70px !important;
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    padding: 0 1.5rem !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--navy-dark);
+    z-index: 100;
+    overflow: hidden;
+    transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease !important;
   }
-  .menu-item-link {
-    padding: 0.6rem 0.85rem;
-    font-size: 0.85rem;
+
+  /* Quando a sidebar está aberta, vira overlay em tela cheia */
+  .gerente-sidebar.open {
+    height: 100vh !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    padding: 1.5rem !important;
+    overflow-y: auto;
   }
+
+  .gerente-sidebar.open .sidebar-header-mobile {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Oculta navegação e perfil por padrão */
+  .sidebar-nav,
   .sidebar-user {
-    margin-top: 0;
+    display: none !important;
   }
+
+  /* Exibe na sidebar aberta com animação */
+  .gerente-sidebar.open .sidebar-nav {
+    display: block !important;
+    margin-bottom: 0 !important;
+    flex: none !important; /* Impede que o menu estique e jogue o perfil para baixo */
+    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .gerente-sidebar.open .sidebar-user {
+    display: flex !important;
+    margin-top: 1.25rem !important; /* Posiciona o bloco do usuário imediatamente abaixo do botão Relatórios */
+    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+  }
+
+  .sidebar-menu {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+    margin-bottom: 0 !important;
+  }
+
+  .menu-item-link {
+    padding: 0.85rem 1.25rem !important;
+    font-size: 1rem !important;
+    border-radius: 14px !important;
+  }
+
+  .sidebar-user {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  }
+
+  /* Destaca o botão de sair no menu hambúrguer móvel */
+  .gerente-sidebar.open .btn-logout {
+    background: rgba(239, 68, 68, 0.15) !important;
+    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+    color: #F87171 !important; /* Tom vermelho suave de alto contraste no fundo escuro */
+    padding: 8px 14px !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .gerente-sidebar.open .btn-logout:hover {
+    background: rgba(239, 68, 68, 0.25) !important;
+    color: #EF4444 !important;
+    transform: scale(1.02);
+  }
+
+  .gerente-sidebar.open .btn-logout::after {
+    content: "Sair";
+    font-family: 'Sora', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  /* Ajuste no layout principal do conteúdo */
   .gerente-content {
-    padding: 1.5rem;
+    margin-top: 70px; /* Evita que o conteúdo seja cortado pelo header fixo */
+    padding: 1.5rem !important;
   }
+
+  /* Ajuste nos painéis e grades em telas pequenas */
   .kpi-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
   }
+
+  .content-header {
+    margin-bottom: 1.75rem;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .btn-header-action {
+    width: 100%;
+    justify-content: center;
+    padding: 0.8rem 1.5rem;
+  }
+
   .panel-header-row {
     flex-direction: column;
     align-items: flex-start;
+    gap: 1.25rem;
   }
+
   .filter-bar {
     width: 100%;
     flex-direction: column;
     align-items: stretch;
+    gap: 0.75rem;
   }
-  .search-input {
-    width: 100%;
+
+  .search-input-wrap,
+  .search-input,
+  .filter-select {
+    width: 100% !important;
   }
 }

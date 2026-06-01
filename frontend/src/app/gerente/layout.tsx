@@ -14,6 +14,12 @@ export default function GerenteLayout({
   const pathname = usePathname();
   const router = useRouter();
   const [userName, setUserName] = useState('Gerente de Operações');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    // Fecha a barra lateral automaticamente na mudança de página
+    setIsSidebarOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     // Tenta recuperar o nome real do usuário simulado ou real
@@ -43,19 +49,41 @@ export default function GerenteLayout({
   };
 
   return (
-    <div className="gerente-layout">
+    <div className={`gerente-layout ${isSidebarOpen ? 'sidebar-open' : ''}`}>
       {/* SIDEBAR DO GERENTE */}
-      <aside className="gerente-sidebar">
-        <div className="sidebar-logo">
-          {/* Ícone de ferramenta SVG nativo do React */}
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--green-light)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}>
-            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
-          </svg>
-          <span>Keep<em>UnB</em></span>
+      <aside className={`gerente-sidebar ${isSidebarOpen ? 'open' : ''}`}>
+        <div className="sidebar-header-mobile">
+          <div className="sidebar-logo">
+            {/* Ícone de ferramenta SVG nativo do React */}
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--green-light)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}>
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+            </svg>
+            <span>Keep<em>UnB</em></span>
+          </div>
+
+          <button 
+            className="hamburger-menu" 
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            aria-label={isSidebarOpen ? "Fechar menu" : "Abrir menu"}
+            aria-expanded={isSidebarOpen}
+          >
+            {isSidebarOpen ? (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            ) : (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            )}
+          </button>
         </div>
 
         {/* NAVEGAÇÃO */}
-        <nav style={{ flex: 1 }}>
+        <nav style={{ flex: 1 }} className="sidebar-nav">
           <ul className="sidebar-menu">
             <li>
               <Link href="/gerente/painel" className={`menu-item-link ${isActive('/gerente/painel')}`}>
