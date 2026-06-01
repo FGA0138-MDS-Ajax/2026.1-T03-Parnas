@@ -40,11 +40,11 @@ export default function TecnicoLayout({
         {/* MENU */}
         <nav style={{ display: 'flex', gap: '1rem' }}>
           <Link href="/tecnico/fila" style={botaoEstilo('/tecnico/fila')}>
-            📥 Fila de Chamados
+            Fila de Chamados
           </Link>
           
           <Link href="/tecnico/chamado" style={botaoEstilo('/tecnico/chamado')}>
-            🔧 Chamado Atual
+            Chamado Atual
           </Link>
         </nav>
       </header>
