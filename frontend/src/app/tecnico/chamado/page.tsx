@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
-export default function DetalhesChamadoPage() {
+function DetalhesChamadoContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -127,5 +127,13 @@ export default function DetalhesChamadoPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function DetalhesChamadoPage() {
+  return (
+    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center', fontFamily: 'sans-serif', color: '#6B7A99' }}>Carregando detalhes do chamado...</div>}>
+      <DetalhesChamadoContent />
+    </Suspense>
   );
 }
