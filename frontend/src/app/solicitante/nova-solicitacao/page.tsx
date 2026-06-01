@@ -51,7 +51,7 @@ export default function NovaSolicitacaoPage() {
               value={local}
               onChange={(e) => setLocal(e.target.value)}
               required
-              placeholder="Ex: Sala A1 - Sala S1, RU, Biblioteca"
+              placeholder="Ex: Sala I1, Sala S1, RU, Biblioteca"
               style={{ width: '100%', padding: '0.6rem', border: '1px solid #ccc', borderRadius: '4px' }}
             />
           </div>
