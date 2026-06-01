@@ -7,9 +7,9 @@ import NovaSolicitacaoForm from '../../../features/solicitante/components/NovaSo
 export default function NovaSolicitacaoPage() {
   return (
     <>
-      <header style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
-        <h1 className="page-title">➕ Abrir Novo Chamado</h1>
-        <p className="page-subtitle" style={{ maxWidth: '600px', margin: '0.5rem auto 2.5rem' }}>
+      <header style={{ marginBottom: '0.5rem', textAlign: 'center' }}>
+        <h1 className="page-title">Abrir Novo Chamado</h1>
+        <p className="page-subtitle" style={{ maxWidth: '600px', margin: '0.3rem auto 1rem' }}>
           Ajude a manter a infraestrutura da FCTE conservada. Registre uma ocorrência de manutenção preenchendo as informações abaixo.
         </p>
       </header>

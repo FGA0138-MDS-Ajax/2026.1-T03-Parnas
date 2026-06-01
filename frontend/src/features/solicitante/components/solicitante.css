@@ -755,7 +755,6 @@
   to { transform: rotate(360deg); }
 }
 
-/* Responsividade */
 @media (max-width: 992px) {
   .solicitante-layout {
     flex-direction: column;
@@ -763,29 +762,113 @@
   
   .solicitante-sidebar {
     width: 100%;
-    padding: 1.25rem 2rem;
+    padding: 0.75rem 1.5rem !important;
     border-right: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    height: auto;
-    position: relative;
+    height: 64px !important;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
   }
   
   .sidebar-logo {
-    margin-bottom: 1rem;
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+    font-size: 1.25rem !important;
+  }
+
+  .sidebar-logo svg {
+    display: none !important;
+  }
+  
+  .solicitante-sidebar nav {
+    flex: none !important;
+    margin-left: auto !important;
   }
   
   .sidebar-menu {
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-direction: row !important;
+    gap: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Por padrão no mobile, esconde o Início e exibe a Nova Solicitação */
+  .menu-li-dashboard {
+    display: none !important;
+  }
+  .menu-li-nova {
+    display: block !important;
+  }
+  
+  /* Se o link da Nova Solicitação estiver ativo (estamos na página nova-solicitacao), inverte: exibe o Início e esconde a Nova Solicitação */
+  .sidebar-menu:has(.menu-li-nova .menu-item-link.active) .menu-li-dashboard {
+    display: block !important;
+  }
+  .sidebar-menu:has(.menu-li-nova .menu-item-link.active) .menu-li-nova {
+    display: none !important;
+  }
+
+  .sidebar-menu .menu-item-link {
+    padding: 0.35rem 0.85rem !important;
+    border-radius: 20px !important;
+    background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%) !important;
+    border: none !important;
+    color: var(--white) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    font-size: 0.8rem !important;
+    text-decoration: none !important;
+    box-shadow: 0 2px 8px rgba(27, 122, 58, 0.2) !important;
+  }
+
+  .sidebar-menu .menu-item-link svg {
+    width: 12px !important;
+    height: 12px !important;
+    stroke: var(--white) !important;
+    stroke-width: 3px !important;
+  }
+
+  .sidebar-menu .menu-item-link span {
+    display: inline-block !important; /* Mostra o texto "Nova Solicitação" */
+    font-weight: 600 !important;
+    color: var(--white) !important;
   }
   
   .sidebar-user {
-    margin-top: 1rem;
-    padding-top: 1rem;
+    margin: 0 0 0 1rem !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .sidebar-user .user-avatar,
+  .sidebar-user .user-info {
+    display: none !important; /* Esconde info do usuário */
+  }
+
+  .sidebar-user .btn-logout {
+    padding: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
+
+  .sidebar-user .btn-logout:hover {
+    color: #ff4a4a !important;
   }
   
   .solicitante-content {
-    padding: 2rem;
+    padding: 1.5rem !important;
   }
   
   .responsive-dashboard-grid {

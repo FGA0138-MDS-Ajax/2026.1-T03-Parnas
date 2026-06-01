@@ -8,7 +8,7 @@ export default function SolicitanteDashboardPage() {
   return (
     <>
       <header style={{ marginBottom: '1.5rem' }}>
-        <h1 className="page-title">📊 Painel Geral do Solicitante</h1>
+        <h1 className="page-title">Painel Geral do Solicitante</h1>
         <p className="page-subtitle">Acompanhe seus chamados de manutenção de infraestrutura abertos no KeepUnB.</p>
       </header>
       

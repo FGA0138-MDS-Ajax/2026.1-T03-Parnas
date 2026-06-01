@@ -53,13 +53,13 @@ export default function NovaSolicitacaoForm() {
   return (
     <div className="form-solicitacao">
       <div className="glass-card">
-        <h3 style={{ fontFamily: 'Sora', fontSize: '1.4rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--white)' }}>
-          📄 Descreva o Problema de Infraestrutura
+        <h3 style={{ fontFamily: 'Sora', fontSize: '1.4rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--navy-dark)' }}>
+          Formulário do Chamado
         </h3>
         
         {errorMsg && (
           <div style={{ padding: '1rem', background: 'rgba(255, 74, 74, 0.1)', border: '1px solid rgba(255, 74, 74, 0.3)', borderRadius: '10px', color: '#ff6b6b', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
-            ⚠️ {errorMsg}
+            {errorMsg}
           </div>
         )}
 

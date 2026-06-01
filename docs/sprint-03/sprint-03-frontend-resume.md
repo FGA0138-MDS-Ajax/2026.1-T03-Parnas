@@ -1,63 +1,56 @@
 # Resumo das Implementações de Frontend • Sprint 03
-## Sistema KeepUnB • Área do Gerente
+## Sistema KeepUnB • Áreas do Gerente & Solicitante
 
-Este documento apresenta o resumo executivo, as decisões de design e as melhorias de experiência de usuário (UX/UI) desenvolvidas no frontend da **Área do Gerente** da plataforma **KeepUnB** durante a Sprint 03. 
+Este documento apresenta o resumo executivo, as decisões de design e as melhorias de experiência de usuário (UX/UI) desenvolvidas no frontend das **Áreas do Gerente e Solicitante** da plataforma **KeepUnB** durante a Sprint 03. 
 
-O foco principal destas implementações foi elevar o apelo visual para uma estética premium, garantir a consistência das ações globais e sanar problemas de legibilidade e contraste sob temas escuros na barra lateral.
+O foco principal destas implementações foi elevar o apelo visual para uma estética premium, unificar fluxos de navegação eliminando rotas redundantes, sanar problemas de legibilidade/contraste e garantir que a interface transpareça profissionalismo corporativo sem a presença de emojis genéricos.
 
 ---
 
 ## 1. Resumo Executivo das Melhorias
 
-Durante esta etapa, a interface do gerente passou por uma profunda lapidação visual, focando nos princípios de **Glassmorphism**, **Micro-interações**, **Hierarquia Visual** e **Feedback Dinâmico**. As principais frentes de trabalho contemplaram:
+Durante esta etapa, a interface geral passou por uma profunda lapidação visual, focando nos princípios de **Glassmorphism**, **Micro-interações**, **Hierarquia Visual** e **Feedback Dinâmico**. As principais frentes de trabalho contemplaram:
 
-* 🟥 **Urgência e Destaque Visual nos KPI Cards**: Redesenho dos 4 cards estatísticos do topo do painel principal, com ênfase máxima em tons avermelhados de alta visibilidade para sinalizar a fila de triagem crítica.
-* ⚛️ **Substituição de Emojis por Componentes SVG Interativos**: Eliminação de emojis de texto genéricos em botões principais, substituindo-os por elementos de desenho vetorial (nativos em JSX/SVG) que respondem dinamicamente a estados de carregamento.
-* 🟢 **Padronização de Ações Globais de Cabeçalho**: Criação de uma classe centralizada de botão para os cabeçalhos de página, garantindo uniformidade em dimensões, efeitos tridimensionais e transições.
-* 🌗 **Correções de Alto Contraste na Sidebar**: Ajuste completo das cores de fonte da barra lateral de fundo escuro para garantir perfeita legibilidade corporativa.
+* 🟥 **Destaque Visual nos KPI Cards (Gerente & Solicitante)**: Redesenho dos cards estatísticos do topo com ênfase em tons de alta visibilidade e destaque aprimorado de seus ícones internos.
+* 📋 **Unificação de Telas do Solicitante**: Integração de todas as solicitações diretamente no Dashboard principal do Solicitante, descontinuando a necessidade de uma rota dedicada para "Minhas Solicitações".
+* ⚛️ **Substituição e Remoção de Emojis**: Eliminação de emojis genéricos em títulos, formulários, botões e alertas de erro, trocando-os por ícones SVG vetoriais consistentes ou deixando o design limpo e formal.
+* 🟢 **Padronização de Ações Globais**: Criação de classes de botões e cartões padronizados no CSS, garantindo uniformidade em dimensões, efeitos de hover e transições.
+* 🌗 **Ajustes de Legibilidade e Contraste**: Correções em cores de texto sobre elementos claros e escuros, garantindo legibilidade corporativa exemplar.
+* 📐 **Otimização de Layouts Responsivos**: Ajuste na proporção de colunas no grid principal do Dashboard do Solicitante para sanar problemas de overflow horizontal e esticar colunas de conteúdo relevante.
 
 ---
 
 ## 2. Detalhamento Técnico & Visual das Alterações
 
-### 2.1. Reengenharia Visual dos KPI Cards (Cards do Topo)
-Os 4 cards de indicadores foram reestruturados para herdar cores temáticas e fornecer micro-interações refinadas:
+### 2.1. Reengenharia Visual dos KPI Cards (Gerente)
+Os cards de indicadores do gerente foram reestruturados para sinalizar urgência e fornecer micro-interações refinadas:
+* **Aguardando Triagem (Vermelho `#EF4444`)**: Destaque crítico com borda superior e efeito glow sob hover.
+* **Delegados / Atribuídos (Laranja `#F59E0B`)**: Glow âmbar suave.
+* **Manutenções em Curso (Roxo `#8B5CF6`)**: Glow violeta sutil.
+* **Equipe Técnica Ativa (Verde `#10B981`)**: Glow verde UnB no hover.
 
-| Card / Indicador | Finalidade Visual | Cor de Destaque | Efeito Prático Aplicado |
-| :--- | :--- | :--- | :--- |
-| **Aguardando Triagem** | Sinalizar urgência crítica de triagem | Vermelho (`#EF4444`) | Borda superior de 4px, valor estatístico em `#DC2626`, fundo do ícone translúcido, tag de rodapé de alta visibilidade e efeito *glow* vermelho no hover. |
-| **Delegados / Atribuídos** | Chamados aguardando início técnico | Âmbar/Laranja (`#F59E0B`) | Borda superior de 4px, valor em `#D97706`, ícone temático e *glow* âmbar suave sob interação do cursor. |
-| **Manutenções em Curso** | Chamados ativos em execução | Roxo/Violeta (`#8B5CF6`) | Borda superior de 4px, valor em `#7C3AED`, ícone temático e *glow* roxo sob hover. |
-| **Equipe Técnica Ativa** | Quantidade de técnicos disponíveis | Verde/Esmeralda (`#10B981`) | Borda superior de 4px, valor em `#059669` (cor tradicional da UnB), ícone temático e *glow* verde sob hover. |
+### 2.2. Destaque de KPIs e Coerência de Cores (Solicitante)
+Os KPIs do topo do dashboard do Solicitante foram amplificados:
+* **Ícones SVGs Ampliados**: Largura e altura aumentadas para `38px` e espessura de linha (`strokeWidth`) ajustada para `2.5`.
+* **Opacidade e Destaque das Cores**: A opacidade das cores dos ícones subiu para `25%` a `35%` para excelente visibilidade.
+* **Inversão e Harmonia de Cores**:
+  * **Em Aberto** agora é associado ao tom amarelado/laranja (ícone, borda e valor numérico) para indicar atenção.
+  * **Em Atendimento** agora usa tom azul claro (ícone, borda e valor) para denotar processo de execução técnico.
 
-* **Micro-animações**:
-  * Ao passar o mouse (*hover*), os cards sofrem uma translação vertical negativa suave (`translateY(-4px)`) utilizando transição linear em curva cúbica (`cubic-bezier`).
-  * Os ícones internos sofrem um leve aumento de escala (`scale(1.05)`).
-  * Os valores numéricos principais foram ampliados de `2rem` para `2.4rem` em peso `800` (`Sora`), garantindo escaneabilidade instantânea dos dados da fila.
+### 2.3. Unificação de Fluxos & Fim de Telas Redundantes (Solicitante)
+* **Dashboard Unificado**: A lista "Solicitações Recentes" (que limitava a visualização a apenas 3 itens via `.slice(0,3)`) foi convertida em uma lista de todas as solicitações do usuário.
+* **Eliminação de Rotas Vazias**: A rota `/solicitante/minhas-solicitacoes` (que não possuía arquivo físico próprio de página) foi totalmente descontinuada e removida do menu lateral (`layout.tsx`).
+* **Fluxo Pós-Sucesso Otimizado**: Ao abrir um chamado no [NovaSolicitacaoForm.tsx](file:///frontend/src/features/solicitante/components/NovaSolicitacaoForm.tsx), o botão de sucesso redireciona o usuário para o Dashboard `/solicitante/dashboard` de forma direta e fluida.
 
-### 2.2. Substituição de Emojis por Ícones Dinâmicos SVG
-Buscando eliminar a renderização inconsistente de emojis do sistema operacional e conferir aspecto premium à tela:
+### 2.4. Resolução de Contraste e Separação de Itens (Solicitante)
+* **Legibilidade no Painel**: O título dos chamados na listagem do Dashboard foi configurado explicitamente com cor preta (`#000000`) para legibilidade e conformidade sob fundos claros.
+* **Destaque nos Itens**: Redesenho dos cartões de chamado com fundo branco sólido (`#ffffff`), contorno sutil (`rgba(13, 43, 94, 0.12)`) e sombra leve, realçando visivelmente a separação entre itens na vertical.
+* **Correção de Overflow no Grid**: O grid do painel do solicitante foi reconfigurado com `gridTemplateColumns: 'minmax(0, 1.1fr) minmax(0, 1fr)'` e `min-width: 0`, sanando o overflow causado pelo texto sem quebra (`whiteSpace: 'nowrap'`), o que expandia incorretamente a área esquerda e espremia a coluna de atalhos rápidos à direita.
 
-* **Exportação de PDF (Painel de Relatórios)**:
-  * Substituição do emoji `📥` pelo logotipo vetorial oficial do **React** (símbolo geométrico clássico do átomo), renderizado nativamente em SVG de excelente fidelidade.
-  * Substituição do emoji `⏳` por um spinner de rotação circular contínua em SVG de alta resolução (`animation: spin 1.5s linear infinite`) ativo apenas durante o estado de compilação do arquivo.
-* **Atualização de Carga de Trabalho (Carga Técnica)**:
-  * Substituição do emoji `🔄` pelo mesmo ícone de refresh do Dashboard principal (duas setas em loop espiral).
-  * O ícone gira de forma fluida (`animation: spin 1.5s`) durante a consulta à API, mantendo perfeita coerência e simetria de símbolos entre as telas.
-
-### 2.3. Padronização do Botão de Cabeçalho (`.btn-header-action`)
-Desenvolvemos uma nova classe utilitária no CSS global para unificar os botões de controle das páginas:
-
-* **Estilo Unificado**: Criamos a classe `.btn-header-action` que define bordas arredondadas de `12px`, espaçamento robusto de `padding: 0.9rem 1.8rem`, peso de fonte `600` e tipografia `Sora`.
-* **Remoção de Estilos Inline**: Eliminamos códigos inline que definiam dimensões avulsas de botões no [Dashboard.tsx](file:///frontend/src/features/gerente/components/Dashboard.tsx) e [CargaTrabalho.tsx](file:///frontend/src/features/gerente/components/CargaTrabalho.tsx).
-* **Hierarquia das Tabelas**: Mantivemos a classe `.btn-table-action` menor (`padding: 0.5rem 1rem` e raio `8px`) apenas para ações locais (como o botão "Atribuir" de cada linha), criando um fluxo visual correto de subordinação de funções.
-
-### 2.4. Ajustes de Alto Contraste e Legibilidade na Sidebar
-Sanamos o problema de legibilidade gerado pelo contraste inadequado sobre o fundo azul marinho escuro (`var(--navy-dark)`):
-
-* **Logo KeepUnB**: O termo **Keep** recebeu a propriedade `color: var(--white)`, destacando-se nitidamente ao lado da assinatura **UnB** em verde luminoso.
-* **Nome do Usuário**: A classe `.user-name` foi configurada para cor branca brilhante (`var(--white)`), garantindo legibilidade perfeita sob qualquer iluminação.
-* **Função/Cargo**: O rótulo `.user-role` foi redefinido de cinza-escuro (`var(--gray-text)`) para branco semi-translúcido (`rgba(255, 255, 255, 0.5)`), harmonizando a leitura e preservando a hierarquia secundária do perfil.
+### 2.5. Eliminação Sistêmica de Emojis no Frontend
+Visando um visual corporativo limpo e de excelente qualidade:
+* No Gerente, botões de relatórios e atualização de carga de trabalho agora utilizam SVGs nativos animados de refresh e logo de React.
+* No Solicitante, os emojis foram removidos de títulos de dashboards e também da tela de nova solicitação (como o `➕` do título principal, o `📄` do formulário e o `⚠️` das mensagens de erro).
 
 ---
 
@@ -65,13 +58,19 @@ Sanamos o problema de legibilidade gerado pelo contraste inadequado sobre o fund
 
 | Caminho do Arquivo | Ação Realizada | Impacto Técnico / Funcional |
 | :--- | :--- | :--- |
-| [gerente.css](file:///home/carloshf/keep-unb/frontend/src/features/gerente/components/gerente.css) | `MODIFY` | Centralização dos novos estilos temáticos dos KPI cards (`.kpi-abertos`, etc), criação da classe global `.btn-header-action`, padronização com `.btn-report-download` e correções de contraste da sidebar. |
-| [Dashboard.tsx](file:///home/carloshf/keep-unb/frontend/src/features/gerente/components/Dashboard.tsx) | `MODIFY` | Substituição das classes dos cards pelos seletores semânticos temáticos, remoção de propriedades inline de cores de ícones e padronização do botão de atualizar dados com a nova classe global. |
-| [PainelRelatorios.tsx](file:///home/carloshf/keep-unb/frontend/src/features/gerente/components/PainelRelatorios.tsx) | `MODIFY` | Remoção de emojis antigos e introdução do logo do React em SVG e do spinner vetorial animado no fluxo de exportação de PDF. |
-| [CargaTrabalho.tsx](file:///home/carloshf/keep-unb/frontend/src/features/gerente/components/CargaTrabalho.tsx) | `MODIFY` | Padronização do botão de atualizar dados com a classe global `.btn-header-action` e inclusão do ícone de refresh em loop idêntico ao do painel central. |
+| [gerente.css](file:///home/carloshf/keep-unb/frontend/src/features/gerente/components/gerente.css) | `MODIFY` | Novos estilos de KPI cards do gerente, classe `.btn-header-action` e ajustes de contraste da sidebar. |
+| [Dashboard.tsx](file:///home/carloshf/keep-unb/frontend/src/features/gerente/components/Dashboard.tsx) | `MODIFY` | Introdução de seletores semânticos nos KPIs e botão de atualização padronizado. |
+| [PainelRelatorios.tsx](file:///home/carloshf/keep-unb/frontend/src/features/gerente/components/PainelRelatorios.tsx) | `MODIFY` | Remoção de emojis, inclusão do logo do React em SVG e do spinner de carregamento de PDFs. |
+| [CargaTrabalho.tsx](file:///home/carloshf/keep-unb/frontend/src/features/gerente/components/CargaTrabalho.tsx) | `MODIFY` | Botão de atualizar dados padronizado e ícone de refresh em loop SVG. |
+| [solicitante.css](file:///home/carloshf/keep-unb/frontend/src/features/solicitante/components/solicitante.css) | `MODIFY` | Adaptação de layout de sidebar, inversão de cores de bordas e textos de valor para os cards `kpi-aberto` (amarelado) e `kpi-progresso` (azul claro). |
+| [DashboardContent.tsx](file:///home/carloshf/keep-unb/frontend/src/features/solicitante/components/DashboardContent.tsx) | `MODIFY` | Remoção do limite `.slice(0, 3)`, mudança para listar todas as solicitações, alteração dos títulos, refatoração de estilos do item (título preto, borda e fundo branco), ampliação/realce dos SVGs de KPIs e reconfiguração do grid de colunas com minmax para evitar overflow. |
+| [layout.tsx](file:///home/carloshf/keep-unb/frontend/src/app/solicitante/layout.tsx) | `MODIFY` | Remoção do item redundante de menu "Minhas Solicitações" da barra lateral de navegação. |
+| [NovaSolicitacaoForm.tsx](file:///home/carloshf/keep-unb/frontend/src/features/solicitante/components/NovaSolicitacaoForm.tsx) | `MODIFY` | Redirecionamento da ação do botão de sucesso para `/solicitante/dashboard`, e remoção de emojis do cabeçalho e do alerta de erro. |
+| [nova-solicitacao/page.tsx](file:///home/carloshf/keep-unb/frontend/src/app/solicitante/nova-solicitacao/page.tsx) | `MODIFY` | Remoção do emoji `➕` do título principal de abertura de chamados. |
+| [dashboard/page.tsx](file:///home/carloshf/keep-unb/frontend/src/app/solicitante/dashboard/page.tsx) | `MODIFY` | Remoção do emoji `📊` do título do Painel do Solicitante. |
 
 ---
 
 ## 4. Conclusão da Sprint
 
-As melhorias implantadas garantem que a **Área do Gerente** do KeepUnB apresente uma estética visual extremamente elegante, em conformidade estrita com o [Manual de Identidade Visual](file:///home/carloshf/keep-unb/identidade_visual.md), transmitindo robustez institucional, profissionalismo e excelente fluidez de interações para as atividades de triagem e controle de infraestrutura da universidade.
+As melhorias implantadas na Sprint 03 consolidam as interfaces do **Gerente** e do **Solicitante** no KeepUnB sob uma estética visual elegante, harmoniosa e consistente. A simplificação de fluxos e a lapidação nos mínimos detalhes de contraste, grids responsivos e remoção de emojis conferem um ar altamente profissional e corporativo, garantindo usabilidade superior para a manutenção e conservação do campus FCTE.
