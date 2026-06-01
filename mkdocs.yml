@@ -1,20 +1,70 @@
-site_name: Documentação
-
-nav:
-  - Instruções mkdocs: "index.md"
-  - Atas de Reunião:
-      - Ata 1: "atas-reuniao/ata-reuniao-1.md"
-  - Documento de Visão: "visao/visao.md"
-  - Documento de Arquitetura: "arq/arq.md"
-  - Banco de Dados:
-      - Diagrama do banco de dados: "banco-de-dados/diagrama-relacionamento-inicial.md"
-  - Sprint 3:
-      
-      - Fluxo: "sprint3/fluxo.md"
-      - Permições: "sprint3/permissoes.md"
-      - Endpoints: "sprint3/endpoints.md"
-      - Execução Local: "sprint3/execucao-local.md"
-      
+site_name: KeepUnB
+site_description: Documentação oficial do projeto KeepUnB
+site_author: Equipe KeepUnB
 
 theme:
   name: material
+  language: pt-BR
+  logo: assets/logokeepunb.png
+  favicon: assets/favicon.png
+
+  font:
+    text: Inter
+    code: JetBrains Mono
+
+  palette:
+    scheme: default
+    primary: custom
+    accent: custom
+
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.footer
+    - search.highlight
+    - search.suggest
+    - content.code.copy
+    - content.tabs.link
+    - toc.follow
+
+nav:
+  - Início: "index.md"
+
+  - Como executar:
+      - Primeiros passos: "como-executar/tutorial.md"
+
+  - Documentação:
+      - Documento de Visão: "visao/visao.md"
+      - Documento de Arquitetura: "arq/arq.md"
+      - Sobre o banco de dados: "banco-de-dados/diagrama-relacionamento-inicial.md"
+
+  - Nossas reuniões:
+      - Ata 1: "atas-reuniao/ata-reuniao-1.md"
+
+  - Sprints:
+      - Sprint 1: "sprint1/sprint1.md"
+      - Sprint 2: "sprint2/sprint2.md"
+      - Sprint 3: "sprint3/sprint3.md"
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra_css:
+  - stylesheets/extra.css
