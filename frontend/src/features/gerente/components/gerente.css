@@ -35,6 +35,7 @@
   letter-spacing: -0.03em;
   margin-bottom: 3rem;
   padding: 0 0.5rem;
+  color: var(--white);
 }
 .sidebar-logo em {
   font-style: normal;
@@ -85,6 +86,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  color: var(--white);
 }
 
 .user-avatar {
@@ -112,10 +114,11 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--white);
 }
 .user-role {
   font-size: 0.72rem;
-  color: var(--gray-text);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .btn-logout {
