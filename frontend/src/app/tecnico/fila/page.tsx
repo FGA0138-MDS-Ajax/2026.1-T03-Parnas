@@ -7,7 +7,7 @@ export default function FilaChamadosPage() {
   // MOCK: Lista de chamados ATRIBUÍDOS especificamente a este técnico
   const chamadosAtribuidos = [
     { id: 'CH-001', titulo: 'Ar condicionado vazando no Auditório', local: 'Auditório - FCTE', status: 'ATRIBUIDO', prioridade: 'Média' },
-    { id: 'CH-005', titulo: 'Manutenção do Forno do RU', local: 'RU - FCTE', status: 'EM EXECUÇÃO', prioridade: 'Urgente' },
+    { id: 'CH-005', titulo: 'Manutenção do Forno do RU', local: 'RU - FCTE', status: 'ATRIBUIDO', prioridade: 'Urgente' },
   ];
 
   return (
@@ -49,11 +49,10 @@ export default function FilaChamadosPage() {
               </div>
             </div>
 
-            
             {/* Acesso ao detalhe do chamado passando dados via Query Params */}
 <div>
   <Link 
-    href={`/tecnico/chamado?id=${c.id}&titulo=${encodeURIComponent(c.titulo)}&local=${encodeURIComponent(c.local)}&status=${encodeURIComponent(c.status)}`}
+href={`/tecnico/chamado?id=${c.id}&titulo=${encodeURIComponent(c.titulo)}&local=${encodeURIComponent(c.local)}&status=${encodeURIComponent(c.status)}&tipo=${encodeURIComponent(c.id === 'CH-001' ? 'Climatização' : 'Infraestrutura / Predial')}`}
     style={{ 
       padding: '0.5rem 1rem', 
       backgroundColor: '#10b981', 
