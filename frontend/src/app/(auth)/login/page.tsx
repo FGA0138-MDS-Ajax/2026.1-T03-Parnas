@@ -13,7 +13,7 @@ export default function LoginPage() {
   const USUARIOS_MOCK = [
     { email: 'admin@gmail.com', senha: '123', perfil: 'admin', rota: '/admin/usuarios' },
     { email: 'solicitante@gmail.com', senha: '123', perfil: 'solicitante', rota: '/solicitante' },
-    { email: 'tecnico@gmail.com', senha: '123', perfil: 'tecnico', rota: '/tecnico' },
+    { email: 'tecnico@gmail.com', senha: '123', perfil: 'tecnico', rota: '/tecnico/fila' },
     { email: 'gerente@gmail.com', senha: '123', perfil: 'gerente', rota: '/gerente' },
   ];
 

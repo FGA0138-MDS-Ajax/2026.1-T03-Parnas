@@ -19,7 +19,6 @@ export default function NovaSolicitacaoPage() {
     setDescricao('');
     setCategoria('infraestrutura');
   };
-
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto', fontFamily: 'sans-serif', padding: '1rem' }}>
       <div style={{ border: '1px solid #ccc', padding: '2rem', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', backgroundColor: '#fff' }}>
