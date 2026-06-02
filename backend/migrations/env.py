@@ -1,3 +1,5 @@
+#Pietro, 01 de Junho
+
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -28,6 +30,7 @@ config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
 from app.core.database import Base
 from app.models.user import User
 from app.models.ticket import Ticket
+from app.models.comment import Comment
 
 target_metadata = Base.metadata
 
@@ -68,18 +71,16 @@ def do_run_migrations(connection: Connection) -> None:
         context.run_migrations()
 
 
+#Please read the comment within this function.
+#We're in the context of a SQLAlchemy-Alembic-FastAPI workflow.
 async def run_async_migrations() -> None:
-    """In this scenario we need to create an Engine
-    and associate a connection with the context.
-
-    """
-
     connectable = async_engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
 
+    # The line below is causing an error when trying to autogenerate with Alembic. Why so?
     async with connectable.connect() as connection:
         await connection.run_sync(do_run_migrations)
 
