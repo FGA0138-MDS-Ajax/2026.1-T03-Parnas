@@ -34,9 +34,9 @@ class CommentService:
         db: AsyncSession, 
         comment_in: CommentCreate, 
         user: User,
-        ticket: int
+        ticket_id: int
         ) -> Comment:
-        return await CommentRepository.create(db, comment_in, user.matricula, ticket.id)
+        return await CommentRepository.create(db, comment_in, user.matricula, ticket_id)
 
     #Obter os comentários de um usuário
     async def get_user_comments(

@@ -1,6 +1,5 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from app.models.ticket import Ticket, TicketStatus
 from app.schemas.ticket import TicketCreate
 

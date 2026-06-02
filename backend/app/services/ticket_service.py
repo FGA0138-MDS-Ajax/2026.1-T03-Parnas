@@ -1,12 +1,9 @@
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-
-from app.models.user import User, UserRole
 from app.models.ticket import Ticket, TicketStatus
-
-from app.repositories.user_repository import UserRepository
+from app.models.user import User, UserRole
 from app.repositories.ticket_repository import TicketRepository
-
+from app.repositories.user_repository import UserRepository
 from app.schemas.ticket import TicketCreate
 
 class TicketService:
