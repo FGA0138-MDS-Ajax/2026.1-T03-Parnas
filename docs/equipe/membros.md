@@ -68,35 +68,35 @@ Conheça os participantes envolvidos no desenvolvimento do **KeepUnB**.
 
     **GitHub:** [CharlesRuan-MAP](https://github.com/CharlesRuan-MAP)
 
--   ![](){ .keepunb-member-avatar}
+-   ![Rodrigo Barbosa](https://github.com/RodrigoCBarbosa.png?size=160){ .keepunb-member-avatar}
 
     **Rodrigo Barbosa**
 
     **Papel:** Analista de Qualidade
 
-    **GitHub:** []()
+    **GitHub:** [RodrigoCBarbosa](https://github.com/RodrigoCBarbosa)
 
--   ![](){ .keepunb-member-avatar}
+-   ![Arthur Coelho](https://github.com/arthurrcoelho.png?size=160){ .keepunb-member-avatar}
 
     **Arthur Coelho**
 
     **Papel:** Desenvolvedor
 
-    **GitHub:** []()
+    **GitHub:** [arthurrcoelho](https://github.com/arthurrcoelho)
 
--   ![](){ .keepunb-member-avatar}
+-   ![Caio Nápoles](https://github.com/caioNapoles.png?size=160){ .keepunb-member-avatar}
 
     **Caio Nápoles**
 
     **Papel:** Desenvolvedor
 
-    **GitHub:** []()
+    **GitHub:** [caioNapoles](https://github.com/caioNapoles)
 
--   ![](){ .keepunb-member-avatar}
+-   ![Daniel Velloso](https://github.com/vellloso.png?size=160){ .keepunb-member-avatar}
 
     **Daniel Velloso**
 
     **Papel:** Desenvolvedor
 
-    **GitHub:** []()
+    **GitHub:** [vellloso](https://github.com/vellloso)
 </div>
