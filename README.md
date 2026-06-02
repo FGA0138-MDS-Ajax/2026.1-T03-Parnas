@@ -27,12 +27,13 @@ A arquitetura do KeepUnB é dividida em serviços independentes utilizando tecno
 - **Framework**: [Next.js 14](https://nextjs.org/) (App Router) & [React 18](https://react.dev/)
 - **Linguagem**: [TypeScript](https://www.typescriptlang.org/)
 - **Estilização**: Vanilla CSS (CSS Variables & Design Tokens customizados)
+- **Ambiente de Execução (Runtime)**: [Node.js 20+](https://nodejs.org/)
 
 ### Backend
-- **Framework**: [FastAPI](https://fastapi.tiangolo.com/) (Python 3.10+)
-- **ORM & Banco**: [SQLAlchemy 2.0](https://www.sqlalchemy.org/) (Assíncrono) com driver [asyncpg](https://github.com/MagicStack/asyncpg)
+- **Framework**: [FastAPI](https://fastapi.tiangolo.com/) (Python 3.12+)
+- **ORM**: [SQLAlchemy 2.0](https://www.sqlalchemy.org/) (Assíncrono)
 - **Migrações**: [Alembic](https://alembic.sqlalchemy.org/)
-- **Banco de Dados**: [PostgreSQL](https://www.postgresql.org/)
+- **Banco de Dados**: [PostgreSQL 16](https://www.postgresql.org/) (com driver assíncrono [asyncpg](https://github.com/MagicStack/asyncpg))
 - **Validação de Dados**: [Pydantic v2](https://docs.pydantic.dev/)
 
 ### Infraestrutura & Devops
@@ -102,7 +103,7 @@ Após o build e a inicialização, você poderá acessar:
 ```text
 keep-unb/
 ├── backend/            # Código-fonte do servidor FastAPI
-│   ├── app/            # Módulos principais (routers, models, schemas, services)
+│   ├── app/            # Módulos principais (core, models, repositories, routers, schemas, services, utils)
 │   ├── migrations/     # Arquivos de migração de banco gerados pelo Alembic
 │   └── tests/          # Testes automatizados do backend com PyTest
 ├── frontend/           # Aplicação web em Next.js (TypeScript)
