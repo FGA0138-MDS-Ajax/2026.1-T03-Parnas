@@ -9,7 +9,7 @@ theme:
   favicon: assets/favicon.png
 
   font:
-    text: Inter
+    text: DM Sans
     code: JetBrains Mono
 
   palette:
@@ -38,7 +38,7 @@ nav:
   - Documentação:
       - Documento de Visão: "visao/visao.md"
       - Documento de Arquitetura: "arq/arq.md"
-      - Identidade Visual: "identidade_visual.md"
+      - Identidade Visual: "identidade_visual/identidade_visual.md"
       - Sobre o banco de dados: "banco-de-dados/diagrama-relacionamento-inicial.md"
 
   - Nossas reuniões:
@@ -48,6 +48,10 @@ nav:
       - Sprint 1: "sprint1/sprint1.md"
       - Sprint 2: "sprint2/sprint2.md"
       - Sprint 3: "sprint3/sprint3.md"
+
+  - Nossa equipe:
+      - Membros: "equipe/membros.md"
+
 
 markdown_extensions:
   - admonition
