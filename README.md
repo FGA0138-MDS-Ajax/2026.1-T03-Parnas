@@ -17,3 +17,9 @@ Nesta branch, você encontrará todos os arquivos markdown (`.md`) e configuraç
 O site da documentação gerado de forma estática pelo MkDocs é atualizado automaticamente e pode ser acessado publicamente através do link:
 
 **[Site de Documentação do KeepUnB](https://fga0138-mds-ajax.github.io/2026.1-T03-Parnas)**
+
+Além disso, você também pode acessar diretamente os seguintes documentos em formato PDF:
+
+* [Documento de Arquitetura](docs/arq/Doc_arquitetura_parnas.pdf)
+* [Documento de Visão](docs/visao/visao_parnas.pdf)
+

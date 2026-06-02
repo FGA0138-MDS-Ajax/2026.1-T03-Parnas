@@ -22,7 +22,7 @@
       <span class="keepunb-button__icon" aria-hidden="true">+</span>
       Começar agora
     </a>
-    <a class="keepunb-button keepunb-button--secondary" href="visao/visao-pdf/">
+    <a class="keepunb-button keepunb-button--secondary" href="visao/visao/">
       <span class="keepunb-button__icon" aria-hidden="true">i</span>
       Ver visão do projeto
     </a>
@@ -135,13 +135,13 @@ monitorar indicadores operacionais.
 
     Entenda objetivos, público, escopo, riscos e indicadores do projeto.
 
-    [Abrir visão](visao/visao-pdf.md)
+    [Abrir visão](visao/visao.md)
 
 -   :material-sitemap-outline: **Arquitetura**
 
     Consulte a organização técnica, componentes e decisões estruturais.
 
-    [Ver arquitetura](arq/arq-pdf.md)
+    [Ver arquitetura](arq/arq.md)
 
 -   :material-database-outline: **Banco de Dados**
 
