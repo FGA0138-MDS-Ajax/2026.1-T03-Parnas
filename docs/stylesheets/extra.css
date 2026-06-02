@@ -337,10 +337,17 @@ body,
   border-radius: 8px;
 }
 
+.md-typeset__table {
+  overflow: hidden;
+  border: 1px solid rgba(13, 43, 94, 0.1);
+  border-radius: 18px;
+  box-shadow: none;
+}
+
 .md-typeset table:not([class]) {
   overflow: hidden;
   border-radius: 18px;
-  box-shadow: 0 14px 34px rgba(7, 26, 62, 0.08);
+  box-shadow: none;
 }
 
 .md-typeset table:not([class]) th {
@@ -350,8 +357,14 @@ body,
 
 .md-typeset .admonition,
 .md-typeset details {
+  overflow: hidden;
   border-radius: 18px;
   box-shadow: 0 14px 34px rgba(7, 26, 62, 0.07);
+}
+
+.md-typeset .admonition-title,
+.md-typeset summary {
+  border-radius: 18px 18px 0 0;
 }
 
 .md-footer {
@@ -390,6 +403,7 @@ body,
     linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px);
   background-size: 3rem 3rem;
   opacity: 0.45;
+  pointer-events: none;
 }
 
 .keepunb-hero::after {
@@ -401,6 +415,7 @@ body,
   height: 0.38rem;
   content: "";
   background: linear-gradient(90deg, var(--green), var(--green-light), var(--green));
+  pointer-events: none;
 }
 
 .keepunb-hero__content,
@@ -501,6 +516,8 @@ body,
 }
 
 .keepunb-actions {
+  position: relative;
+  z-index: 1;
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

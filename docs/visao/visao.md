@@ -1,11 +1,5 @@
 # Visão do Produto e do Projeto
 
-**Versão:** 1.1.0  
-**Data da última revisão:** 25/05/2026  
-**Organização:** Parnas - KeepUnB  
-
----
-
 ## 1. Visão Geral do Produto
 
 ### 1.1 Problema
@@ -193,7 +187,5 @@ Os requisitos do produto foram identificados via técnicas de *brainstorm* inter
 
 ---
 
-> [!TIP]
-> Caso prefira, você pode [abrir o Documento de Visão em formato PDF diretamente](./visao_parnas.pdf).
-
-```
+!!! tip
+    Caso prefira, você pode [abrir o Documento de Visão em formato PDF diretamente](./visao_parnas.pdf).

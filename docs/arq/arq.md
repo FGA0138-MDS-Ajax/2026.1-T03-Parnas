@@ -1,19 +1,5 @@
 # Documento de Arquitetura de Software
 
-**Versão:** 2.0.0  
-**Data da última revisão:** 29/05/2026  
-**Organização:** Parnas - KeepUnB  
-
----
-
-## Histórico de Revisões
-| Data | Versão | Descrição | Autor(es) |
-| :--- | :--- | :--- | :--- |
-| 05/05/2026 | 1.0.0 | Arquitetura inicial do produto | Grupo Parnas |
-| 29/05/2026 | 2.0.0 | Alteração na estrutura do backend | Felipe Melo e Carlos Costa |
-
----
-
 ## 1 INTRODUÇÃO
 
 ### 1.1 Propósito
@@ -327,5 +313,5 @@ Para garantir o isolamento entre os quatro perfis de usuário, o sistema adota o
 
 ---
 
-> [!TIP]
-> Caso prefira, você pode [abrir o Documento de Arquitetura em formato PDF diretamente](./Doc_arquitetura_parnas.pdf).
+!!! tip
+    Caso prefira, você pode [abrir o Documento de Arquitetura em formato PDF diretamente](./Doc_arquitetura_parnas.pdf).
