@@ -45,9 +45,11 @@ nav:
       - Ata 1: "atas-reuniao/ata-reuniao-1.md"
 
   - Sprints:
+      - Sprint 0: "sprint0/sprint0.md"
       - Sprint 1: "sprint1/sprint1.md"
       - Sprint 2: "sprint2/sprint2.md"
       - Sprint 3: "sprint3/sprint3.md"
+      - Sprint 4: "sprint4/sprint4.md"
 
   - Nossa equipe:
       - Membros: "equipe/membros.md"
