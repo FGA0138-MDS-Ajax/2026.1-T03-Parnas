@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from typing import Optional
 from app.models.ticket import TicketStatus
 
@@ -20,3 +20,17 @@ class TicketResponse(TicketBase):
     updated_at: datetime
 
     model_config = {"from_attributes": True}
+
+class TicketAssign(BaseModel):
+    tecnico_id: str
+
+class TicketUpdateStatus(BaseModel):
+    status: TicketStatus
+
+    @field_validator("status")
+    @classmethod
+    def validate_status(cls, v: TicketStatus) -> TicketStatus:
+        allowed = [TicketStatus.NAO_INICIADO, TicketStatus.EM_ANDAMENTO, TicketStatus.CONCLUIDO]
+        if v not in allowed:
+            raise ValueError(f"Status not allowed. Allowed values: {[s.value for s in allowed]}")
+        return v

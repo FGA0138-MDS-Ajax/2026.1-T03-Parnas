@@ -1,1 +1,33 @@
-/* globals.css — Estilos globais do KeepUnB. TODO: Implementar design system. */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --navy: #0D2B5E;
+  --navy-dark: #071A3E;
+  --navy-mid: #1A3F7A;
+  --navy-light: #2557A7;
+  --green: #1B7A3A;
+  --green-mid: #2AA34E;
+  --green-light: #3DC966;
+  --green-pale: #D4F0DC;
+  --white: #FFFFFF;
+  --off-white: #F4F7FB;
+  --gray-text: #6B7A99;
+  --border: rgba(255,255,255,0.12);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--navy-dark);
+  color: var(--white);
+  overflow-x: hidden;
+}
