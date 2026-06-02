@@ -1,5 +1,5 @@
 #Pietro, 01 de Junho
-#Esse script preenche o banco de dados com dados de mentira para fins de teste.
+#Esse script preenche o banco de dados com dados de mentira para fins de teste..
 
 import sys
 import asyncio
