@@ -29,26 +29,72 @@ O logotipo do **KeepUnB** foi projetado para representar a essência do projeto:
 
 A paleta de cores do **KeepUnB** foi extraída das cores tradicionais da Universidade de Brasília (Azul e Verde) e expandida para criar um contraste contemporâneo e elegante. Ela está configurada no CSS global do projeto como variáveis customizadas (`:root`).
 
-```mermaid
-graph TD
-    subgraph Tons de Azul (Confiança e Estrutura)
-        NavyDark["Navy Dark<br>#071A3E"]
-        Navy["Navy (Base)<br>#0D2B5E"]
-        NavyMid["Navy Mid<br>#1A3F7A"]
-        NavyLight["Navy Light<br>#2557A7"]
-    end
-    subgraph Tons de Verde (Ação e Sucesso)
-        Green["Green (Base)<br>#1B7A3A"]
-        GreenMid["Green Mid<br>#2AA34E"]
-        GreenLight["Green Light<br>#3DC966"]
-        GreenPale["Green Pale<br>#D4F0DC"]
-    end
-    subgraph Neutros (Leitura e Superfícies)
-        White["White<br>#FFFFFF"]
-        OffWhite["Off-White<br>#F4F7FB"]
-        GrayText["Gray Text<br>#6B7A99"]
-    end
-```
+<div class="keepunb-color-grid" markdown>
+
+<div class="keepunb-color-card">
+  <i class="keepunb-swatch keepunb-swatch--navy-dark"></i>
+  <strong>Navy Dark</strong>
+  <span>Confiança e estrutura</span>
+  <code>#071A3E</code>
+</div>
+
+<div class="keepunb-color-card">
+  <i class="keepunb-swatch keepunb-swatch--navy"></i>
+  <strong>Navy Base</strong>
+  <span>Cor institucional primária</span>
+  <code>#0D2B5E</code>
+</div>
+
+<div class="keepunb-color-card">
+  <i class="keepunb-swatch keepunb-swatch--navy-mid"></i>
+  <strong>Navy Mid</strong>
+  <span>Gradientes e bordas ativas</span>
+  <code>#1A3F7A</code>
+</div>
+
+<div class="keepunb-color-card">
+  <i class="keepunb-swatch keepunb-swatch--navy-light"></i>
+  <strong>Navy Light</strong>
+  <span>Estados secundários</span>
+  <code>#2557A7</code>
+</div>
+
+<div class="keepunb-color-card">
+  <i class="keepunb-swatch keepunb-swatch--green"></i>
+  <strong>Green Base</strong>
+  <span>Ação e sucesso</span>
+  <code>#1B7A3A</code>
+</div>
+
+<div class="keepunb-color-card">
+  <i class="keepunb-swatch keepunb-swatch--green-mid"></i>
+  <strong>Green Mid</strong>
+  <span>Hover e destaques</span>
+  <code>#2AA34E</code>
+</div>
+
+<div class="keepunb-color-card">
+  <i class="keepunb-swatch keepunb-swatch--green-light"></i>
+  <strong>Green Light</strong>
+  <span>Badges ativos</span>
+  <code>#3DC966</code>
+</div>
+
+<div class="keepunb-color-card">
+  <i class="keepunb-swatch keepunb-swatch--green-pale"></i>
+  <strong>Green Pale</strong>
+  <span>Alertas e fundos suaves</span>
+  <code>#D4F0DC</code>
+</div>
+
+<div class="keepunb-color-card">
+  <i class="keepunb-swatch keepunb-swatch--off-white"></i>
+  <strong>Off-White</strong>
+  <span>Superfícies claras</span>
+  <code>#F4F7FB</code>
+</div>
+
+</div>
 
 ### Detalhamento dos Códigos de Cores
 

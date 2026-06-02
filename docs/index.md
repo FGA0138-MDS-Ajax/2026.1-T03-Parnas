@@ -1,55 +1,58 @@
 <section class="keepunb-hero" markdown>
   <div class="keepunb-hero__content">
-    <span class="keepunb-kicker">Documentação oficial</span>
-    <h1>
-      <span>Keep</span>
-      <span>UnB</span>
-    </h1>
+    <span class="keepunb-kicker">Guia oficial</span>
+    <h1><span>Keep</span><span>UnB</span></h1>
     <p>
-      Plataforma para registrar, organizar e acompanhar chamados de manutenção
-      no ambiente universitário com clareza, rastreabilidade e prioridade.
+      Sistema de manutenção da UnB reunindo guias de execução, arquitetura,
+      banco de dados, sprints e equipe.
     </p>
 
-    <div class="keepunb-actions">
-      <a class="keepunb-button keepunb-button--primary" href="como-executar/tutorial/">
-        <span class="keepunb-button__icon" aria-hidden="true">&#9658;</span>
-        Começar agora
-      </a>
-      <a class="keepunb-button keepunb-button--secondary" href="arq/arq/">
-        <span class="keepunb-button__icon" aria-hidden="true">&#9638;</span>
-        Ver arquitetura
-      </a>
-    </div>
   </div>
 
   <div class="keepunb-hero__brand" aria-label="Identidade visual KeepUnB">
-    <img src="assets/logokeepunb.png" alt="Logo KeepUnB">
+    <img class="keepunb-logo-display" src="assets/logokeepunb.png" alt="Logo KeepUnB">
+    <div class="keepunb-hero__panel">
+      <strong>Base do projeto</strong>
+      <span>Execução local, arquitetura, banco de dados, sprints e equipe.</span>
+    </div>
+  </div>
+
+  <div class="keepunb-actions">
+    <a class="keepunb-button keepunb-button--primary" href="como-executar/tutorial/">
+      <span class="keepunb-button__icon" aria-hidden="true">+</span>
+      Começar agora
+    </a>
+    <a class="keepunb-button keepunb-button--secondary" href="visao/visao/">
+      <span class="keepunb-button__icon" aria-hidden="true">i</span>
+      Ver visão do projeto
+    </a>
   </div>
 </section>
 
 <section class="keepunb-overview" markdown>
 
-## Um fluxo mais simples para manutenções
+## O que é o KeepUnB
 
-O **KeepUnB** centraliza solicitações, atribuições e atualizações de chamados
-em um fluxo feito para reduzir perda de informação e facilitar a tomada de
-decisão por usuários, gerentes e técnicos.
+O **KeepUnB** é uma aplicação web para centralizar solicitações de manutenção
+da UnB-FCTE. O sistema substitui fluxos manuais e comunicações dispersas por
+um canal único para abrir chamados, acompanhar status, atribuir técnicos e
+monitorar indicadores operacionais.
 
 <div class="keepunb-metrics" markdown>
 
 <div>
-  <strong>3</strong>
-  <span>perfis principais</span>
+  <strong>Problema</strong>
+  <span>Pedidos dispersos, pouca rastreabilidade e demora no atendimento</span>
 </div>
 
 <div>
-  <strong>1</strong>
-  <span>fluxo rastreável</span>
+  <strong>Solução</strong>
+  <span>Canal único para registrar, priorizar e acompanhar manutenções</span>
 </div>
 
 <div>
-  <strong>24/7</strong>
-  <span>histórico consultável</span>
+  <strong>Impacto</strong>
+  <span>Mais transparência para solicitantes, técnicos e gestores</span>
 </div>
 
 </div>
@@ -58,59 +61,93 @@ decisão por usuários, gerentes e técnicos.
 
 <section class="keepunb-section" markdown>
 
-## Principais áreas
-
-<div class="grid cards keepunb-feature-grid" markdown>
-
--   :material-account-outline: **Usuário**
-
-    Registra chamados com local, categoria e descrição do problema.
-
--   :material-account-tie-outline: **Gerente**
-
-    Analisa demandas, acompanha prioridades e direciona os atendimentos.
-
--   :material-account-hard-hat-outline: **Técnico**
-
-    Visualiza tarefas atribuídas e atualiza o andamento da manutenção.
-
--   :material-chart-timeline-variant: **Rastreabilidade**
-
-    Mantém histórico, status e contexto de cada solicitação.
-
-</div>
-
-</section>
-
-<section class="keepunb-section" markdown>
-
-## Acesse a documentação
+## Escopo principal
 
 <div class="grid cards keepunb-doc-grid" markdown>
 
--   :material-book-open-variant: **Documento de Visão**
+-   :material-clipboard-plus-outline: **Registro de chamados**
 
-    Escopo, objetivos, publico-alvo e contexto do produto.
+    O solicitante informa local, categoria e descrição do problema de
+    manutenção.
 
-    [Abrir documento](visao/visao.md)
+-   :material-progress-clock: **Acompanhamento**
 
--   :material-sitemap-outline: **Documento de Arquitetura**
+    O pedido mantém histórico e status para reduzir perda de informações e
+    retrabalho.
 
-    Organização técnica, componentes e decisões estruturais.
+-   :material-account-hard-hat-outline: **Fila técnica**
+
+    Técnicos visualizam chamados atribuídos, iniciam atendimento e atualizam a
+    execução.
+
+-   :material-chart-box-outline: **Gestão operacional**
+
+    Gerentes acompanham volume, prioridades, tempo médio e relatórios de
+    atendimento.
+
+</div>
+
+</section>
+
+<section class="keepunb-section" markdown>
+
+## Perfis de uso
+
+<div class="grid cards keepunb-feature-grid" markdown>
+
+-   :material-account-outline: **Solicitante**
+
+    Comunidade acadêmica que abre chamados, acompanha o andamento e avalia o
+    atendimento ao final do fluxo.
+
+-   :material-account-hard-hat-outline: **Técnico**
+
+    Equipe responsável por consultar chamados atribuídos, executar manutenções
+    e atualizar status.
+
+-   :material-account-tie-outline: **Gerente**
+
+    Supervisão operacional com visão global da fila, delegação de chamados e
+    análise de indicadores.
+
+-   :material-shield-account-outline: **Administrador**
+
+    Gestão técnica de usuários, perfis de acesso e configurações transversais
+    da plataforma.
+
+</div>
+
+</section>
+
+<section class="keepunb-section" markdown>
+
+## Acesse rapidamente
+
+<div class="grid cards keepunb-doc-grid" markdown>
+
+-   :material-play-circle-outline: **Como executar**
+
+    Configure o ambiente local e suba o projeto com Docker Compose.
+
+    [Abrir guia](como-executar/tutorial.md)
+
+-   :material-eye-outline: **Visão do Projeto**
+
+    Entenda objetivos, público, escopo, riscos e indicadores do projeto.
+
+    [Abrir visão](visao/visao.md)
+
+-   :material-sitemap-outline: **Arquitetura**
+
+    Consulte a organização técnica, componentes e decisões estruturais.
 
     [Ver arquitetura](arq/arq.md)
 
 -   :material-database-outline: **Banco de Dados**
 
-    Modelagem inicial e relacionamento entre entidades.
+    Confira a modelagem inicial e os relacionamentos entre entidades.
 
-    [Ver diagrama](banco-de-dados/diagrama-relacionamento-inicial.md)
-
--   :material-source-branch: **Sprint 3**
-
-    Fluxo, permissões, execução local e endpoints do ciclo atual.
-
-    [Ver Sprint 3](sprint3/sprint3.md)
+    [Ver modelagem](banco-de-dados/diagrama-relacionamento-inicial.md)
 
 </div>
 
