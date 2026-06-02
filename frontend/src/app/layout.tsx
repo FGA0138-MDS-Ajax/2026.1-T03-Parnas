@@ -1,14 +1,8 @@
 import type { Metadata } from "next";
-import "../styles/globals.css";
 
 export const metadata: Metadata = {
-  title: "KeepUnB — Sistema de Manutenção",
-  description: "Centralização e automação da gestão de solicitações de manutenção da UnB.",
-  icons: {
-    icon: "/favicon2.png",
-    shortcut: "/favicon2.png",
-    apple: "/favicon2.png",
-  },
+  title: "KeepUnB — Sistema de Manutenção FCTE/UnB",
+  description: "Centralização e automação da gestão de solicitações de manutenção da FCTE/UnB.",
 };
 
 export default function RootLayout({
@@ -18,7 +12,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body>
+      <body style={{ margin: 0, padding: 0, fontFamily: "sans-serif" }}>
         {children}
       </body>
     </html>

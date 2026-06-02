@@ -12,7 +12,6 @@ class TicketStatus(str, enum.Enum):
     EM_ANDAMENTO = "EM_ANDAMENTO"
     CONCLUIDO = "CONCLUIDO"
     CANCELADO = "CANCELADO"
-    NAO_INICIADO = "NAO_INICIADO"
 
 
 class Ticket(Base):

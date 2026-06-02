@@ -1,119 +1,23 @@
-# KeepUnB — Sistema de Gestão de solicitações de manutenção da UnB-FCTE
+# template-repository - Branch Developer
 
-O **KeepUnB** é uma plataforma centralizada e inteligente desenvolvida para otimizar, automatizar e rastrear as solicitações de manutenção corretiva e preventiva na Universidade de Brasília (UnB). 
+Template de Repositório para a matéria de Métodos de Desenvolvimento de Software lecionado pelo professor Ricardo Ajax.
 
-O sistema permite que os solicitantes relatem problemas de infraestrutura, enquanto fornece ferramentas robustas para administradores, gerentes de equipe e técnicos gerenciarem o ciclo de vida de cada chamado.
+Essa Branch deve ser usada exclusivamente para a versão de desenvolvimento do software antes de ir para produção.
 
----
+## Especificações Técnicas do Repositório
 
-## Principais Funcionalidades
+Este repositório é planejado e estruturado para que seja realizado documentações de software. Caso haja outra necessidades, deve-se consultar a professora.
 
-- **Abertura de Chamados** 
-- **Painéis Customizados por Perfil**:
-  - **Solicitante**: Acompanha seus chamados e cria novos relatos de manutenção.
-  - **Técnico**: Acessa a fila de tarefas designadas e atualiza o andamento das ordens de serviço.
-  - **Gerente**: Distribui chamados para equipes técnicas e acompanha o andamento das tarefas em tempo real.
-  - **Admin**: Gerencia o cadastro de usuários e configurações gerais do sistema.
-- **Rastreamento em Tempo Real**: Histórico detalhado de atualizações e comentários em cada chamado.
+Atualmente se usa a ferramenta MkDocs para gerar sua documentação baseado nos seus arquivos markdowns, vocês podem achar mais instruções sobre o MkDocs através do link da documentação da ferramenta: [https://www.mkdocs.org/](https://www.mkdocs.org/).
 
+Também é usado uma "sub-ferramenta" do MkDocs para sua estilização, o Material Theme, que pode ser consultado através do link: [https://squidfunk.github.io/mkdocs-material/](https://squidfunk.github.io/mkdocs-material/).
 
----
+Este repositório também conta com uma pipeline de automatização de deploy do seu conteúdo MkDocs, para que a cada commit feito na main, a pipeline gere uma versão atualizada da sua documentação em minutos. Vale ressaltar que é importante realizar uma configuração para que tudo funcione da forma correta, as instruções são as seguintes:
 
-## Especificações Técnicas
+* Acesse as configurações do repositório;
+* Procure a aba de "Pages"
+* Em "Source" escolha a opção "Deploy from a branch";
+* Em "Branch" escolha "gh-pages";
+* Clique em salvar e pronto;
 
-A arquitetura do KeepUnB é dividida em serviços independentes utilizando tecnologias modernas e de alta performance:
-
-### Frontend
-- **Framework**: [Next.js 14](https://nextjs.org/) (App Router) & [React 18](https://react.dev/)
-- **Linguagem**: [TypeScript](https://www.typescriptlang.org/)
-- **Estilização**: Vanilla CSS (CSS Variables & Design Tokens customizados)
-- **Ambiente de Execução (Runtime)**: [Node.js 20+](https://nodejs.org/)
-
-### Backend
-- **Framework**: [FastAPI](https://fastapi.tiangolo.com/) (Python 3.12+)
-- **ORM**: [SQLAlchemy 2.0](https://www.sqlalchemy.org/) (Assíncrono)
-- **Migrações**: [Alembic](https://alembic.sqlalchemy.org/)
-- **Banco de Dados**: [PostgreSQL 16](https://www.postgresql.org/) (com driver assíncrono [asyncpg](https://github.com/MagicStack/asyncpg))
-- **Validação de Dados**: [Pydantic v2](https://docs.pydantic.dev/)
-
-### Infraestrutura & Devops
-- **Containers**: [Docker](https://www.docker.com/) & [Docker Compose](https://docs.docker.com/compose/)
-
----
-
-## Como Rodar o Projeto Localmente
-
-### Pré-requisitos Básicos
-
-Antes de iniciar, certifique-se de ter instalado em sua máquina:
-
-1. **Git** (para controle de versão)
-2. **Docker & Docker Compose** (para rodar a aplicação localmente)
-3. **Python 3.12+** (para rodar ferramentas de qualidade locais)
-4. **Node.js 20+** (para o frontend)
-
-
-### Passo a Passo de Inicialização
-
-### 1. Clonar o Repositório e Navegar até a Branch Correta
-
-O desenvolvimento principal do projeto ocorre a partir da branch `developer`.
-
-```bash
-# Clone o repositório
-git clone "https://github.com/FGA0138-MDS-Ajax/2026.1-T03-Parnas.git" keep-unb
-cd keep-unb
-
-# Garanta que você está na branch de desenvolvimento
-git checkout developer
-```
-
-### 2. Configurar os Arquivos de Variáveis de Ambiente (`.env`)
-
-Tanto o backend quanto o frontend possuem modelos de configuração (`.env.example`). Você precisa copiá-los e criar as configurações locais:
-
-```bash
-# Configuração do Backend
-cp backend/.env.example backend/.env
-
-# Configuração do Frontend
-cp frontend/.env.example frontend/.env
-```
-
-
-**As configurações padrões contidas nos arquivos `.env.example` já estão preparadas para funcionar imediatamente com o Docker Compose local.**
-
-
-### 3. Subir o Ambiente com Docker Compose
-
-O Docker subirá o banco de dados (PostgreSQL), o backend (FastAPI) e o frontend (Next.js):
-
-```bash
-docker compose up --build
-```
-
-Após o build e a inicialização, você poderá acessar:
-
-- **Frontend (Next.js):** http://localhost:3000
-- **Backend API (FastAPI):** http://localhost:8000
-- **Documentação Automática da API (Swagger UI):** http://localhost:8000/docs
-
-## 📂 Estrutura do Repositório
-
-```text
-keep-unb/
-├── backend/            # Código-fonte do servidor FastAPI
-│   ├── app/            # Módulos principais (core, models, repositories, routers, schemas, services, utils)
-│   ├── migrations/     # Arquivos de migração de banco gerados pelo Alembic
-│   └── tests/          # Testes automatizados do backend com PyTest
-├── frontend/           # Aplicação web em Next.js (TypeScript)
-│   ├── src/
-│   │   ├── app/        # Páginas e rotas da aplicação (App Router)
-│   │   ├── features/   # Componentes e lógica agrupados por funcionalidade (Ex: landing)
-│   │   └── styles/     # Arquivos de estilo globais
-│   └── public/         # Ativos estáticos e logotipos oficiais
-├── docs/               # Guias rápidos de desenvolvimento e relatórios de sprint
-└── docker-compose.yml  # Configuração de containers de desenvolvimento
-```
-
-
+Após essas etapas de configuração, o seu GitPages deve funcionar normalmente.
