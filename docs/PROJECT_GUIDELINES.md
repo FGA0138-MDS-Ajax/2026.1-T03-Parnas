@@ -255,8 +255,6 @@ frontend/
 
 | Item             | Convenção                                         |
 | ---------------- | ------------------------------------------------- |
-| Formatação       | `black` (line-length=88) [Apenas Local / Opcional] |
-| Linting          | `ruff` [Apenas Local / Opcional]                  |
 | Tipagem          | Type hints obrigatórios em funções públicas        |
 | Nomenclatura     | `snake_case` para funções/variáveis, `PascalCase` para classes |
 | Docstrings       | Google Style (obrigatórias em services e routers)  |

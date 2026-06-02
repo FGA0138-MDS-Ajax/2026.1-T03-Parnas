@@ -53,33 +53,7 @@ Após o build e a inicialização, você poderá acessar:
 *   **Backend API (FastAPI):** [http://localhost:8000](http://localhost:8000)
 *   **Documentação Automática da API (Swagger UI):** [http://localhost:8000/docs](http://localhost:8000/docs)
 
----
 
-##  Configurando Ferramentas de Qualidade Locais (Pre-commit)
-
-Para garantir que o código submetido esteja de acordo com as diretrizes do projeto (Black e Ruff), configuramos githooks automáticos. Nenhum commit fora do padrão é aceito.
-
-### Configurando o ambiente Python local:
-```bash
-# 1. Crie um ambiente virtual na raiz do projeto
-python3 -m venv .venv
-
-# 2. Ative o ambiente virtual
-# No Linux/macOS:
-source .venv/bin/activate
-# No Windows (Command Prompt):
-.venv\Scripts\activate.bat
-
-# 3. Instale o pre-commit
-pip install pre-commit
-
-# 4. Registre os githooks no repositório git local
-pre-commit install
-```
-
-Pronto! Agora, toda vez que você executar `git commit`, o **Black** e o **Ruff** verificarão seu código automaticamente antes de concluir a gravação.
-
----
 
 ##  Banco de Dados e Migrações (Alembic)
 
