@@ -1,23 +1,18 @@
-# template-repository - Branch DOCS
+# KeepUnB - Branch de Documentação (`docs`)
 
-Template de Repositório para a matéria de Métodos de Desenvolvimento de Software lecionado pelo professor Ricardo Ajax.
+Esta branch (`docs`) é dedicada exclusivamente à organização, estruturação e publicação da documentação oficial do projeto **KeepUnB** utilizando o **MkDocs** com o tema **Material for MkDocs**.
 
-Essa Branch de desenvolvimento "docs" deve ser mantida somente para fins de documentação, onde já se encontra uma estrutura inicial montada com MKDocs.
+## Sobre esta Branch
 
-## Especificações Técnicas do Repositório
+Nesta branch, você encontrará todos os arquivos markdown (`.md`) e configurações necessárias para gerar o site de documentação do projeto. A estrutura de páginas é configurada por meio do arquivo [mkdocs.yml]
 
-Este repositório é planejado e estruturado para que seja realizado documentações de software. Caso haja outra necessidades, deve-se consultar a professora.
+* **`/docs`**: Contém todos os documentos, atas de reuniões, sprints, diagramas e guias do projeto.
+* **`mkdocs.yml`**: Arquivo de configuração que define o tema, paleta de cores, extensões e o menu de navegação do site de documentação.
 
-Atualmente se usa a ferramenta MkDocs para gerar sua documentação baseado nos seus arquivos markdowns, vocês podem achar mais instruções sobre o MkDocs através do link da documentação da ferramenta: [https://www.mkdocs.org/](https://www.mkdocs.org/).
+---
 
-Também é usado uma "sub-ferramenta" do MkDocs para sua estilização, o Material Theme, que pode ser consultado através do link: [https://squidfunk.github.io/mkdocs-material/](https://squidfunk.github.io/mkdocs-material/).
+## Como Acessar a Documentação Online
 
-Este repositório também conta com uma pipeline de automatização de deploy do seu conteúdo MkDocs, para que a cada commit feito na main, a pipeline gere uma versão atualizada da sua documentação em minutos. Vale ressaltar que é importante realizar uma configuração para que tudo funcione da forma correta, as instruções são as seguintes:
+O site da documentação gerado de forma estática pelo MkDocs é atualizado automaticamente e pode ser acessado publicamente através do link:
 
-* Acesse as configurações do repositório;
-* Procure a aba de "Pages"
-* Em "Source" escolha a opção "Deploy from a branch";
-* Em "Branch" escolha "gh-pages";
-* Clique em salvar e pronto;
-
-Após essas etapas de configuração, o seu GitPages deve funcionar normalmente.
+**[Site de Documentação do KeepUnB](https://fga0138-mds-ajax.github.io/2026.1-T03-Parnas)**
