@@ -191,4 +191,9 @@ Os requisitos do produto foram identificados via técnicas de *brainstorm* inter
 1. BECK, Kent; ANDRES, Cynthia. **Extreme programming explained: embrace change**. 2. ed. Boston: Addison-Wesley, 2004.
 2. WASHIZAKI, Hironori (ed.). **Guide to the software engineering body of knowledge (SWEBOK Guide): version 4.0**. Los Alamitos: IEEE Computer Society, 2024. Disponível em: <https://www.swebok.org>.
 
+---
+
+> [!TIP]
+> Caso prefira, você pode [abrir o Documento de Visão em formato PDF diretamente](./visao_parnas.pdf).
+
 ```
