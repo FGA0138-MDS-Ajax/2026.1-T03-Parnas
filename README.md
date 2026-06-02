@@ -7,6 +7,7 @@ Esta branch (`docs`) é dedicada exclusivamente à organização, estruturação
 Nesta branch, você encontrará todos os arquivos markdown (`.md`) e configurações necessárias para gerar o site de documentação do projeto. A estrutura de páginas é configurada por meio do arquivo [mkdocs.yml]
 
 * **`/docs`**: Contém todos os documentos, atas de reuniões, sprints, diagramas e guias do projeto.
+* **`docs/stylesheets`**: Contém os arquivos CSS para customização e estilização personalizada do site de documentação.
 * **`mkdocs.yml`**: Arquivo de configuração que define o tema, paleta de cores, extensões e o menu de navegação do site de documentação.
 
 ---
