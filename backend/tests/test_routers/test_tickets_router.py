@@ -4,6 +4,7 @@ from fastapi import status
 
 from app.models.ticket import Ticket, TicketStatus
 from app.models.user import User, UserRole
+from app.core.security import create_access_token
 
 @pytest.mark.asyncio
 async def test_create_ticket_router_success(
@@ -84,6 +85,50 @@ async def test_get_open_tickets_router(
     assert res_solic.status_code == status.HTTP_403_FORBIDDEN
 
 @pytest.mark.asyncio
+async def test_get_all_tickets_router_requires_gerente(
+    client: AsyncClient,
+    test_solicitante: User,
+    test_gerente: User,
+    gerente_headers: dict[str, str],
+    solicitante_headers: dict[str, str],
+    create_test_ticket
+):
+    """Garante que apenas gerente liste todos os chamados."""
+    await create_test_ticket("Sala 1", "Ar", "Quebrado", test_solicitante.matricula, status=TicketStatus.ABERTO)
+    await create_test_ticket("Sala 2", "Luz", "Sem luz", test_solicitante.matricula, status=TicketStatus.EM_ANDAMENTO)
+
+    res_unauthenticated = await client.get("/api/v1/tickets")
+    assert res_unauthenticated.status_code == status.HTTP_401_UNAUTHORIZED
+
+    res_solic = await client.get("/api/v1/tickets", headers=solicitante_headers)
+    assert res_solic.status_code == status.HTTP_403_FORBIDDEN
+
+    res_gerente = await client.get("/api/v1/tickets", headers=gerente_headers)
+    assert res_gerente.status_code == status.HTTP_200_OK
+    assert len(res_gerente.json()) == 2
+
+@pytest.mark.asyncio
+async def test_get_in_progress_tickets_router_requires_gerente(
+    client: AsyncClient,
+    test_solicitante: User,
+    test_gerente: User,
+    gerente_headers: dict[str, str],
+    solicitante_headers: dict[str, str],
+    create_test_ticket
+):
+    """Garante que apenas gerente liste chamados atribuidos ou em andamento."""
+    await create_test_ticket("Sala 1", "Ar", "Quebrado", test_solicitante.matricula, status=TicketStatus.ATRIBUIDO)
+    await create_test_ticket("Sala 2", "Luz", "Sem luz", test_solicitante.matricula, status=TicketStatus.EM_ANDAMENTO)
+    await create_test_ticket("Sala 3", "Hidraulica", "Vazamento", test_solicitante.matricula, status=TicketStatus.ABERTO)
+
+    res_solic = await client.get("/api/v1/tickets/in-progress", headers=solicitante_headers)
+    assert res_solic.status_code == status.HTTP_403_FORBIDDEN
+
+    res_gerente = await client.get("/api/v1/tickets/in-progress", headers=gerente_headers)
+    assert res_gerente.status_code == status.HTTP_200_OK
+    assert len(res_gerente.json()) == 2
+
+@pytest.mark.asyncio
 async def test_get_assigned_tickets_router(
     client: AsyncClient,
     test_solicitante: User,
@@ -158,3 +203,32 @@ async def test_update_ticket_status_router(
     
     assert response.status_code == status.HTTP_200_OK
     assert response.json()["status"] == TicketStatus.EM_ANDAMENTO.value
+
+@pytest.mark.asyncio
+async def test_update_ticket_status_router_forbidden_for_other_technician(
+    client: AsyncClient,
+    test_solicitante: User,
+    test_tecnico: User,
+    create_test_user,
+    create_test_ticket
+):
+    """Garante que tecnico nao atualize chamado atribuido a outro tecnico."""
+    ticket = await create_test_ticket(
+        "Sala 1", "Luz", "Queimada", test_solicitante.matricula,
+        tecnico_id=test_tecnico.matricula, status=TicketStatus.ATRIBUIDO
+    )
+    outro_tecnico = await create_test_user(
+        "999999999",
+        "Outro Tecnico",
+        "outro_tecnico@teste.com",
+        role=UserRole.TECNICO,
+        ativo=True,
+    )
+
+    response = await client.patch(
+        f"/api/v1/tickets/{ticket.id}/status",
+        json={"status": "EM_ANDAMENTO"},
+        headers={"Authorization": f"Bearer {create_access_token(subject=outro_tecnico.matricula)}"},
+    )
+
+    assert response.status_code == status.HTTP_403_FORBIDDEN
