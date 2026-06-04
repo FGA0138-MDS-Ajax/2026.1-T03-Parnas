@@ -14,10 +14,6 @@ export default function ListaSolicitacoes() {
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   
-  // Controle do modal de cancelamento
-  const [cancelingTicketId, setCancelingTicketId] = useState<number | null>(null);
-  const [isCanceling, setIsCanceling] = useState(false);
-  const [toastMsg, setToastMsg] = useState('');
 
   const fetchTickets = async () => {
     try {
@@ -67,31 +63,6 @@ export default function ListaSolicitacoes() {
     setExpandedId(expandedId === id ? null : id);
   };
 
-  const handleCancelClick = (e: React.MouseEvent, id: number) => {
-    e.stopPropagation(); // Evita expandir a linha ao clicar no botão
-    setCancelingTicketId(id);
-  };
-
-  const confirmCancel = async () => {
-    if (!cancelingTicketId) return;
-    setIsCanceling(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 600)); // Latência simulada
-      await solicitanteService.cancelarChamado(cancelingTicketId);
-      
-      // Atualiza localmente
-      setTickets(prev => prev.map(t => t.id === cancelingTicketId ? { ...t, status: 'CANCELADO', updated_at: new Date().toISOString() } : t));
-      
-      setToastMsg('Solicitação cancelada com sucesso!');
-      setTimeout(() => setToastMsg(''), 3000);
-    } catch (e: any) {
-      alert(e.message || 'Erro ao cancelar chamado.');
-    } finally {
-      setIsCanceling(false);
-      setCancelingTicketId(null);
-    }
-  };
-
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
       case 'ABERTO': return 'aberto';
@@ -115,11 +86,9 @@ export default function ListaSolicitacoes() {
     }
   };
 
-  // Retorna os dados do técnico fictício/real
+  // Exibe apenas o identificador real recebido da API.
   const getTecnicoNome = (tecnicoId: string | null) => {
     if (!tecnicoId) return 'Aguardando designação';
-    if (tecnicoId === '190012345') return 'Alessandro da Silva';
-    if (tecnicoId === '200054321') return 'Maria Eduarda Ribeiro';
     return `Técnico Matrícula: ${tecnicoId}`;
   };
 
@@ -152,31 +121,6 @@ export default function ListaSolicitacoes() {
 
   return (
     <div style={{ position: 'relative' }}>
-      
-      {/* Toast de Notificação */}
-      {toastMsg && (
-        <div style={{
-          position: 'fixed',
-          top: '20px',
-          right: '20px',
-          background: 'var(--green)',
-          color: 'var(--white)',
-          padding: '1rem 1.5rem',
-          borderRadius: '10px',
-          boxShadow: '0 5px 15px rgba(0,0,0,0.3)',
-          zIndex: 1000,
-          fontFamily: 'Sora',
-          fontSize: '0.9rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          animation: 'fadeIn 0.2s ease forwards'
-        }}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          {toastMsg}
-        </div>
-      )}
-
       {/* Barra de Filtros e Pesquisa */}
       <div className="filter-bar">
         <div className="search-input-wrapper">
@@ -269,12 +213,9 @@ export default function ListaSolicitacoes() {
                       </td>
                       <td style={{ textAlign: 'center' }}>
                         {ticket.status === 'ABERTO' ? (
-                          <button
-                            className="btn-danger-outline"
-                            onClick={(e) => handleCancelClick(e, ticket.id)}
-                          >
-                            Cancelar
-                          </button>
+                          <span style={{ fontSize: '0.8rem', color: 'var(--gray-text)', fontStyle: 'italic' }}>
+                            Sem ação disponível
+                          </span>
                         ) : (
                           <span style={{ fontSize: '0.8rem', color: 'var(--gray-text)', fontStyle: 'italic' }}>Em andamento</span>
                         )}
@@ -366,49 +307,6 @@ export default function ListaSolicitacoes() {
               })}
             </tbody>
           </table>
-        </div>
-      )}
-
-      {/* Modal de Confirmação de Cancelamento */}
-      {cancelingTicketId && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3 style={{ fontFamily: 'Sora', fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.75rem' }}>
-              Confirmar Cancelamento
-            </h3>
-            <p style={{ color: 'var(--gray-text)', fontSize: '0.92rem', lineHeight: 1.6, marginBottom: '1.75rem' }}>
-              Tem certeza que deseja cancelar a solicitação **#{cancelingTicketId}**? Esta ação mudará o status do chamado para cancelado e ele não será mais triado ou encaminhado aos executores.
-            </p>
-            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
-              <button
-                className="btn-secondary"
-                onClick={() => setCancelingTicketId(null)}
-                disabled={isCanceling}
-                style={{ padding: '0.6rem 1.2rem', fontSize: '0.88rem' }}
-              >
-                Voltar
-              </button>
-              <button
-                className="btn-primary"
-                onClick={confirmCancel}
-                disabled={isCanceling}
-                style={{ 
-                  background: 'linear-gradient(135deg, #ff4a4a 0%, #ff6b6b 100%)', 
-                  boxShadow: '0 4px 15px rgba(255, 74, 74, 0.25)',
-                  padding: '0.6rem 1.2rem',
-                  fontSize: '0.88rem'
-                }}
-              >
-                {isCanceling ? (
-                  <>
-                    <div className="spinner" style={{ marginRight: '4px' }} /> Cancelando...
-                  </>
-                ) : (
-                  'Confirmar Cancelamento'
-                )}
-              </button>
-            </div>
-          </div>
         </div>
       )}
 

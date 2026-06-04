@@ -5,6 +5,8 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import '../../features/gerente/components/gerente.css';
+import AuthGuard from '../../features/shared/components/AuthGuard';
+import { authService } from '../../features/shared/services/authService';
 
 export default function GerenteLayout({
   children,
@@ -22,12 +24,13 @@ export default function GerenteLayout({
   }, [pathname]);
 
   useEffect(() => {
-    // Tenta recuperar o nome real do usuário simulado ou real
+    // Tenta recuperar o nome real do usuario autenticado
     if (typeof window !== 'undefined') {
-      const email = localStorage.getItem('keepunb_email') || 'gerente@gmail.com';
-      if (email.includes('gerente')) {
-        setUserName('Carlos Costa');
-      } else {
+      const email = localStorage.getItem('keepunb_email') || '';
+      const nome = localStorage.getItem('keepunb_nome') || '';
+      if (nome) {
+        setUserName(nome);
+      } else if (email) {
         setUserName(email.split('@')[0]);
       }
     }
@@ -36,10 +39,7 @@ export default function GerenteLayout({
   const handleLogout = (e: React.MouseEvent) => {
     e.preventDefault();
     if (confirm('Deseja realmente sair da plataforma KeepUnB?')) {
-      // Limpa dados temporários
-      localStorage.removeItem('keepunb_token');
-      localStorage.removeItem('keepunb_role');
-      // Redireciona para o login
+      authService.logout();
       router.push('/login');
     }
   };
@@ -49,6 +49,7 @@ export default function GerenteLayout({
   };
 
   return (
+    <AuthGuard allowedRoles={['GERENTE']}>
     <div className={`gerente-layout ${isSidebarOpen ? 'sidebar-open' : ''}`}>
       {/* SIDEBAR DO GERENTE */}
       <aside className={`gerente-sidebar ${isSidebarOpen ? 'open' : ''}`}>
@@ -145,5 +146,6 @@ export default function GerenteLayout({
         {children}
       </main>
     </div>
+    </AuthGuard>
   );
 }

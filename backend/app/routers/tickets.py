@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
-from app.core.dependencies import get_current_user, require_role
+from app.core.dependencies import require_role
 from app.models.user import User, UserRole
 from app.schemas.ticket import TicketCreate, TicketResponse, TicketAssign, TicketUpdateStatus
 from app.services.ticket_service import TicketService
@@ -33,6 +33,22 @@ async def get_open_tickets(
     db: AsyncSession = Depends(get_db),
 ):
     return await TicketService.get_open_tickets(db)
+
+
+@router.get("/in-progress", response_model=list[TicketResponse])
+async def get_in_progress_tickets(
+    current_user: User = Depends(require_role([UserRole.GERENTE])),
+    db: AsyncSession = Depends(get_db),
+):
+    return await TicketService.get_in_progress_tickets(db)
+
+
+@router.get("", response_model=list[TicketResponse])
+async def get_all_tickets(
+    current_user: User = Depends(require_role([UserRole.GERENTE])),
+    db: AsyncSession = Depends(get_db),
+):
+    return await TicketService.get_all_tickets(db)
 
 
 @router.get("/assigned-to-me", response_model=list[TicketResponse])

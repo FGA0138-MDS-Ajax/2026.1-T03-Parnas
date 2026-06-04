@@ -5,6 +5,8 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import '../../features/solicitante/components/solicitante.css';
+import AuthGuard from '../../features/shared/components/AuthGuard';
+import { authService } from '../../features/shared/services/authService';
 
 export default function SolicitanteLayout({
   children,
@@ -13,19 +15,20 @@ export default function SolicitanteLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [userName, setUserName] = useState('Gabriel Sousa');
-  const [userMatricula, setUserMatricula] = useState('211043210');
+  const [userName, setUserName] = useState('Solicitante');
+  const [userMatricula, setUserMatricula] = useState('');
 
   useEffect(() => {
     // Tenta carregar informações salvas no localStorage
     if (typeof window !== 'undefined') {
-      const email = localStorage.getItem('keepunb_email') || 'solicitante@gmail.com';
-      const matricula = localStorage.getItem('keepunb_matricula') || '211043210';
+      const email = localStorage.getItem('keepunb_email') || '';
+      const nome = localStorage.getItem('keepunb_nome') || '';
+      const matricula = localStorage.getItem('keepunb_matricula') || '';
       setUserMatricula(matricula);
 
-      if (email.includes('solicitante')) {
-        setUserName('Gabriel Sousa');
-      } else {
+      if (nome) {
+        setUserName(nome);
+      } else if (email) {
         const parsedName = email.split('@')[0];
         setUserName(parsedName.charAt(0).toUpperCase() + parsedName.slice(1));
       }
@@ -35,12 +38,7 @@ export default function SolicitanteLayout({
   const handleLogout = (e: React.MouseEvent) => {
     e.preventDefault();
     if (confirm('Deseja realmente sair da plataforma KeepUnB?')) {
-      // Limpa dados temporários
-      localStorage.removeItem('keepunb_token');
-      localStorage.removeItem('keepunb_role');
-      localStorage.removeItem('keepunb_email');
-      localStorage.removeItem('keepunb_matricula');
-      // Redireciona para o login
+      authService.logout();
       router.push('/login');
     }
   };
@@ -50,6 +48,7 @@ export default function SolicitanteLayout({
   };
 
   return (
+    <AuthGuard allowedRoles={['SOLICITANTE']}>
     <div className="solicitante-layout">
       {/* SIDEBAR DO SOLICITANTE */}
       <aside className="solicitante-sidebar">
@@ -110,5 +109,6 @@ export default function SolicitanteLayout({
         {children}
       </main>
     </div>
+    </AuthGuard>
   );
 }
