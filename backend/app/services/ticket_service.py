@@ -20,6 +20,17 @@ class TicketService:
         return await TicketRepository.get_by_status(db, TicketStatus.ABERTO)
 
     @staticmethod
+    async def get_all_tickets(db: AsyncSession) -> list[Ticket]:
+        return await TicketRepository.get_all(db)
+
+    @staticmethod
+    async def get_in_progress_tickets(db: AsyncSession) -> list[Ticket]:
+        return await TicketRepository.get_by_statuses(
+            db,
+            [TicketStatus.ATRIBUIDO, TicketStatus.EM_ANDAMENTO],
+        )
+
+    @staticmethod
     async def assign_technician(db: AsyncSession, ticket_id: int, tecnico_id: str) -> Ticket:
         ticket = await TicketRepository.get_by_id(db, ticket_id)
         if not ticket:

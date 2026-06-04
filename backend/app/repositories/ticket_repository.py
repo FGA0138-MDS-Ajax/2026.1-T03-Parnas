@@ -30,6 +30,16 @@ class TicketRepository:
         return list(result.scalars().all())
 
     @staticmethod
+    async def get_by_statuses(db: AsyncSession, statuses: list[TicketStatus]) -> list[Ticket]:
+        result = await db.execute(select(Ticket).where(Ticket.status.in_(statuses)))
+        return list(result.scalars().all())
+
+    @staticmethod
+    async def get_all(db: AsyncSession) -> list[Ticket]:
+        result = await db.execute(select(Ticket))
+        return list(result.scalars().all())
+
+    @staticmethod
     async def get_by_id(db: AsyncSession, ticket_id: int) -> Ticket | None:
         result = await db.execute(select(Ticket).where(Ticket.id == ticket_id))
         return result.scalars().first()
