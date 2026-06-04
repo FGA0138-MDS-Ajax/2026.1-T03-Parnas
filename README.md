@@ -98,7 +98,27 @@ Após o build e a inicialização, você poderá acessar:
 - **Backend API (FastAPI):** http://localhost:8000
 - **Documentação Automática da API (Swagger UI):** http://localhost:8000/docs
 
-## 📂 Estrutura do Repositório
+### 4. Popular o Banco com Usuários de Teste (Seed)
+
+Para testar as diferentes funcionalidades e permissões do sistema, execute as migrações de banco e o script para criar os usuários de testes:
+
+```bash
+# Rodar as migrações do banco
+docker compose exec backend alembic upgrade head
+
+# Criar os usuários de teste
+docker compose exec backend python scripts/seed_test_users.py
+```
+
+Você poderá acessar o sistema utilizando as seguintes credenciais:
+* **Senha para todos:** `123`
+* **E-mails por perfil:**
+  * **Solicitante:** `solicitante.teste@unb.br`
+  * **Técnico:** `tecnico.teste@unb.br`
+  * **Gerente:** `gerente.teste@unb.br`
+  * **Administrador:** `admin.teste@unb.br`
+
+##  Estrutura do Repositório
 
 ```text
 keep-unb/
