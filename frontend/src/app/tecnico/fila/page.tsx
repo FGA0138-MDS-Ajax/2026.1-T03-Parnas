@@ -1,83 +1,137 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-import { chamadosAtribuidos } from '../chamados';
+import { tecnicoService } from '../../../features/tecnico/services/tecnicoService';
+import type { Ticket } from '../../../features/tecnico/types';
 
-const resumo = [
-  { label: 'Atribuídos', value: chamadosAtribuidos.length.toString(), tone: 'success' },
-  { label: 'Urgentes', value: chamadosAtribuidos.filter((c) => c.prioridade === 'Urgente').length.toString(), tone: 'danger' },
-  { label: 'Tempo médio', value: '35 min', tone: 'info' },
-];
+const statusLabels: Record<Ticket['status'], string> = {
+  ABERTO: 'Aberto',
+  ATRIBUIDO: 'Atribuido',
+  EM_ANDAMENTO: 'Em andamento',
+  CONCLUIDO: 'Concluido',
+  CANCELADO: 'Cancelado',
+  NAO_INICIADO: 'Nao iniciado',
+};
 
-const prioridadeClasse = (prioridade: string) =>
-  prioridade === 'Urgente' ? 'tecnico-pill tecnico-pill-danger' : 'tecnico-pill tecnico-pill-warning';
+const statusClasse = (status: Ticket['status']) => {
+  if (status === 'EM_ANDAMENTO') return 'tecnico-pill tecnico-pill-info';
+  if (status === 'CONCLUIDO') return 'tecnico-pill tecnico-pill-success';
+  if (status === 'CANCELADO') return 'tecnico-pill tecnico-pill-danger';
+  return 'tecnico-pill tecnico-pill-warning';
+};
 
 export default function FilaChamadosPage() {
+  const [chamados, setChamados] = useState<Ticket[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const loadChamados = async () => {
+      try {
+        setIsLoading(true);
+        setError('');
+        const data = await tecnicoService.getChamadosAtribuidos();
+        setChamados(data);
+      } catch (e) {
+        console.error('Erro ao carregar chamados do tecnico:', e);
+        setError('Nao foi possivel carregar seus chamados atribuidos.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    void loadChamados();
+  }, []);
+
+  const resumo = [
+    { label: 'Atribuidos', value: chamados.length.toString(), tone: 'success' },
+    {
+      label: 'Em andamento',
+      value: chamados.filter((chamado) => chamado.status === 'EM_ANDAMENTO').length.toString(),
+      tone: 'info',
+    },
+    {
+      label: 'Concluidos',
+      value: chamados.filter((chamado) => chamado.status === 'CONCLUIDO').length.toString(),
+      tone: 'success',
+    },
+  ];
+
   return (
     <section className="tecnico-page">
       <div className="tecnico-hero">
         <div>
           <span className="tecnico-kicker">Fila operacional</span>
-          <h1 className="tecnico-title">Meus chamados atribuídos</h1>
+          <h1 className="tecnico-title">Meus chamados atribuidos</h1>
           <p className="tecnico-subtitle">
-            Acompanhe os serviços designados para a sua escala, veja prioridades e abra o detalhe para
-            iniciar ou finalizar o atendimento sem perder o contexto do chamado.
+            Acompanhe os servicos designados para voce, veja o status atual e abra o detalhe para
+            iniciar ou finalizar o atendimento.
           </p>
         </div>
 
         <div className="fila-summary" aria-label="Resumo da fila">
           {resumo.map((item) => (
             <div key={item.label} className={`fila-summary-item is-${item.tone}`}>
-              <strong>{item.value}</strong>
+              <strong>{isLoading ? '...' : item.value}</strong>
               <span>{item.label}</span>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="fila-grid" aria-label="Lista de chamados atribuídos">
-        {chamadosAtribuidos.map((chamado) => (
-          <article className="tecnico-card fila-card" key={chamado.id}>
-            <div className="fila-card-main">
-              <div className="fila-card-topline">
-                <span className="fila-id">{chamado.id}</span>
-                <span className={prioridadeClasse(chamado.prioridade)}>{chamado.prioridade}</span>
+      {error && <p className="tecnico-card fila-empty">{error}</p>}
+
+      {!error && isLoading && <p className="tecnico-card fila-empty">Carregando chamados...</p>}
+
+      {!error && !isLoading && chamados.length === 0 && (
+        <p className="tecnico-card fila-empty">Nenhum chamado atribuido a voce no momento.</p>
+      )}
+
+      {!error && chamados.length > 0 && (
+        <div className="fila-grid" aria-label="Lista de chamados atribuidos">
+          {chamados.map((chamado) => (
+            <article className="tecnico-card fila-card" key={chamado.id}>
+              <div className="fila-card-main">
+                <div className="fila-card-topline">
+                  <span className="fila-id">CH-{String(chamado.id).padStart(3, '0')}</span>
+                  <span className={statusClasse(chamado.status)}>{statusLabels[chamado.status]}</span>
+                </div>
+
+                <h2>{chamado.tipo_manutencao}</h2>
+
+                <dl className="fila-meta">
+                  <div>
+                    <dt>Local</dt>
+                    <dd>{chamado.local}</dd>
+                  </div>
+                  <div>
+                    <dt>Solicitante</dt>
+                    <dd>{chamado.solicitante_id}</dd>
+                  </div>
+                  <div>
+                    <dt>Atualizado em</dt>
+                    <dd>{new Date(chamado.updated_at).toLocaleDateString('pt-BR')}</dd>
+                  </div>
+                </dl>
+
+                <div className="fila-status-row">
+                  <span className={statusClasse(chamado.status)}>{statusLabels[chamado.status]}</span>
+                  <span>{chamado.descricao}</span>
+                </div>
               </div>
 
-              <h2>{chamado.titulo}</h2>
-
-              <dl className="fila-meta">
-                <div>
-                  <dt>Local</dt>
-                  <dd>{chamado.local}</dd>
-                </div>
-                <div>
-                  <dt>Tipo</dt>
-                  <dd>{chamado.tipo}</dd>
-                </div>
-                <div>
-                  <dt>Estimativa</dt>
-                  <dd>{chamado.estimativa}</dd>
-                </div>
-              </dl>
-
-              <div className="fila-status-row">
-                <span className="tecnico-pill tecnico-pill-success">{chamado.status}</span>
-                <span>Pronto para atendimento em campo</span>
-              </div>
-            </div>
-
-            <Link
-              className="tecnico-button fila-action"
-              href={`/tecnico/chamado/${encodeURIComponent(chamado.id)}`}
-            >
-              Ver detalhes
-            </Link>
-          </article>
-        ))}
-      </div>
+              <Link
+                className="tecnico-button fila-action"
+                href={`/tecnico/chamado/${chamado.id}`}
+              >
+                Ver detalhes
+              </Link>
+            </article>
+          ))}
+        </div>
+      )}
 
       <style jsx>{`
         .fila-summary {
@@ -87,7 +141,8 @@ export default function FilaChamadosPage() {
           min-width: min(100%, 27rem);
         }
 
-        .fila-summary-item {
+        .fila-summary-item,
+        .fila-empty {
           padding: 1rem;
           border: 1px solid rgba(13, 43, 94, 0.08);
           border-radius: 20px;
@@ -104,7 +159,8 @@ export default function FilaChamadosPage() {
           color: var(--navy-dark);
         }
 
-        .fila-summary-item span {
+        .fila-summary-item span,
+        .fila-empty {
           display: block;
           margin-top: 0.18rem;
           color: var(--gray-text);
@@ -114,10 +170,6 @@ export default function FilaChamadosPage() {
 
         .fila-summary-item.is-success {
           border-color: rgba(61, 201, 102, 0.32);
-        }
-
-        .fila-summary-item.is-danger {
-          border-color: rgba(248, 113, 113, 0.3);
         }
 
         .fila-summary-item.is-info {
@@ -202,6 +254,10 @@ export default function FilaChamadosPage() {
           margin-top: 1rem;
           color: var(--gray-text);
           font-size: 0.9rem;
+        }
+
+        .fila-status-row span:last-child {
+          flex: 1 1 20rem;
         }
 
         .fila-action {
