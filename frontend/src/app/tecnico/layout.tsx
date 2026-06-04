@@ -1,8 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+
+import AuthGuard from '../../features/shared/components/AuthGuard';
+import { authService } from '../../features/shared/services/authService';
 
 const navItems = [
   { href: '/tecnico/fila', label: 'Fila de chamados', eyebrow: 'Triagem' },
@@ -15,8 +18,29 @@ export default function TecnicoLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const [userName, setUserName] = useState('Técnico');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const nome = localStorage.getItem('keepunb_nome') || '';
+      const email = localStorage.getItem('keepunb_email') || '';
+
+      if (nome) {
+        setUserName(nome);
+      } else if (email) {
+        setUserName(email.split('@')[0]);
+      }
+    }
+  }, []);
+
+  const handleLogout = () => {
+    authService.logout();
+    router.push('/login');
+  };
 
   return (
+    <AuthGuard allowedRoles={['TECNICO']}>
     <div className="tecnico-shell">
       <aside className="tecnico-sidebar">
         <Link href="/tecnico/fila" className="tecnico-brand" aria-label="Ir para a fila de chamados">
@@ -48,15 +72,15 @@ export default function TecnicoLayout({
 
         <div className="tecnico-user-card" aria-label="Perfil do usuário logado">
           <span className="tecnico-user-avatar" aria-hidden="true">
-            CT
+            {userName.substring(0, 2).toUpperCase()}
           </span>
           <span className="tecnico-user-info">
-            <strong>Carlos Técnico</strong>
+            <strong>{userName}</strong>
             <small>Manutenção Predial</small>
           </span>
-          <span className="tecnico-user-exit" aria-hidden="true">
+          <button className="tecnico-user-exit" onClick={handleLogout} type="button" aria-label="Sair">
             →
-          </span>
+          </button>
         </div>
       </aside>
 
@@ -221,8 +245,12 @@ export default function TecnicoLayout({
         }
 
         .tecnico-user-exit {
+          border: 0;
+          background: transparent;
           color: rgba(255, 255, 255, 0.5);
+          cursor: pointer;
           font-family: 'Sora', sans-serif;
+          font-size: 1rem;
           font-weight: 800;
         }
 
@@ -400,5 +428,6 @@ export default function TecnicoLayout({
         }
       `}</style>
     </div>
+    </AuthGuard>
   );
 }
