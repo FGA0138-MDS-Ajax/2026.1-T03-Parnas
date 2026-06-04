@@ -64,6 +64,21 @@ O controle de tabelas no banco de dados é feito de forma versionada via Alembic
 docker compose exec backend alembic upgrade head
 ```
 
+### Popular o banco com dados de teste (Seed):
+Para facilitar o desenvolvimento e testes locais, você pode popular o banco com contas de teste que representam cada um dos perfis do sistema (Solicitante, Técnico, Gerente e Administrador). A senha padrão para todos os usuários criados é `123`.
+
+Perfis e e-mails de teste para login:
+- solicitante.teste@unb.br
+- gerente.teste@unb.br
+- tecnico.teste@unb.br
+- admin.teste@unb.br
+- senha: `123` para todos
+
+Execute o script de seed no container do backend:
+```bash
+docker compose exec backend python scripts/seed_test_users.py
+```
+
 ---
 
 ##  Fluxo de Trabalho (Git Flow)
