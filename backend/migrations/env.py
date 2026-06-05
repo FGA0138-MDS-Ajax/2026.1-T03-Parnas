@@ -28,6 +28,7 @@ config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
 from app.core.database import Base
 from app.models.user import User
 from app.models.ticket import Ticket
+from app.models.ticket_history import TicketHistory
 
 target_metadata = Base.metadata
 

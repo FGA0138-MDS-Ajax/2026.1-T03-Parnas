@@ -48,7 +48,15 @@ O Docker subirá o banco de dados (PostgreSQL), o backend (FastAPI) e o frontend
 docker compose up --build
 ```
 
-Após o build e a inicialização, você poderá acessar:
+Após o build e a inicialização, você poderá acessar dessa forma:
+```bash
+#derruba os containers
+docker compose down
+
+#sobe os containers
+docker compose up
+```
+
 *   **Frontend (Next.js):** [http://localhost:3000](http://localhost:3000)
 *   **Backend API (FastAPI):** [http://localhost:8000](http://localhost:8000)
 *   **Documentação Automática da API (Swagger UI):** [http://localhost:8000/docs](http://localhost:8000/docs)

@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str = "changeme"
     POSTGRES_DB: str = "keepunb_dev"
     DATABASE_URL: str = "postgresql+asyncpg://keepunb:changeme@db:5432/keepunb_dev"
+    TEST_DATABASE_URL: str = "postgresql+asyncpg://keepunb:changeme@db_test:5432/keepunb_test"
     
     SECRET_KEY: str = "changeme-secret-key"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
