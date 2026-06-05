@@ -67,6 +67,7 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
         
         # Executa os deletes em uma transação isolada para limpeza garantida
         async with session.begin():
+            await session.execute(text("DELETE FROM ticket_histories;"))
             await session.execute(text("DELETE FROM tickets;"))
             await session.execute(text("DELETE FROM users;"))
 
