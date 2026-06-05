@@ -25,10 +25,10 @@ from app.models.user import User, UserRole
 from app.models.ticket import Ticket, TicketStatus
 
 
-# Configura o motor assíncrono para o banco de dados sem pooling de conexões
-# para evitar InterfaceError do asyncpg ao transitar entre event loops do pytest.
+# Configura o motor assíncrono para o banco de dados de TESTES (container isolado).
+# Usa NullPool para evitar InterfaceError do asyncpg ao transitar entre event loops do pytest.
 engine = create_async_engine(
-    settings.DATABASE_URL,
+    settings.TEST_DATABASE_URL,
     echo=False,
     future=True,
     poolclass=NullPool

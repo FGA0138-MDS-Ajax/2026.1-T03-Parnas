@@ -1,8 +1,6 @@
 # docker-compose.yml — KeepUnB
 # Orquestração dos serviços: backend, frontend e banco de dados.
 
-version: "3.9"
-
 services:
   db:
     image: postgres:16
@@ -15,6 +13,19 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  db_test:
+    image: postgres:16
+    container_name: keepunb-db-test
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: keepunb
+      POSTGRES_PASSWORD: changeme
+      POSTGRES_DB: keepunb_test
+    volumes:
+      - pgdata_test:/var/lib/postgresql/data
+
   backend:
     build: ./backend
     container_name: keepunb-backend
@@ -23,6 +34,7 @@ services:
       - "8000:8000"
     depends_on:
       - db
+      - db_test
     env_file:
       - ./backend/.env
     volumes:
@@ -44,3 +56,4 @@ services:
 
 volumes:
   pgdata:
+  pgdata_test:
