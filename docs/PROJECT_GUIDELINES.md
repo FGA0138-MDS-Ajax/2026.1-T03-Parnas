@@ -38,18 +38,16 @@ O **KeepUnB** é uma plataforma web para centralizar e automatizar a gestão de 
 
 ## 3. Padrões Arquiteturais
 
-### 3.1 Backend — MVC (Model-View-Controller)
+### 3.1 Backend — Arquitetura em Camadas (Service-Repository)
 
-O backend segue o padrão **MVC adaptado** para FastAPI:
+O backend segue o padrão de **Arquitetura em Camadas (Layered Architecture)** baseado no padrão **Service-Repository**:
 
-- **Model:** Entidades do banco de dados (SQLAlchemy) e schemas de validação (Pydantic).
-- **View (Router):** Definições de endpoints REST — recebe requisições, chama o controller/service e retorna respostas.
-- **Controller (Service):** Lógica de negócio. Orquestra operações entre models e repositórios.
-
-Camadas adicionais:
-- **Repository:** Abstração de acesso a dados (queries ao banco).
-- **Schema:** Objetos Pydantic para request/response (validação e serialização).
-- **Core:** Configurações, segurança, dependências e utilitários transversais.
+- **Routers:** Definições de endpoints REST — recebe requisições, valida permissões/perfis de acesso e delega a execução para a camada de serviços.
+- **Services:** Lógica de negócio da aplicação. Orquestra operações, valida regras corporativas e interage com os repositórios.
+- **Repositories:** Abstração de acesso a dados (queries e comandos no banco de dados via SQLAlchemy).
+- **Models:** Entidades de mapeamento físico com o banco de dados (SQLAlchemy ORM).
+- **Schemas:** Objetos Pydantic para request/response (validação, tipagem estruturada e serialização).
+- **Core:** Configurações globais, segurança (JWT), dependências injetáveis e utilitários transversais.
 
 ### 3.2 Frontend — Feature-Based por Perfil de Usuário
 
@@ -65,7 +63,7 @@ Cada feature é **autocontida**: possui seus componentes, hooks, serviços, tipo
 
 ```
 keep-unb/
-├── backend/                  # Aplicação FastAPI (MVC)
+├── backend/                  # Aplicação FastAPI (Service-Repository)
 ├── frontend/                 # Aplicação Next.js (Feature-Based)
 ├── docker-compose.yml        # Orquestração dos serviços
 ├── .github/                  # Workflows CI/CD
@@ -90,34 +88,34 @@ backend/
 │   │   ├── security.py            # Hash de senhas, JWT, autenticação
 │   │   └── dependencies.py        # Dependências injetáveis (get_db, get_current_user)
 │   │
-│   ├── models/                    # Entidades SQLAlchemy (Model do MVC)
+│   ├── models/                    # Entidades SQLAlchemy (Mapeamento ORM)
 │   │   ├── __init__.py
 │   │   ├── user.py
 │   │   ├── solicitacao.py
 │   │   ├── chamado.py
 │   │   └── categoria.py
 │   │
-│   ├── schemas/                   # Schemas Pydantic (request/response)
+│   ├── schemas/                   # Schemas Pydantic (validação e tipagem)
 │   │   ├── __init__.py
 │   │   ├── user.py
 │   │   ├── solicitacao.py
 │   │   ├── chamado.py
 │   │   └── auth.py
 │   │
-│   ├── repositories/              # Acesso a dados (queries)
+│   ├── repositories/              # Acesso a dados (queries ao banco)
 │   │   ├── __init__.py
 │   │   ├── user_repository.py
 │   │   ├── solicitacao_repository.py
 │   │   └── chamado_repository.py
 │   │
-│   ├── services/                  # Lógica de negócio (Controller do MVC)
+│   ├── services/                  # Lógica de negócio (Regras Corporativas)
 │   │   ├── __init__.py
 │   │   ├── user_service.py
 │   │   ├── solicitacao_service.py
 │   │   ├── chamado_service.py
 │   │   └── auth_service.py
 │   │
-│   ├── routers/                   # Endpoints REST (View do MVC)
+│   ├── routers/                   # Endpoints REST (Controle de Rotas)
 │   │   ├── __init__.py
 │   │   ├── auth.py
 │   │   ├── users.py
@@ -263,9 +261,9 @@ frontend/
 
 **Fluxo de uma requisição no backend:**
 ```
-Router (View) → Service (Controller) → Repository → Model (DB)
-                    ↕
-               Schema (Pydantic)
+Router → Service → Repository → Model (DB)
+             ↕
+     Schema (Pydantic)
 ```
 
 ### 5.3 Frontend (TypeScript/React)
