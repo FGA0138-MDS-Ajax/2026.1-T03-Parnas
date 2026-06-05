@@ -48,6 +48,8 @@ async def test_create_ticket_router_forbidden(
         headers=tecnico_headers
     )
     assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert response.json()["detail"] == "Sem permissão para realizar esta operação"
+    assert response.json()["status_code"] == status.HTTP_403_FORBIDDEN
 
 @pytest.mark.asyncio
 async def test_get_my_tickets_router(
@@ -232,3 +234,51 @@ async def test_update_ticket_status_router_forbidden_for_other_technician(
     )
 
     assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert response.json()["path"] == f"/api/v1/tickets/{ticket.id}/status"
+
+
+@pytest.mark.asyncio
+async def test_create_ticket_validation_error_returns_standard_payload(
+    client: AsyncClient,
+    solicitante_headers: dict[str, str],
+):
+    """Garante que falhas de campos obrigatórios retornem 400 com lista legível."""
+    response = await client.post(
+        "/api/v1/tickets",
+        json={
+            "tipo_manutencao": "Elétrica",
+            "descricao": "Lâmpada queimada",
+        },
+        headers=solicitante_headers,
+    )
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    json_data = response.json()
+    assert json_data["detail"] == "Falha na validação dos dados enviados."
+    assert json_data["status_code"] == status.HTTP_400_BAD_REQUEST
+    assert json_data["path"] == "/api/v1/tickets"
+    assert {
+        "field": "body.local",
+        "message": "Campo obrigatório.",
+        "type": "missing",
+    } in json_data["errors"]
+
+
+@pytest.mark.asyncio
+async def test_assign_ticket_not_found_returns_standard_payload(
+    client: AsyncClient,
+    test_tecnico: User,
+    gerente_headers: dict[str, str],
+):
+    """Garante que chamado inexistente retorne 404 no padrão de erro da API."""
+    response = await client.patch(
+        "/api/v1/tickets/999999/assign",
+        json={"tecnico_id": test_tecnico.matricula},
+        headers=gerente_headers,
+    )
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    json_data = response.json()
+    assert json_data["detail"] == "Chamado não encontrado"
+    assert json_data["status_code"] == status.HTTP_404_NOT_FOUND
+    assert json_data["path"] == "/api/v1/tickets/999999/assign"

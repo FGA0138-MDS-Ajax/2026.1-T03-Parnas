@@ -3,6 +3,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.core.error_handlers import register_error_handlers
+from app.core.openapi import configure_openapi
 from app.routers import auth, users, tickets, technicians
 
 app = FastAPI(
@@ -12,6 +14,8 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
 )
+
+register_error_handlers(app)
 
 # Configuração de CORS
 app.add_middleware(
@@ -26,6 +30,7 @@ app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(tickets.router)
 app.include_router(technicians.router)
+configure_openapi(app)
 
 
 @app.get("/")
