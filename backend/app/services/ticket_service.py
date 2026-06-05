@@ -4,12 +4,18 @@ from app.models.ticket import Ticket, TicketStatus
 from app.models.user import User, UserRole
 from app.repositories.ticket_repository import TicketRepository
 from app.repositories.user_repository import UserRepository
+from app.repositories.ticket_history_repository import TicketHistoryRepository
 from app.schemas.ticket import TicketCreate
 
 class TicketService:
     @staticmethod
+    # Registro do evento de criação do chamado
     async def create_ticket(db: AsyncSession, ticket_in: TicketCreate, user: User) -> Ticket:
-        return await TicketRepository.create(db, ticket_in, user.matricula)
+        ticket = await TicketRepository.create(db, ticket_in, user.matricula)
+        await TicketHistoryRepository.create_entry(
+            db, ticket_id=ticket.id, user_id=user.matricula, action="Chamado criado"
+        )
+        return ticket
 
     @staticmethod
     async def get_user_tickets(db: AsyncSession, user: User) -> list[Ticket]:
@@ -31,21 +37,57 @@ class TicketService:
         )
 
     @staticmethod
-    async def assign_technician(db: AsyncSession, ticket_id: int, tecnico_id: str) -> Ticket:
+    async def assign_technician(db: AsyncSession, ticket_id: int, tecnico_id: str, manager_id: str) -> Ticket:
         ticket = await TicketRepository.get_by_id(db, ticket_id)
         if not ticket:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chamado não encontrado")
         
+        if ticket.status == TicketStatus.CONCLUIDO:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, 
+                detail="Não é possível atribuir técnico a um chamado já concluído"
+            )
+        
         if ticket.status != TicketStatus.ABERTO:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Chamado não está aberto")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, 
+                detail="O chamado precisa estar com o status ABERTO para receber uma atribuição"
+            )
 
         tecnico = await UserRepository.get_by_matricula(db, tecnico_id)
-        if not tecnico or tecnico.role != UserRole.TECNICO or not tecnico.ativo:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Técnico inválido ou inativo")
+        
+        if not tecnico:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, 
+                detail="O técnico informado não existe no sistema"
+            )
+            
+        if tecnico.role != UserRole.TECNICO:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, 
+                detail="O usuário selecionado não possui o perfil de TÉCNICO"
+            )
+            
+        if not tecnico.ativo:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, 
+                detail="O técnico selecionado está inativo no sistema"
+            )
 
         ticket.tecnico_id = tecnico.matricula
         ticket.status = TicketStatus.ATRIBUIDO
-        return await TicketRepository.update(db, ticket)
+        
+        updated_ticket = await TicketRepository.update(db, ticket)
+
+        # Registro do evento de alteração de técnico atribuído e mudança de status
+        await TicketHistoryRepository.create_entry(
+            db, ticket_id=ticket.id, user_id=manager_id, action=f"Técnico atribuído: {tecnico_id}"
+        )
+        await TicketHistoryRepository.create_entry(
+            db, ticket_id=ticket.id, user_id=manager_id, action="Status alterado para: ATRIBUIDO"
+        )
+        
+        return updated_ticket
 
     @staticmethod
     async def get_tickets_by_technician(db: AsyncSession, tecnico_id: str) -> list[Ticket]:
@@ -61,4 +103,25 @@ class TicketService:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Chamado não está atribuído a você")
 
         ticket.status = new_status
-        return await TicketRepository.update(db, ticket)
+        updated_ticket = await TicketRepository.update(db, ticket)
+
+        # Registro do evento de mudança nos status (EM_ANDAMENTO, CONCLUIDO, etc.)
+        await TicketHistoryRepository.create_entry(
+            db, ticket_id=ticket.id, user_id=tecnico_id, action=f"Status alterado para: {new_status.value}"
+        )
+        return updated_ticket
+
+    # Disponibilização do histórico em leitura
+    @staticmethod
+    async def get_ticket_detail_with_history(db: AsyncSession, ticket_id: int) -> dict:
+        ticket = await TicketRepository.get_by_id(db, ticket_id)
+        if not ticket:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chamado não encontrado")
+        
+        history = await TicketHistoryRepository.get_by_ticket_id(db, ticket_id)
+        
+        # Retorna os dados do chamado juntos com o seu histórico (linha do tempo)
+        return {
+            "ticket": ticket,
+            "history": history
+        }

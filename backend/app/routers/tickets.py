@@ -76,7 +76,8 @@ async def assign_ticket(
     current_user: User = Depends(require_role([UserRole.GERENTE])),
     db: AsyncSession = Depends(get_db),
 ):
-    return await TicketService.assign_technician(db, ticket_id, assignment.tecnico_id)
+    # Passar a matrícula do gerente logado (current_user.matricula)
+    return await TicketService.assign_technician(db, ticket_id, assignment.tecnico_id, current_user.matricula)
 
 
 @router.patch("/{ticket_id}/status", response_model=TicketResponse)
@@ -87,3 +88,13 @@ async def update_ticket_status(
     db: AsyncSession = Depends(get_db),
 ):
     return await TicketService.update_ticket_status(db, ticket_id, status_update.status, current_user.matricula)
+
+
+# Retorna o detalhe do chamado agregado com o histórico de alterações
+@router.get("/{ticket_id}", status_code=status.HTTP_200_OK)
+async def get_ticket_detail(
+    ticket_id: int,
+    current_user: User = Depends(require_role([UserRole.SOLICITANTE, UserRole.TECNICO, UserRole.GERENTE])),
+    db: AsyncSession = Depends(get_db),
+):
+    return await TicketService.get_ticket_detail_with_history(db, ticket_id)
