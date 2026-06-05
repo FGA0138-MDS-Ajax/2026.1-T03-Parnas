@@ -4,10 +4,20 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_db
 from app.core.dependencies import require_role
 from app.models.user import User, UserRole
+from app.schemas.error import error_response_docs
 from app.schemas.ticket import TicketCreate, TicketResponse, TicketAssign, TicketUpdateStatus
 from app.services.ticket_service import TicketService
 
-router = APIRouter(prefix="/api/v1/tickets", tags=["tickets"])
+router = APIRouter(
+    prefix="/api/v1/tickets",
+    tags=["tickets"],
+    responses={
+        400: error_response_docs("Dados inválidos ou regra de negócio não atendida."),
+        401: error_response_docs("Token ausente, inválido ou expirado."),
+        403: error_response_docs("Usuário sem permissão para executar a operação."),
+        404: error_response_docs("Chamado não encontrado."),
+    },
+)
 
 
 @router.post("", response_model=TicketResponse, status_code=status.HTTP_201_CREATED)
