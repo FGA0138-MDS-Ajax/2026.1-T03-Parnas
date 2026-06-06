@@ -94,7 +94,7 @@ async def test_assign_technician_ticket_not_open(db_session: AsyncSession, test_
         await TicketService.assign_technician(db_session, ticket.id, test_tecnico.matricula)
         
     assert exc_info.value.status_code == status.HTTP_400_BAD_REQUEST
-    assert exc_info.value.detail == "Chamado não está aberto"
+    assert exc_info.value.detail == "O chamado precisa estar com o status ABERTO para receber uma atribuição"
 
 @pytest.mark.asyncio
 async def test_assign_technician_invalid_technician(db_session: AsyncSession, test_solicitante: User, create_test_user, create_test_ticket):
@@ -106,19 +106,21 @@ async def test_assign_technician_invalid_technician(db_session: AsyncSession, te
     with pytest.raises(HTTPException) as exc_info:
         await TicketService.assign_technician(db_session, ticket.id, tec_inativo.matricula)
     assert exc_info.value.status_code == status.HTTP_400_BAD_REQUEST
-    assert exc_info.value.detail == "Técnico inválido ou inativo"
+    assert exc_info.value.detail == "O técnico selecionado está inativo no sistema"
 
     # 2. Solicitante como técnico (role inválida - matrícula alterada de 222222222 para 888888888)
     solicitante = await create_test_user("888888888", "Novo Solicitante", "solic2@teste.com", role=UserRole.SOLICITANTE, ativo=True)
     with pytest.raises(HTTPException) as exc_info:
         await TicketService.assign_technician(db_session, ticket.id, solicitante.matricula)
     assert exc_info.value.status_code == status.HTTP_400_BAD_REQUEST
+    assert exc_info.value.detail == "O usuário selecionado não possui o perfil de TÉCNICO"
 
 
-    # 3. Técnico inexistente
+    # 3. Técnico inexistente (Agora validando corretamente o 404 da Tarefa 4)
     with pytest.raises(HTTPException) as exc_info:
         await TicketService.assign_technician(db_session, ticket.id, "000000000")
-    assert exc_info.value.status_code == status.HTTP_400_BAD_REQUEST
+    assert exc_info.value.status_code == status.HTTP_404_NOT_FOUND
+    assert exc_info.value.detail == "O técnico informado não existe no sistema"
 
 @pytest.mark.asyncio
 async def test_get_tickets_by_technician_service(db_session: AsyncSession, test_solicitante: User, test_tecnico: User, create_test_ticket):
