@@ -86,3 +86,17 @@ A Sprint 0 foi importante para entender o problema, definir o escopo inicial do 
 A partir do estudo de caso, a equipe identificou que o principal desafio era a falta de padronização e centralização no processo de manutenção. Como resposta, foi proposta uma solução web capaz de organizar os chamados, separar responsabilidades por perfil e permitir o acompanhamento das solicitações de forma mais clara.
 
 Assim, o KeepUnB surge como uma ferramenta voltada para melhorar a gestão de manutenção no ambiente universitário, oferecendo mais controle, transparência e eficiência ao processo.
+
+## 7. Ata de reunião
+
+**Data:** 09/04/2026  
+**Horário:** 14:00 - 15:20  
+**Local:** FCTE - S10  
+**Participantes:** @felipemso, @arthur-mariani, @carloshfgit, @CharlesRuan-MAP, @Dandot1.  
+
+**Objetivo:**   
+Realizar uma análise inicial do tema do projeto e discuti-lo entre os membros, com o intuito de levantar ideias e posicionamentos.
+
+**Discussões e Decisões:**       
+- Foi decidido que os membros deveriam realizar um estudo sobre o tema e pensar em possíveis funcionalidades.  
+- A comunicação via WhatsApp foi estabelecida e todos foram adicionados no grupo da equipe.

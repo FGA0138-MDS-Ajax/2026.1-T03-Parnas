@@ -208,3 +208,18 @@ Nessa etapa, a equipe definiu como o KeepUnB seria construído, quais ferramenta
 A elaboração do Documento de Arquitetura foi fundamental para registrar essas decisões e orientar o desenvolvimento do projeto, garantindo maior padronização, clareza e organização para a equipe.
 
 Dessa forma, a Sprint 2 consolidou a base técnica necessária para que o KeepUnB pudesse avançar para a implementação de suas funcionalidades principais.
+
+## 9. Ata de reunião
+
+**Data:** 05/05/2026    
+**Horário:** 14:00 - 16:00  
+**Local:** FCTE - S10   
+**Participantes:** @felipemso, @arthur-mariani, @carloshfgit, @vellloso, @caioNapoles, @Danielfelipe08, @prietum, @RodrigoCBarbosa. 
+
+**Objetivo:**   
+Realizar a delegação de tarefas para a produção do documento de arquitetura, estipular stack/ferramentas a serem utilizadas e realizar estudo de métodos e estruturas de software.
+
+**Discussões e Decisões:**       
+- Foram decididas as responsabilidades em relação à produção do documento de arquitetura.  
+- Foram definidos conceitos-base do sistema e visões de uso.  
+- Optou-se por seguir inicialmente uma arquitetura _Clean-Arc_ para o backend e _Feature-Based_ para o frontend.  

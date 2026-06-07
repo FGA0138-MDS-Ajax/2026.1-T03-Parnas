@@ -108,3 +108,20 @@ Nessa etapa, a equipe definiu o que o sistema seria, quais problemas ele deveria
 Além disso, a elaboração do Documento de Visão ajudou a formalizar essas decisões e a criar uma referência para o desenvolvimento das próximas sprints.
 
 Dessa forma, a Sprint 1 contribuiu diretamente para o alinhamento da equipe e para a consolidação do KeepUnB como uma solução voltada à organização, controle e acompanhamento de chamados de manutenção no ambiente universitário.
+
+## 8. Ata de reunião
+
+**Data:** 27/04/2026  
+**Horário:** 15:00 - 16:00  
+**Local:** Discord   
+**Participantes:** @felipemso, @arthur-mariani, @carloshfgit. 
+
+**Objetivo:**   
+Realizar a delegação de tarefas para a produção do documento de visão, estipular escopo e realizar estudo do cenário em que a proposta se enquadra.
+
+**Discussões e Decisões:**       
+- Foram decididas as responsabilidades em relação à produção do documento de visão.  
+- As informações adquiridas a partir do estudo de cenário foram sintetizadas e devidamente registradas.  
+- Foi definido um comportamento inicial esperado e funcionalidades básicas que o sistema proposto deverá conter.  
+- Foi decidido o nome para o software: KeepUnB.  
+- Papéis iniciais para os membros em relação a produção foram definidos.
