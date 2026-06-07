@@ -31,3 +31,86 @@ body {
   color: var(--white);
   overflow-x: hidden;
 }
+
+/* Estilos para páginas de erro */
+.error-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+  padding: 1rem;
+}
+
+.error-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  max-width: 24rem;
+  width: 100%;
+}
+
+.error-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 1rem;
+}
+
+.error-message {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.1rem;
+  color: var(--green-light);
+  margin-bottom: 0.5rem;
+}
+
+.error-description {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  color: var(--gray-text);
+  margin-bottom: 2rem;
+}
+
+.error-button {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: var(--green);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 0.25rem;
+}
+
+.error-button:hover {
+  background: var(--green-mid);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(27, 122, 58, 0.3);
+}
+
+.error-button.secondary {
+  background: var(--navy);
+}
+
+.error-button.secondary:hover {
+  background: var(--navy-mid);
+  box-shadow: 0 4px 12px rgba(26, 63, 122, 0.3);
+}
+
+.error-status-code {
+  font-family: 'Sora', sans-serif;
+  font-size: 5rem;
+  font-weight: 800;
+  color: var(--navy-light);
+  line-height: 1;
+  margin-bottom: 1rem;
+}

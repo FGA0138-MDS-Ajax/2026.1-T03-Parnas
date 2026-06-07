@@ -15,6 +15,7 @@ interface AuthGuardProps {
 export default function AuthGuard({ allowedRoles, children }: AuthGuardProps) {
   const router = useRouter();
   const [isAllowed, setIsAllowed] = useState(false);
+  const [loading, setLoading] = useState(true);
   const allowedRolesKey = allowedRoles.join('|');
 
   useEffect(() => {
@@ -24,7 +25,9 @@ export default function AuthGuard({ allowedRoles, children }: AuthGuardProps) {
       const token = getStoredToken();
 
       if (!token) {
-        router.replace('/login');
+        if (active) {
+          router.replace('/login');
+        }
         return;
       }
 
@@ -33,16 +36,39 @@ export default function AuthGuard({ allowedRoles, children }: AuthGuardProps) {
         saveAuthUser(user);
 
         if (!allowedRolesKey.split('|').includes(user.role)) {
-          router.replace(getDefaultRouteForRole(user.role));
+          if (active) {
+            // Redirect to default route for the user's role instead of showing error
+            router.replace(getDefaultRouteForRole(user.role));
+          }
           return;
         }
 
         if (active) {
           setIsAllowed(true);
+          setLoading(false);
         }
-      } catch {
-        authService.logout();
-        router.replace('/login');
+      } catch (error: any) {
+        // Check if it's an API error with status code
+        if (error.status === 401) {
+          authService.logout();
+          if (active) {
+            router.replace('/login');
+          }
+        } else if (error.status === 403) {
+          if (active) {
+            router.replace('/forbidden');
+          }
+        } else {
+          // For other errors, redirect to login
+          authService.logout();
+          if (active) {
+            router.replace('/login');
+          }
+        }
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
       }
     };
 
@@ -52,6 +78,14 @@ export default function AuthGuard({ allowedRoles, children }: AuthGuardProps) {
       active = false;
     };
   }, [allowedRolesKey, router]);
+
+  if (loading) {
+    return (
+      <div className="error-container">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#1B7A3A]"></div>
+      </div>
+    );
+  }
 
   if (!isAllowed) {
     return null;

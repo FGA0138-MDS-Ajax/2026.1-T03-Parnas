@@ -36,6 +36,20 @@ export async function apiRequest<T>(
     headers,
   });
 
+  // Handle different status codes specifically
+  if (response.status === 401) {
+    // Clear auth session and redirect to login
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('keepunb_token');
+      localStorage.removeItem('keepunb_role');
+      localStorage.removeItem('keepunb_email');
+      localStorage.removeItem('keepunb_matricula');
+      localStorage.removeItem('keepunb_nome');
+      window.location.href = '/login';
+    }
+    throw new ApiError('Acesso não autorizado. Faça login novamente.', 401);
+  }
+
   const data = await response.json().catch(() => null);
 
   if (!response.ok) {
