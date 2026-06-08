@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image'; // Adicionado para usar <Image /> em vez de <img>
 import './landing.css';
 
 export default function Hero() {
