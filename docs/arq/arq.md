@@ -1,5 +1,8 @@
 # Documento de Arquitetura de Software
 
+!!! success "Observação"
+    Caso prefira, você pode [abrir o Documento de Arquitetura em formato PDF diretamente](./arq_parnas.pdf), ou  [baixar versão no formato ._docx_](./arq_parnas.docx).
+
 ## 1 INTRODUÇÃO
 
 ### 1.1 Propósito
@@ -13,7 +16,7 @@ O detalhamento do escopo se encontra no documento de Visão do produto e do proj
 ## 2 REPRESENTAÇÃO ARQUITETURAL
 
 ### 2.1 Definições
-O sistema KeepUnB seguirá um modelo de arquitetura híbrido, combinando diferentes estilos arquiteturais para atender às necessidades específicas do backend e do frontend. No backend, será adotada a arquitetura MVC (Model-View-Controller) em conjunto com o framework FastAPI. Essa arquitetura organiza o sistema em três camadas, onde o Model representa os dados e entidades, o Controller concentra as regras de negócio e o View define os contratos de entrada e saída da API.
+No backend, será adotada uma Arquitetura em Camadas (Layered Architecture) baseada no padrão Service-Repository, em conjunto com o framework FastAPI. Essa arquitetura organiza o sistema em camadas de responsabilidade bem delimitadas, sendo elas: Routers (pontos de entrada/rotas HTTP), Services (lógica de negócio), Repositories (acesso a dados), Models (entidades ORM do banco de dados) e Schemas (validação e serialização de dados via Pydantic).
 
 Dessa forma, elementos como entidades, casos de uso, adaptadores e frameworks possuem responsabilidades bem definidas. No frontend, será adotada uma arquitetura feature-based, também conhecida como organização orientada a funcionalidades. Essa abordagem estrutura o código com base nos principais módulos funcionais do sistema, como autenticação, gestão de solicitações, acompanhamento de chamados, painel de indicadores e gestão de usuários.
 
@@ -22,25 +25,30 @@ A comunicação entre frontend e backend ocorrerá por meio de API RESTful, util
 ### 2.2 Motivação
 A escolha de um modelo arquitetural híbrido para o KeepUnB se justifica pela necessidade de organizar o sistema de forma modular, testável e de fácil manutenção. Como o projeto será uma aplicação web composta por frontend, backend e banco de dados, a separação de responsabilidades contribui para reduzir o acoplamento entre as partes e facilitar a evolução do sistema ao longo das sprints.
 
-No backend, a adoção do padrão MVC permite organizar o código de forma clara e familiar para a equipe, separando responsabilidades entre dados (Model), lógica de negócio (Controller) e serialização de respostas (View). Isso facilita o desenvolvimento incremental, a manutenção e a realização de testes automatizados, contribuindo para atingir a meta de qualidade definida no projeto, que prevê cobertura mínima de 80% de testes automatizados para novas funcionalidades.
+No backend, a adoção do padrão Service-Repository permite organizar o código de forma clara e familiar para a equipe, separando as responsabilidades de acesso a dados (Repositories), regras corporativas (Services), validação de payload (Schemas) e rotas HTTP (Routers). Isso facilita o desenvolvimento incremental, a manutenção e a realização de testes automatizados, contribuindo para atingir a meta de qualidade definida no projeto, que prevê cobertura mínima de 80% de testes automatizados para novas funcionalidades (BECK; ANDRES, 2004).
 
 Além disso, essa arquitetura favorece a manutenção do código, pois cada camada possui responsabilidade bem delimitada, reduzindo o impacto de mudanças em uma parte sobre as demais.
 
-Portanto, a combinação entre MVC no backend e Feature-based Architecture no frontend atende às necessidades do KeepUnB, pois favorece testes, organização, manutenção, desenvolvimento incremental e separação clara de responsabilidades.
+Portanto, a combinação entre a Arquitetura em Camadas (Service-Repository) no backend e Feature-based Architecture no frontend atende às necessidades do KeepUnB, pois favorece testes, organização, manutenção, desenvolvimento incremental e separação clara de responsabilidades.
 
 ### 2.3 Detalhamento
 A arquitetura do KeepUnB será organizada em dois blocos principais:
 * **Frontend**, desenvolvido em Next.js/React e estruturado por funcionalidades.
-* **Backend**, desenvolvido com FastAPI/Python seguindo o padrão MVC.
+* **Backend**, desenvolvido com FastAPI/Python seguindo o padrão Service-Repository.
 
 A comunicação entre os dois blocos ocorrerá por meio de uma API RESTful, utilizando protocolo HTTPS e dados no formato JSON. No frontend, a organização será baseada em módulos de funcionalidades. Cada módulo concentrará seus próprios componentes visuais, serviços de comunicação com a API e lógica específicas da interface.
 
-No backend, a estrutura será dividida em três camadas. O Model representa as entidades do sistema: Usuário, Solicitação, Chamado e Técnico. Mapeadas diretamente para o banco de dados via ORM. O Controller concentra as regras de negócio, como abrir uma solicitação, atribuir um chamado, atualizar o status e gerar indicadores de desempenho. O View define os contratos de entrada e saída da API, garantindo a validação e serialização dos dados trafegados. As rotas HTTP ficam em um módulo separado de routers, responsável por direcionar cada requisição ao controller correspondente.
+No backend, a estrutura está dividida em cinco camadas principais:
+* **Routers:** Módulo responsável pelas rotas HTTP e endpoints da API, interceptando requisições, aplicando políticas de autorização de perfis e retornando as respostas.
+* **Services:** Concentra a lógica de negócio e as orquestrações de fluxo de trabalho (como validação de transição de status e atribuição de técnicos).
+* **Repositories:** Responsável exclusivo pelas operações de consulta, inserção e atualização no banco de dados através do ORM.
+* **Models:** Representa as entidades físicas do banco de dados mapeadas pelo ORM (SQLAlchemy).
+* **Schemas:** Define os modelos Pydantic de entrada e saída da API, realizando a validação de formato e a serialização dos dados trafegados.
 
 Por fim, a camada de frameworks e Drivers reúne os elements externos, como FastAPI, rotas HTTP, PostgreSQL e configurações de infraestrutura. O banco de dados PostgreSQL será responsável por armazenar os dados do sistema, como usuários, perfis, chamados, status, categorias e histórico de atualizações. O frontend não acessará o banco diretamente; toda comunicação será feita por meio do backend, garantindo maior controle, segurança e organização das regras de negócio.
 
 ### 2.4 Metas e Restrições Arquiteturais
-O projeto deverá aderir aos padrões REST para a interface cliente-servidor, feature-based para os componentes de software e MVC para a estrutura e dependências do backend. A escolha se justifica pois o padrão RESTful é simples, escalável e rápido; o feature-based permite que múltiplas partes sejam desenvolvidas simultaneamente; e o MVC organiza o backend em camadas de responsabilidade clara e testável.
+O projeto deverá aderir aos padrões REST para a interface cliente-servidor, feature-based para os componentes de software e a uma Arquitetura em Camadas (Service-Repository) para a estrutura do backend. A escolha se justifica pois o padrão RESTful é simples, escalável e rápido; o feature-based permite que múltiplas partes sejam desenvolvidas simultaneamente; e a Arquitetura em Camadas organiza o backend em responsabilidades isoladas e testáveis.
 
 Além disso, as partes do projeto desenvolvidas em Python deverão empregar *type hinting* nas declarações de função e documentar seus comportamentos e casos de uso. Isso garante que qualquer desenvolvedor ou editor de código possa inferir o uso de qualquer função importante.
 
@@ -99,7 +107,7 @@ SHARED --> API
 %% =========================
 %% BACKEND MVC
 %% =========================
-subgraph BACKEND["«package» Backend<br/>FastAPI / Python — MVC Adaptado"]
+subgraph BACKEND["«package» Backend<br/>FastAPI / Python — Service-Repository"]
 ROUTERS["View / Routers<br/><small>Endpoints REST<br/>auth.py<br/>users.py<br/>solicitacoes.py<br/>chamados.py</small>"]
 
 SERVICES["Controller / Services<br/><small>Lógica de negócio<br/>auth_service.py<br/>user_service.py<br/>solicitacao_service.py<br/>chamado_service.py</small>"]
@@ -167,12 +175,13 @@ O sistema é composto por três elementos principais: o Frontend, o Backend e o 
 
 ###### Backend (API e Lógica de Negócios):
 *   **Tecnologias:** Desenvolvido em Python utilizando o framework FastAPI.
-*   **Estrutura:** Estruturado com base no padrão MVC.
+*   **Estrutura:** Estruturado sob uma Arquitetura em Camadas com padrão Service-Repository.
 *   **Responsabilidades:** Divididas entre camadas:
-    *   **Model:** Representa as entidades do domínio mapeadas via ORM, Usuário, Solicitação, Chamado e Técnico, sem lógica de negócio embutida.
-    *   **Controller:** Concentra as regras de negócio, orquestrando operações como abrir solicitação, atribuir chamado, atualizar status e gerar indicadores de desempenho.
-    *   **View:** Schemas Pydantic que definem o formato das requisições e respostas da API, garantindo a validação e serialização dos dados.
-    *   **Routers:** Módulo que mapeia as rotas HTTP aos controllers correspondentes, sem lógica embutida.
+    *   **Routers:** Definição dos endpoints RESTful do sistema. Recebe a chamada HTTP, valida credenciais de sessão e delega a computação para a camada de Service correspondente.
+    *   **Services:** Onde reside a lógica de negócio do sistema. Recebe dados validados, aplica regras corporativas e gerencia o fluxo de chamadas aos repositórios.
+    *   **Repositories:** Camada responsável pela interação com o banco de dados via SQLAlchemy. Executa comandos SQL e gerencia a transação de persistência.
+    *   **Models:** Mapeamento de tabelas físicas do banco de dados para classes Python usando SQLAlchemy.
+    *   **Schemas:** Modelos Pydantic para declaração dos contratos das APIs (corpo de requisição e resposta).
 
 ###### Banco de Dados (Persistência):
 *   **Tecnologias:** Sistema de Gerenciamento de Banco de Dados PostgreSQL.
@@ -181,7 +190,7 @@ O sistema é composto por três elementos principais: o Frontend, o Backend e o 
 ##### Conexões e Fluxo de Comunicação
 Os elementos do sistema se conectam por meio de fronteiras e protocolos bem definidos para garantir a segurança e o baixo acoplamento:
 *   **Frontend &rarr; Backend:** A comunicação ocorre exclusivamente através de uma API RESTful. O frontend realiza requisições seguindo o protocolo HTTPS e enviando/recebendo cargas de dados no formato JSON.
-*   **Backend &rarr; Banco de Dados:** O acesso aos dados é restrito ao backend, sendo intermediado pela camada de repositórios e drivers de conexão. O frontend não possui qualquer rota de acesso direto ao PostgreSQL, garantindo que toda operação passe obrigatoriamente pela validação dos casos de uso. O fluxo estrutural de comunicação segue uma ordem estrita: o usuário interage com a interface visual no frontend; este dispara uma requisição JSON para a API RESTful; o backend recebe a requisição, processa a lógica de negócio através da Clean Architecture, consulta ou modifica o estado no PostgreSQL e, por fim, devolve uma resposta JSON para o frontend atualizar a interface.
+*   **Backend &rarr; Banco de Dados:** O acesso aos dados é restrito ao backend, sendo intermediado pela camada de repositórios e drivers de conexão. O frontend não possui qualquer rota de acesso direto ao PostgreSQL, garantindo que toda operação passe obrigatoriamente pela validação dos casos de uso. O fluxo estrutural de comunicação segue uma ordem estrita: o usuário interage com a interface visual no frontend; este dispara uma requisição JSON para a API RESTful; o backend recebe a requisição, processa a lógica de negócio através da camada de Services e persiste os dados por meio de Repositories, consulta ou modifica o estado no PostgreSQL e, por fim, devolve uma resposta JSON para o frontend atualizar a interface.
 
 ###### Diagrama de Componentes
 ```mermaid
@@ -313,5 +322,4 @@ Para garantir o isolamento entre os quatro perfis de usuário, o sistema adota o
 
 ---
 
-!!! tip
-    Caso prefira, você pode [abrir o Documento de Arquitetura em formato PDF diretamente](./arq_parnas.pdf), ou  [baixar versão no formato ._docx_](./arq_parnas.docx).
+
