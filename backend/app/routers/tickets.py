@@ -97,4 +97,4 @@ async def get_ticket_detail(
     current_user: User = Depends(require_role([UserRole.SOLICITANTE, UserRole.TECNICO, UserRole.GERENTE])),
     db: AsyncSession = Depends(get_db),
 ):
-    return await TicketService.get_ticket_detail_with_history(db, ticket_id)
+    return await TicketService.get_ticket_detail_with_history(db, ticket_id, current_user)
