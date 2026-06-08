@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import './landing.css';
 
 export default function Hero() {
@@ -16,7 +17,7 @@ export default function Hero() {
       <div className="hero-visual">
         <div className="hero-card">
           <div className="card-icon-wrap">
-            <img src="/keep-unb-half.png" alt="KeepUnB Logo" className="card-logo-img" />
+            <Image src="/keep-unb-half.png" alt="KeepUnB Logo" width={80} height={80} className="card-logo-img" />
           </div>
           <h2 className="card-title">Abra seu chamado</h2>
           
@@ -39,26 +40,3 @@ export default function Hero() {
               </div>
               <select className="form-select" defaultValue="">
                 <option value="" disabled>Tipo de problema</option>
-                <option value="eletrica">Elétrica</option>
-                <option value="hidraulica">Hidráulica</option>
-                <option value="estrutura">Estrutura</option>
-              </select>
-              <div className="select-chevron">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
-              </div>
-            </div>
-
-            <Link href="/login" className="btn-card-submit">
-              Continuar
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: '8px' }}>
-                <path d="M9 18l6-6-6-6" />
-              </svg>
-            </Link>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
