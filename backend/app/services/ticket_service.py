@@ -125,9 +125,6 @@ class TicketService:
         if not ticket:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chamado não encontrado")
         
-        if user.role == UserRole.SOLICITANTE and ticket.solicitante_id != user.matricula:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Você não tem permissão para acessar este chamado")
-        
         if user.role == UserRole.TECNICO and ticket.tecnico_id != user.matricula:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Você não tem permissão para acessar este chamado")
         
