@@ -188,4 +188,4 @@ Os requisitos do produto foram identificados via técnicas de *brainstorm* inter
 ---
 
 !!! tip
-    Caso prefira, você pode [abrir o Documento de Visão em formato PDF diretamente](./visao_parnas.pdf).
+    Caso prefira, você pode [abrir o Documento de Visão em formato PDF diretamente](./visao_parnas.pdf), ou [baixar versão no formato _.docx_](./visao_parnas.docx).

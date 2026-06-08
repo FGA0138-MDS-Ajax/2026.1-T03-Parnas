@@ -314,4 +314,4 @@ Para garantir o isolamento entre os quatro perfis de usuário, o sistema adota o
 ---
 
 !!! tip
-    Caso prefira, você pode [abrir o Documento de Arquitetura em formato PDF diretamente](./Doc_arquitetura_parnas.pdf).
+    Caso prefira, você pode [abrir o Documento de Arquitetura em formato PDF diretamente](./arq_parnas.pdf), ou  [baixar versão no formato ._docx_](./arq_parnas.docx).

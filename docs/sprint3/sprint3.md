@@ -3,7 +3,7 @@
 Este documento reúne o fluxo principal do sistema e as permissões dos perfis
 definidos para a Sprint 3 do KeepUnB.
 
-## Fluxo principal do sistema
+## 1. Fluxo principal do sistema
 
 ### Objetivo do fluxo
 
@@ -118,7 +118,7 @@ Técnico conclui manutenção
 Status: Concluído / Finalizado
 ```
 
-## Permissões dos perfis
+## 2. Permissões dos perfis
 
 ### Objetivo
 
@@ -193,3 +193,18 @@ sistema.
 Algumas permissões descritas representam funcionalidades planejadas no
 documento de visão e podem ser implementadas de forma incremental ao longo das
 próximas sprints.
+
+## 3. Ata de reunião
+
+**Data:** 21/05/2026    
+**Horário:** 20:00 - 21:00  
+**Local:** Discord  
+**Participantes:** @felipemso, @arthur-mariani, @carloshfgit, @vellloso, @caioNapoles, @Danielfelipe08, @prietum, @RodrigoCBarbosa, @arthurrcoelho, @Dandot1, @Guilhermesouza21, @CharlesRuan-MAP.
+
+**Objetivo:**   
+Discutir sobre a sprint 3, realizar análises em relação à sprint anterior e definir/delegar tasks aos seus respectivos responsáveis.
+
+**Discussões e Decisões:**       
+- Houve mudanças na comunicação via Whatsapp, foi criada uma comunidade, dividida em frontend, backend e database, centralizada por um grupo geral.  
+- Foi apresentado o modelo de produção em equipe via GitHub.  
+- Foram definidas políticas de issues, branches e commits.
