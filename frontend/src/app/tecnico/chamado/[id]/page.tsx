@@ -1,57 +1,145 @@
 'use client';
 
-import { notFound, useParams, useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
-import { buscarChamadoPorId, type StatusChamado } from '../../chamados';
+import { tecnicoService } from '../../../../features/tecnico/services/tecnicoService';
+import type { TechnicianUpdateStatus, Ticket } from '../../../../features/tecnico/types';
 
-const statusLabels: Record<StatusChamado, string> = {
-  ATRIBUIDO: 'Atribuído',
+const statusLabels: Record<Ticket['status'], string> = {
+  ABERTO: 'Aberto',
+  ATRIBUIDO: 'Atribuido',
   EM_ANDAMENTO: 'Em andamento',
-  CONCLUIDO: 'Concluído',
+  CONCLUIDO: 'Concluido',
+  CANCELADO: 'Cancelado',
+  NAO_INICIADO: 'Nao iniciado',
 };
 
-const statusClasse = (status: StatusChamado) => {
+const statusClasse = (status: Ticket['status']) => {
   if (status === 'EM_ANDAMENTO') return 'tecnico-pill tecnico-pill-info';
   if (status === 'CONCLUIDO') return 'tecnico-pill tecnico-pill-success';
+  if (status === 'CANCELADO') return 'tecnico-pill tecnico-pill-danger';
   return 'tecnico-pill tecnico-pill-warning';
 };
 
 export default function DetalheChamadoTecnicoPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
-  const chamado = buscarChamadoPorId(params.id);
+  const ticketId = Number(params.id);
+  const [chamado, setChamado] = useState<Ticket | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [error, setError] = useState('');
+  const [notFoundMessage, setNotFoundMessage] = useState('');
 
-  if (!chamado) {
-    notFound();
+  useEffect(() => {
+    const loadChamado = async () => {
+      if (!Number.isInteger(ticketId) || ticketId <= 0) {
+        setChamado(null);
+        setNotFoundMessage('Chamado invalido.');
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        setError('');
+        setNotFoundMessage('');
+        const data = await tecnicoService.getChamadoAtribuido(ticketId);
+
+        if (!data) {
+          setChamado(null);
+          setNotFoundMessage('Chamado nao encontrado ou nao atribuido a voce.');
+          return;
+        }
+
+        setChamado(data);
+      } catch (e) {
+        console.error('Erro ao carregar chamado do tecnico:', e);
+        setChamado(null);
+        setError('Nao foi possivel carregar este chamado.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    void loadChamado();
+  }, [ticketId]);
+
+  const updateStatus = async (status: TechnicianUpdateStatus) => {
+    if (!chamado) return;
+
+    try {
+      setIsUpdating(true);
+      setError('');
+      const updated = await tecnicoService.atualizarStatus(chamado.id, status);
+      setChamado(updated);
+    } catch (e) {
+      console.error('Erro ao atualizar status do chamado:', e);
+      setError('Nao foi possivel atualizar o status deste chamado.');
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  if (isLoading) {
+    return <p className="tecnico-card chamado-feedback">Carregando chamado...</p>;
   }
 
-  const [statusAtual, setStatusAtual] = useState<StatusChamado>(chamado.status);
-  const statusLabel = statusLabels[statusAtual];
+  if (notFoundMessage || !chamado) {
+    return (
+      <section className="tecnico-page">
+        <div className="tecnico-card chamado-empty-state">
+          <span className="tecnico-kicker">Chamado indisponivel</span>
+          <h1 className="tecnico-title">Nao foi possivel abrir este chamado</h1>
+          <p className="tecnico-subtitle">
+            {notFoundMessage || 'Este chamado nao esta disponivel para o seu perfil tecnico.'}
+          </p>
 
-  const handleIniciarAtendimento = () => {
-    setStatusAtual('EM_ANDAMENTO');
-  };
+          <button
+            className="tecnico-button"
+            onClick={() => router.push('/tecnico/fila')}
+            type="button"
+          >
+            Retornar a fila
+          </button>
+        </div>
 
-  const handleConcluirAtendimento = () => {
-    setStatusAtual('CONCLUIDO');
-  };
+        <style jsx>{`
+          .chamado-empty-state {
+            display: grid;
+            gap: 1rem;
+            max-width: 42rem;
+            padding: clamp(1.25rem, 3vw, 2rem);
+          }
+
+          .chamado-empty-state .tecnico-button {
+            justify-self: start;
+          }
+        `}</style>
+      </section>
+    );
+  }
+
+  const statusLabel = statusLabels[chamado.status];
 
   return (
     <section className="tecnico-page">
+      {error && <p className="tecnico-card chamado-feedback">{error}</p>}
+
       <div className="tecnico-hero chamado-hero">
         <div>
           <span className="tecnico-kicker">Detalhe do chamado</span>
-          <h1 className="tecnico-title">{chamado.titulo}</h1>
+          <h1 className="tecnico-title">{chamado.tipo_manutencao}</h1>
           <p className="tecnico-subtitle">
             Visualize os dados principais do chamado e atualize o andamento do atendimento conforme a
-            execução em campo.
+            execucao em campo.
           </p>
         </div>
 
         <aside className="tecnico-card chamado-status-card" aria-label="Status atual do chamado">
-          <span className="chamado-id">{chamado.id}</span>
-          <span className={statusClasse(statusAtual)}>{statusLabel}</span>
+          <span className="chamado-id">CH-{String(chamado.id).padStart(3, '0')}</span>
+          <span className={statusClasse(chamado.status)}>{statusLabel}</span>
         </aside>
       </div>
 
@@ -70,43 +158,43 @@ export default function DetalheChamadoTecnicoPage() {
               <dd>{chamado.local}</dd>
             </div>
             <div>
-              <dt>Tipo de manutenção</dt>
-              <dd>{chamado.tipo}</dd>
+              <dt>Tipo de manutencao</dt>
+              <dd>{chamado.tipo_manutencao}</dd>
             </div>
             <div>
               <dt>Status atual</dt>
               <dd>
-                <span className={statusClasse(statusAtual)}>{statusLabel}</span>
+                <span className={statusClasse(chamado.status)}>{statusLabel}</span>
               </dd>
             </div>
             <div>
-              <dt>Estimativa</dt>
-              <dd>{chamado.estimativa}</dd>
+              <dt>Solicitante</dt>
+              <dd>{chamado.solicitante_id}</dd>
             </div>
           </dl>
 
           <div className="chamado-description">
-            <span>Descrição do problema</span>
+            <span>Descricao do problema</span>
             <p>{chamado.descricao}</p>
           </div>
         </article>
 
         <aside className="tecnico-card chamado-actions">
           <div>
-            <span className="chamado-section-kicker">Atualização</span>
+            <span className="chamado-section-kicker">Atualizacao</span>
             <h2>Andamento do atendimento</h2>
             <p>
-              Altere o status para registrar o início do atendimento ou marcar o chamado como concluído.
+              Altere o status para registrar o inicio do atendimento ou marcar o chamado como concluido.
             </p>
           </div>
 
           <div className="chamado-progress" aria-label={`Progresso atual: ${statusLabel}`}>
-            {(['ATRIBUIDO', 'EM_ANDAMENTO', 'CONCLUIDO'] as StatusChamado[]).map((status) => (
+            {(['ATRIBUIDO', 'EM_ANDAMENTO', 'CONCLUIDO'] as Ticket['status'][]).map((status) => (
               <span
                 key={status}
-                className={`chamado-progress-step${statusAtual === status ? ' is-current' : ''}${
-                  statusAtual === 'CONCLUIDO' ||
-                  (statusAtual === 'EM_ANDAMENTO' && status === 'ATRIBUIDO')
+                className={`chamado-progress-step${chamado.status === status ? ' is-current' : ''}${
+                  chamado.status === 'CONCLUIDO' ||
+                  (chamado.status === 'EM_ANDAMENTO' && status === 'ATRIBUIDO')
                     ? ' is-complete'
                     : ''
                 }`}
@@ -119,8 +207,8 @@ export default function DetalheChamadoTecnicoPage() {
           <div className="chamado-button-row">
             <button
               className="tecnico-button tecnico-button-secondary"
-              disabled={statusAtual !== 'ATRIBUIDO'}
-              onClick={handleIniciarAtendimento}
+              disabled={isUpdating || chamado.status !== 'ATRIBUIDO'}
+              onClick={() => updateStatus('EM_ANDAMENTO')}
               type="button"
             >
               Iniciar atendimento
@@ -128,8 +216,8 @@ export default function DetalheChamadoTecnicoPage() {
 
             <button
               className="tecnico-button"
-              disabled={statusAtual === 'CONCLUIDO'}
-              onClick={handleConcluirAtendimento}
+              disabled={isUpdating || chamado.status === 'CONCLUIDO'}
+              onClick={() => updateStatus('CONCLUIDO')}
               type="button"
             >
               Concluir atendimento
@@ -140,13 +228,18 @@ export default function DetalheChamadoTecnicoPage() {
               onClick={() => router.push('/tecnico/fila')}
               type="button"
             >
-              Retornar à fila
+              Retornar a fila
             </button>
           </div>
         </aside>
       </div>
 
       <style jsx>{`
+        .chamado-feedback {
+          padding: 1rem;
+          color: var(--gray-text);
+        }
+
         .chamado-hero {
           align-items: end;
         }

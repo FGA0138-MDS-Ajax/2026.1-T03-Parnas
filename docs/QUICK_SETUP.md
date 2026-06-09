@@ -48,7 +48,15 @@ O Docker subirá o banco de dados (PostgreSQL), o backend (FastAPI) e o frontend
 docker compose up --build
 ```
 
-Após o build e a inicialização, você poderá acessar:
+Após o build e a inicialização, você poderá acessar dessa forma:
+```bash
+#derruba os containers
+docker compose down
+
+#sobe os containers
+docker compose up
+```
+
 *   **Frontend (Next.js):** [http://localhost:3000](http://localhost:3000)
 *   **Backend API (FastAPI):** [http://localhost:8000](http://localhost:8000)
 *   **Documentação Automática da API (Swagger UI):** [http://localhost:8000/docs](http://localhost:8000/docs)
@@ -62,6 +70,21 @@ O controle de tabelas no banco de dados é feito de forma versionada via Alembic
 ### Rodar as migrações existentes:
 ```bash
 docker compose exec backend alembic upgrade head
+```
+
+### Popular o banco com dados de teste (Seed):
+Para facilitar o desenvolvimento e testes locais, você pode popular o banco com contas de teste que representam cada um dos perfis do sistema (Solicitante, Técnico, Gerente e Administrador). A senha padrão para todos os usuários criados é `123`.
+
+Perfis e e-mails de teste para login:
+- solicitante.teste@unb.br
+- gerente.teste@unb.br
+- tecnico.teste@unb.br
+- admin.teste@unb.br
+- senha: `123` para todos
+
+Execute o script de seed no container do backend:
+```bash
+docker compose exec backend python scripts/seed_test_users.py
 ```
 
 ---

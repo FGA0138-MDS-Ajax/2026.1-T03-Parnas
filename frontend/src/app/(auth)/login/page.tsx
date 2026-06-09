@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import './login.css';
+import { ApiError } from '../../../features/shared/services/apiClient';
+import { authService, getDefaultRouteForRole } from '../../../features/shared/services/authService';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -11,30 +13,24 @@ export default function LoginPage() {
   const [erro, setErro] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [lembrarMe, setLembrarMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Simulação de Banco de Dados (MOCK) para os 4 perfis da KeepUNB
-  const USUARIOS_MOCK = [
-    { email: 'admin@gmail.com', senha: '123', perfil: 'admin', rota: '/admin/usuarios' },
-    { email: 'solicitante@gmail.com', senha: '123', perfil: 'solicitante', rota: '/solicitante' },
-    { email: 'tecnico@gmail.com', senha: '123', perfil: 'tecnico', rota: '/tecnico/fila' },
-    { email: 'gerente@gmail.com', senha: '123', perfil: 'gerente', rota: '/gerente/painel' },
-  ];
-
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErro('');
+    setIsLoading(true);
 
-    // Validação simples do Mock
-    const usuarioValido = USUARIOS_MOCK.find(
-      (user) => user.email === email && user.senha === senha
-    );
-
-    if (usuarioValido) {
-      alert(`Login simulado com sucesso como: ${usuarioValido.perfil}`);
-      // Direciona para a home correta conforme o perfil
-      router.push(usuarioValido.rota);
-    } else {
-      setErro('Usuário ou senha inválidos.');
+    try {
+      const user = await authService.login({ email, senha });
+      router.push(getDefaultRouteForRole(user.role));
+    } catch (error) {
+      if (error instanceof ApiError) {
+        setErro(error.message);
+      } else {
+        setErro('Nao foi possivel entrar. Verifique se a API esta disponivel.');
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -56,7 +52,7 @@ export default function LoginPage() {
             </div>
             <input
               id="email"
-              type="text"
+              type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -85,7 +81,7 @@ export default function LoginPage() {
               type="button"
               className="input-icon-right"
               onClick={() => setShowPassword(!showPassword)}
-              aria-label={showPassword ? "Esconder senha" : "Mostrar senha"}
+              aria-label={showPassword ? 'Esconder senha' : 'Mostrar senha'}
             >
               {showPassword ? (
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -113,8 +109,8 @@ export default function LoginPage() {
             <a href="#forgot" className="forgot-password">Esqueci minha senha</a>
           </div>
 
-          <button type="submit" className="btn-login-submit">
-            Entrar
+          <button type="submit" className="btn-login-submit" disabled={isLoading}>
+            {isLoading ? 'Entrando...' : 'Entrar'}
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: '8px' }}>
               <line x1="5" y1="12" x2="19" y2="12" />
               <polyline points="12 5 19 12 12 19" />

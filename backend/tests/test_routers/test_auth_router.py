@@ -1,9 +1,8 @@
 import pytest
 from httpx import AsyncClient
-from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import status
 
-from app.models.user import User, UserRole
+from app.models.user import UserRole
 
 @pytest.mark.asyncio
 async def test_login_success(client: AsyncClient, create_test_user):
@@ -46,3 +45,22 @@ async def test_login_invalid_credentials(client: AsyncClient, create_test_user):
     
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
     assert response.json()["detail"] == "Email ou senha incorretos"
+    assert response.json()["status_code"] == status.HTTP_401_UNAUTHORIZED
+    assert response.json()["path"] == "/api/v1/auth/login"
+
+
+@pytest.mark.asyncio
+async def test_login_validation_error_returns_standard_payload(client: AsyncClient):
+    """Garante que campos obrigatórios ausentes retornem 400 com falhas explícitas."""
+    response = await client.post("/api/v1/auth/login", json={"email": "joao@unb.br"})
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    json_data = response.json()
+    assert json_data["detail"] == "Falha na validação dos dados enviados."
+    assert json_data["status_code"] == status.HTTP_400_BAD_REQUEST
+    assert json_data["path"] == "/api/v1/auth/login"
+    assert {
+        "field": "body.senha",
+        "message": "Campo obrigatório.",
+        "type": "missing",
+    } in json_data["errors"]

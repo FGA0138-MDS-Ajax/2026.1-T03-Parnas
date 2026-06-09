@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "../styles/globals.css";
+import ErrorBoundary from "@/features/shared/components/ErrorBoundary";
 
 export const metadata: Metadata = {
   title: "KeepUnB — Sistema de Manutenção",
@@ -18,8 +19,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body>
-        {children}
+      <body className="bg-gradient-to-br from-[#071A3E] to-[#0D2B5E] min-h-screen">
+        <ErrorBoundary>
+          {children}
+        </ErrorBoundary>
       </body>
     </html>
   );

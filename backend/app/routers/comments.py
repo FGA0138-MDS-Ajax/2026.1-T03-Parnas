@@ -14,6 +14,7 @@ from app.schemas.ticket import TicketCreate, TicketResponse, TicketAssign, Ticke
 from app.services.ticket_service import TicketService
 
 from app.schemas.comment import CommentCreate, CommentResponse, CommentUpdate
+from app.services.comment_service import CommentService
 
 router = APIRouter(prefix="/api/v1/comments", tags=["comments"])
 
@@ -22,8 +23,8 @@ router = APIRouter(prefix="/api/v1/comments", tags=["comments"])
 @router.post("", response_model=CommentResponse, status_code=status.HTTP_201_CREATED)
 async def create_comment(
     ticket_in: CommentCreate,
+    ticket_id: int,
     current_user: User=Depends(require_role([UserRole.SOLICITANTE])),
-    ticket_id: int
     db: AsyncSession=Depends(get_db),
 ):
     return await CommentService.create_comment(db, ticket_in, current_user, ticket_id)
@@ -43,8 +44,8 @@ async def get_my_comments(
 #   Retorna os comentários de um usuário qualquer, por ID.
 @router.get("/user", response_model=list[CommentResponse])
 async def get_user_comments(
-    current_user: User=Depends(require_role([UserRole.SOLICITANTE])),
     target_user_id: str,
+    current_user: User=Depends(require_role([UserRole.SOLICITANTE])),
     db: AsyncSession=Depends(get_db),
 ):
 
@@ -55,8 +56,8 @@ async def get_user_comments(
 #   Retorna os comentários sob um ticket qualquer, por ID.
 @router.get("/ticket", response_model=list[CommentResponse])
 async def get_ticket_comments(
-    current_user: User=Depends(require_role([UserRole.SOLICITANTE])),
     ticket_id: int,
+    current_user: User=Depends(require_role([UserRole.SOLICITANTE])),
     db: AsyncSession=Depends(get_db),
 ):
     return await CommentService.get_ticket_comments(db, ticket_id)

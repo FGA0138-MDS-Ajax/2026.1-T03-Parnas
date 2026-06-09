@@ -1,12 +1,19 @@
 from datetime import datetime
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, Field, ValidationInfo
 from typing import Optional
 from app.models.ticket import TicketStatus
 
 class TicketBase(BaseModel):
-    local: str
-    tipo_manutencao: str
+    local: str = Field(..., max_length=200)
+    tipo_manutencao: str = Field(..., max_length=100)
     descricao: str
+
+    @field_validator("local", "tipo_manutencao", "descricao")
+    @classmethod
+    def check_not_empty(cls, v: str, info: ValidationInfo) -> str:
+        if not v or not v.strip():
+            raise ValueError(f"O campo '{info.field_name}' não pode estar vazio.")
+        return v.strip()
 
 class TicketCreate(TicketBase):
     pass

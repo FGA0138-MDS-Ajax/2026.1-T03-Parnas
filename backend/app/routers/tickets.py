@@ -2,12 +2,22 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
-from app.core.dependencies import get_current_user, require_role
+from app.core.dependencies import require_role
 from app.models.user import User, UserRole
+from app.schemas.error import error_response_docs
 from app.schemas.ticket import TicketCreate, TicketResponse, TicketAssign, TicketUpdateStatus
 from app.services.ticket_service import TicketService
 
-router = APIRouter(prefix="/api/v1/tickets", tags=["tickets"])
+router = APIRouter(
+    prefix="/api/v1/tickets",
+    tags=["tickets"],
+    responses={
+        400: error_response_docs("Dados inválidos ou regra de negócio não atendida."),
+        401: error_response_docs("Token ausente, inválido ou expirado."),
+        403: error_response_docs("Usuário sem permissão para executar a operação."),
+        404: error_response_docs("Chamado não encontrado."),
+    },
+)
 
 
 @router.post("", response_model=TicketResponse, status_code=status.HTTP_201_CREATED)
@@ -35,6 +45,22 @@ async def get_open_tickets(
     return await TicketService.get_open_tickets(db)
 
 
+@router.get("/in-progress", response_model=list[TicketResponse])
+async def get_in_progress_tickets(
+    current_user: User = Depends(require_role([UserRole.GERENTE])),
+    db: AsyncSession = Depends(get_db),
+):
+    return await TicketService.get_in_progress_tickets(db)
+
+
+@router.get("", response_model=list[TicketResponse])
+async def get_all_tickets(
+    current_user: User = Depends(require_role([UserRole.GERENTE])),
+    db: AsyncSession = Depends(get_db),
+):
+    return await TicketService.get_all_tickets(db)
+
+
 @router.get("/assigned-to-me", response_model=list[TicketResponse])
 async def get_assigned_tickets(
     current_user: User = Depends(require_role([UserRole.TECNICO])),
@@ -50,7 +76,8 @@ async def assign_ticket(
     current_user: User = Depends(require_role([UserRole.GERENTE])),
     db: AsyncSession = Depends(get_db),
 ):
-    return await TicketService.assign_technician(db, ticket_id, assignment.tecnico_id)
+    # Passar a matrícula do gerente logado (current_user.matricula)
+    return await TicketService.assign_technician(db, ticket_id, assignment.tecnico_id, current_user.matricula)
 
 
 @router.patch("/{ticket_id}/status", response_model=TicketResponse)
@@ -61,3 +88,13 @@ async def update_ticket_status(
     db: AsyncSession = Depends(get_db),
 ):
     return await TicketService.update_ticket_status(db, ticket_id, status_update.status, current_user.matricula)
+
+
+# Retorna o detalhe do chamado agregado com o histórico de alterações
+@router.get("/{ticket_id}", status_code=status.HTTP_200_OK)
+async def get_ticket_detail(
+    ticket_id: int,
+    current_user: User = Depends(require_role([UserRole.SOLICITANTE, UserRole.TECNICO, UserRole.GERENTE])),
+    db: AsyncSession = Depends(get_db),
+):
+    return await TicketService.get_ticket_detail_with_history(db, ticket_id, current_user)

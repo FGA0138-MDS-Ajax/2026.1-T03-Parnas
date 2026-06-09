@@ -3,8 +3,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.user import User, UserRole
 
 class UserRepository:
-    # Pietro
-    #   Precisaria de um método 'create'?
+    @staticmethod
+    async def create(db: AsyncSession, user: User) -> User:
+        db.add(user)
+        await db.commit()
+        await db.refresh(user)
+        return user
 
     @staticmethod
     async def get_by_email(db: AsyncSession, email: str) -> User | None:

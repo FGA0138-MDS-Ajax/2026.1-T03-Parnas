@@ -33,8 +33,20 @@ erDiagram
         TIMESTAMP updated_at "Data da última alteração"
     }
 
+    ticket_histories {
+        INTEGER id PK "ID sequencial autoincrementado"
+        INTEGER ticket_id FK "FK apontando para tickets.id"
+        VARCHAR(9) user_id FK "FK apontando para users.matricula"
+        VARCHAR(100) action "Ação realizada no chamado"
+        ticketstatus previous_status "Status anterior do chamado (Nullable)"
+        ticketstatus new_status "Novo status do chamado (Nullable)"
+        TIMESTAMP created_at "Data e hora do registro"
+    }
+
     users ||--o{ tickets : "solicita (solicitante_id)"
     users ||--o{ tickets : "executa (tecnico_id)"
+    tickets ||--o{ ticket_histories : "possui (ticket_id)"
+    users ||--o{ ticket_histories : "registra (user_id)"
 ```
 
 ---
@@ -79,6 +91,26 @@ Centraliza as solicitações de manutenção de infraestrutura abertas pela comu
 > As chaves estrangeiras (`FK`) nesta tabela seguem rigidamente a convenção do projeto de serem explicitamente nomeadas no banco de dados como:
 > - **`fk_tickets_solicitante_users`** apontando para `users.matricula`.
 > - **`fk_tickets_tecnico_users`** apontando para `users.matricula`.
+
+---
+
+### 2.3 Tabela `ticket_histories`
+Armazena o registro histórico de todas as alterações e ações críticas realizadas sobre os chamados do sistema (logs de auditoria).
+
+| Nome da Coluna | Tipo de Dado | Restrições | Padrão (Default) | Descrição |
+| :--- | :--- | :--- | :--- | :--- |
+| **`id`** | `INTEGER` | `PRIMARY KEY`, `INDEX`, `AUTOINCREMENT` | *Nenhum* | ID autoincrementado gerado sequencialmente pelo PostgreSQL para identificação única do log de histórico. |
+| **`ticket_id`** | `INTEGER` | `FOREIGN KEY` (`tickets.id`), `NOT NULL` | *Nenhum* | ID do chamado associado à alteração registrada. |
+| **`user_id`** | `VARCHAR(9)` | `FOREIGN KEY` (`users.matricula`), `NOT NULL` | *Nenhum* | Matrícula do usuário responsável por executar a ação que gerou o log. |
+| **`action`** | `VARCHAR(100)` | `NOT NULL` | *Nenhum* | Texto descritivo da ação realizada (ex: "Chamado criado", "Técnico atribuído"). |
+| **`previous_status`** | `ticketstatus` (ENUM) | `NULLABLE` | `NULL` | Status anterior do chamado, caso a ação tenha provocado mudança de estado. |
+| **`new_status`** | `ticketstatus` (ENUM) | `NULLABLE` | `NULL` | Novo status do chamado, caso a ação tenha provocado mudança de estado. |
+| **`created_at`** | `TIMESTAMP WITH TIME ZONE` | `NOT NULL` | `now()` | Registro de data e hora em que a ação de histórico foi registrada. |
+
+> [!IMPORTANT]
+> As chaves estrangeiras (`FK`) nesta tabela seguem rigidamente a convenção do projeto de serem explicitamente nomeadas no banco de dados como:
+> - **`fk_ticket_histories_tickets`** apontando para `tickets.id`.
+> - **`fk_ticket_histories_users`** apontando para `users.matricula`.
 
 ---
 
