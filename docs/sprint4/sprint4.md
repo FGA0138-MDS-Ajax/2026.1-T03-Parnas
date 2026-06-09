@@ -122,3 +122,21 @@ A Sprint 4 foi uma etapa fundamental para o KeepUnB, pois teve como foco transfo
 Com o desenvolvimento do MVP, a equipe conseguiu concentrar esforços nas funcionalidades essenciais do sistema, garantindo que o fluxo principal de abertura, atribuição e acompanhamento de chamados pudesse ser demonstrado.
 
 Dessa forma, a Sprint 4 representa a consolidação inicial do KeepUnB como produto, entregando uma base funcional que poderá ser aprimorada nas próximas etapas do projeto.
+
+
+## 4. Ata de reunião 
+
+**Data:** 04/06/2026    
+**Horário:** 20:00 - 21:00  
+**Local:** Discord  
+**Participantes:** @felipemso, @carloshfgit, @vellloso, @caioNapoles, @Danielfelipe08, @prietum,  @arthurrcoelho, @Dandot1, @Guilhermesouza21, @CharlesRuan-MAP.
+
+**Objetivo:**   
+Discutir sobre a sprint 4, realizar análises em relação à sprint anterior, alinhar responsabilidades da equipe, discutir melhorias no fluxo de trabalho e esclarecer dúvidas relacionadas ao desenvolvimento do projeto.
+
+**Discussões e Decisões:**       
+- Foi discutida a baixa participação de alguns membros nas atividades do projeto reforçando a importância do comprometimento da equipe.  
+- Foi apresentada a proposta de criação de um gráfico Burndown para acompanhamento do progresso da sprint.  
+- Foram realizadas atualizações sobre a configuração e execução do ambiente de desenvolvimento.  
+- Foram esclarecidas dúvidas dos integrantes relacionadas ao ambiente e às atividades em andamento.  
+- Houve distribuição de tarefas entre os membros da equipe.  
