@@ -30,6 +30,35 @@ async def test_create_ticket_router_success(
     assert json_data["local"] == "Sala de Aula Darcy Ribeiro - Prédio do SG"
     assert json_data["solicitante_id"] == test_solicitante.matricula
     assert json_data["status"] == TicketStatus.ABERTO.value
+    assert json_data["photo_path"] is None
+
+
+@pytest.mark.asyncio
+async def test_create_ticket_router_with_photo_path_success(
+    client: AsyncClient,
+    test_solicitante: User,
+    solicitante_headers: dict[str, str]
+):
+    """Garante que a criação de chamado via rota HTTP por um solicitante funciona quando photo_path é enviado."""
+    response = await client.post(
+        "/api/v1/tickets",
+        json={
+            "local": "Sala de Aula Darcy Ribeiro - Prédio do SG",
+            "tipo_manutencao": "Instalações Elétricas",
+            "descricao": "Luzes piscando na sala de aula.",
+            "photo_path": "uploads/images/luzes_sg.jpg"
+        },
+        headers=solicitante_headers
+    )
+    
+    assert response.status_code == status.HTTP_201_CREATED
+    json_data = response.json()
+    assert json_data["id"] is not None
+    assert json_data["local"] == "Sala de Aula Darcy Ribeiro - Prédio do SG"
+    assert json_data["solicitante_id"] == test_solicitante.matricula
+    assert json_data["status"] == TicketStatus.ABERTO.value
+    assert json_data["photo_path"] == "uploads/images/luzes_sg.jpg"
+
 
 @pytest.mark.asyncio
 async def test_create_ticket_router_forbidden(
