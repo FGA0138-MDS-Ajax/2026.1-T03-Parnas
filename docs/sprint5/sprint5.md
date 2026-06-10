@@ -18,13 +18,13 @@ Outro ponto central da sprint é o fortalecimento da documentação técnica no 
 A Sprint 5 tem como objetivo refinar o MVP do KeepUnB, corrigindo problemas de segurança, melhorando a visualização dos chamados, adicionando foto na criação de chamados, padronizando o visual entre páginas, detalhando a documentação técnica no MkDocs e implementando o cadastro por perfil. O cadastro público será permitido apenas para solicitantes e técnicos. Solicitantes terão acesso liberado após o cadastro, enquanto técnicos precisarão de aprovação de um gerente. Usuários com perfil de gerente serão inseridos no sistema pelo administrador.
 
 
-# 3.Regra de Visualização de Chamados para Solicitantes
+## 3.Regra de Visualização de Chamados para Solicitantes
 
-## Objetivo
+#### Objetivo
 
 Permitir que usuários com perfil de solicitante acompanhem seus próprios chamados e também visualizem chamados em aberto criados por outros usuários, respeitando as regras de privacidade e proteção de dados.
 
-## Chamados criados por mim
+#### Chamados criados por mim
 
 O solicitante pode visualizar todos os chamados criados por ele, independentemente do status.
 
@@ -39,13 +39,13 @@ Para esses chamados, todas as informações relacionadas ao registro podem ser e
 * Histórico de movimentações;
 * Dados do próprio solicitante.
 
-## Chamados em aberto criados por outras pessoas
+#### Chamados em aberto criados por outras pessoas
 
 O solicitante também pode visualizar chamados que estejam com status de aberto e que tenham sido criados por outros usuários.
 
 O objetivo dessa visualização é permitir o acompanhamento das demandas já registradas, evitando solicitações duplicadas para o mesmo problema.
 
-### Dados que podem ser exibidos
+#### Dados que podem ser exibidos
 
 Para chamados criados por terceiros, podem ser exibidas apenas informações necessárias para identificação da demanda:
 
@@ -56,7 +56,7 @@ Para chamados criados por terceiros, podem ser exibidas apenas informações nec
 * Status;
 * Data de abertura.
 
-### Dados que devem permanecer ocultos
+#### Dados que devem permanecer ocultos
 
 Não devem ser exibidos dados que permitam identificar ou acessar informações do solicitante original, incluindo:
 
@@ -68,7 +68,7 @@ Não devem ser exibidos dados que permitam identificar ou acessar informações 
 * Anexos privados;
 * Qualquer outra informação considerada sensível ou pessoal.
 
-## Regras Gerais
+#### Regras Gerais
 
 * O solicitante visualiza integralmente apenas os chamados criados por ele.
 * Chamados criados por terceiros devem respeitar as regras de anonimização e privacidade.
@@ -78,7 +78,7 @@ Não devem ser exibidos dados que permitam identificar ou acessar informações 
 
 
 
-# 4.Regras de Controle de Acesso
+## 4.Regras de Controle de Acesso
 
 O sistema deve aplicar controle de acesso baseado em perfis tanto no frontend quanto no backend.
 
@@ -120,25 +120,25 @@ Exemplos:
 * Técnico tentando executar ação administrativa.
 
 
-# 5.Upload de Imagem em Chamados
+## 5.Upload de Imagem em Chamados
 
-## Objetivo
+#### Objetivo
 
 Permitir que o solicitante anexe uma imagem ao abrir um chamado de manutenção, auxiliando na identificação e análise do problema reportado.
 
-## Inclusão de Foto
+#### Inclusão de Foto
 
 O sistema disponibiliza um campo para anexar uma foto durante a criação do chamado.
 
 O envio da imagem ocorre juntamente com as demais informações do chamado, como local, categoria e descrição do problema.
 
-## Obrigatoriedade
+#### Obrigatoriedade
 
 O envio da foto é opcional.
 
 O solicitante pode criar um chamado mesmo sem anexar uma imagem.
 
-## Formatos Aceitos
+#### Formatos Aceitos
 
 Por questões de segurança e compatibilidade, o sistema aceita apenas os seguintes formatos de imagem:
 
@@ -148,23 +148,23 @@ Por questões de segurança e compatibilidade, o sistema aceita apenas os seguin
 
 Arquivos em formatos diferentes devem ser rejeitados pelo sistema.
 
-## Tamanho Máximo
+#### Tamanho Máximo
 
 O sistema realiza validação do tamanho máximo permitido para arquivos enviados.
 
 O limite é definido pela configuração do backend.
 
-## Armazenamento
+#### Armazenamento
 
 Quando uma imagem é enviada com sucesso, o sistema registra o caminho ou URL do arquivo junto aos dados do chamado.
 
-## Exibição da Imagem
+#### Exibição da Imagem
 
 A imagem anexada fica associada ao chamado e pode ser visualizada posteriormente na tela de detalhes da solicitação.
 
 Essa visualização permite que técnicos, gerentes e demais usuários autorizados consultem a imagem para auxiliar no atendimento da demanda.
 
-## Regras Gerais
+#### Regras Gerais
 
 * A foto pode ser adicionada apenas durante a criação do chamado.
 * O envio da imagem é opcional.
@@ -172,9 +172,25 @@ Essa visualização permite que técnicos, gerentes e demais usuários autorizad
 * O sistema valida o tipo e o tamanho do arquivo enviado.
 * A imagem fica vinculada ao chamado e pode ser exibida em sua visualização detalhada.
 
+## 6.Regra de cadastro por perfil
 
+#### Objetivo
 
-## 5. Ata de reunião 
+Garantir que os cadastros sejam feitos de forma correta e que perfis que tenham grande impacto no funcionamento da manutenção não possam ser criados por qualquer pessoa casualmente. 
+
+#### Como será feito
+O sistema permitirá cadastro público apenas para solicitantes e técnicos, que deverão preencher seus dados como: nome, senha, matricula. 
+
+#### Para solicitantes
+Usuários que fizerem o cadastro como solicitantes terão acesso liberado logo após o cadastro, podendo criar chamados instantâneamente. 
+
+#### Para técnicos
+Os usuários que desejarem se cadastrar como técnicos poderão realizar o preenchimento do formulário, mas precisarão de aprovação de um gerente antes de poder acessar a área técnica. Enquanto o usuário que deseja se cadastrar como técnico estiver sendo avaliado, ele receberá a mensagem de aprovação pendente, caso seja aceito ou recusado receberá o alerta de aprovação concluída ou rejeitada. 
+
+#### Para gerentes
+Usuários com perfil de gerente não poderão se cadastrar publicamente, estes serão inseridos no sistema diretamente pelo administrador.
+
+## 7. Ata de reunião 
 
 **Data:** 08/06/2026  
 **Horário:** 20:00 - 20:20  
