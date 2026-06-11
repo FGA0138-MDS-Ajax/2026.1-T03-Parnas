@@ -154,33 +154,25 @@ Conforme especificado no manual do projeto ([PROJECT_GUIDELINES.md](file:///home
 
 Para manter a consistência do banco de dados no ecossistema de desenvolvimento, siga este guia de referência rápida para executar as tarefas do Alembic.
 
-### 5.1 Regras de Ouro
-- **Convenção de Nomes de Arquivos:** Sempre renomeie o arquivo gerado para seguir o formato `{YYYY_MM_DD}_{descricao_snake_case}.py` (ex: `2026_05_28_criar_tabelas_iniciais.py`), removendo o hash aleatório gerado pelo Alembic na frente do arquivo físico.
-- **Resiliência do Up/Down:** O script de migração deve ser capaz de aplicar e reverter perfeitamente. Certifique-se de que os tipos PostgreSQL personalizados (como `ENUM`) sejam criados explicitamente usando `postgresql.ENUM(..., create_type=False)` e removidos no downgrade com `postgresql.ENUM(name='...').drop(op.get_bind(), checkfirst=True)`.
-- **Testar Rollback Localmente:** Antes de submeter qualquer Pull Request, sempre execute `alembic downgrade -1` localmente e verifique se o banco de dados retorna ao estado íntegro anterior sem dar erros.
+#### Regras
+- **Naming convention:** `{YYYY_MM_DD}_{descricao_snake_case}` (ex: `2026_05_22_criar_tabela_solicitacoes`).
+- **Nunca editar migrations já mergeadas na main.** Se for necessário corrigir uma migração que já foi para a main, crie uma nova migration de correção.
+- **Sempre testar rollback:** Execute e valide o rollback (`alembic downgrade -1`) localmente antes de realizar o merge da Pull Request.
+- **Migrations manuais:** Não usar `--autogenerate` de forma indiscriminada para evitar códigos excessivamente verbosos ou desnecessários. Prefira escrever as alterações manualmente de maneira limpa.
+- **Executar dentro do docker:** Rode os comandos do Alembic sempre dentro do container do Docker para garantir a consistência do ambiente de banco de dados.
 
-### 5.2 Comandos Padrão (Executados via Docker)
-
-Sempre rode os comandos do Alembic utilizando o ambiente encapsulado do Docker Compose para assegurar que as dependências Python, drivers de rede assíncronos e dialetos de banco sejam consistentes com o banco de produção:
-
+### Comandos Padrão
 ```bash
-# 1. Criar nova migration (Manual - sem autogenerate)
-docker compose run --rm backend alembic revision -m "2026_05_22_criar_tabela_solicitacoes"
+# Criar nova migration (manual - sem autogenerate)
+docker compose exec backend alembic revision -m "2026_05_22_criar_tabela_solicitacoes"
 
-# 2. Aplicar migrations pendentes
-docker compose run --rm backend alembic upgrade head
+# Aplicar migrations
+docker compose exec backend alembic upgrade head
 
-# 3. Reverter a última migração aplicada (Teste de Rollback)
-docker compose run --rm backend alembic downgrade -1
+# Reverter última migration
+docker compose exec backend alembic downgrade -1
 
-# 4. Reverter todas as migrações aplicadas (Retornar ao baseline limpo)
-docker compose run --rm backend alembic downgrade base
-
-# 5. Listar histórico de migrações
-docker compose run --rm backend alembic history
+# Listar migrations
+docker compose exec backend alembic history
 ```
-
-> [!WARNING]
-> Após criar uma nova migração a partir do Docker no Linux, o arquivo criado no host local pertencerá ao usuário `root`. Lembre-se de rodar o comando abaixo na raiz do projeto para restabelecer as permissões de edição para o seu usuário do sistema:
-> `docker compose run --rm backend chown -R 1000:1000 /app/migrations`
-
+---

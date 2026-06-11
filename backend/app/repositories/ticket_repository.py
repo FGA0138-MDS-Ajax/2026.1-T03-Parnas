@@ -12,7 +12,8 @@ class TicketRepository:
             descricao=ticket_in.descricao,
             status=TicketStatus.ABERTO,
             solicitante_id=solicitante_id,
-            tecnico_id=None
+            tecnico_id=None,
+            photo_path=ticket_in.photo_path
         )
         db.add(db_ticket)
         await db.commit()
