@@ -2,6 +2,7 @@ import pytest
 from httpx import AsyncClient
 from fastapi import status
 
+from app.routers import tickets as tickets_router
 from app.models.ticket import Ticket, TicketStatus
 from app.models.user import User, UserRole
 from app.core.security import create_access_token
@@ -58,6 +59,88 @@ async def test_create_ticket_router_with_photo_path_success(
     assert json_data["solicitante_id"] == test_solicitante.matricula
     assert json_data["status"] == TicketStatus.ABERTO.value
     assert json_data["photo_path"] == "uploads/images/luzes_sg.jpg"
+
+
+@pytest.mark.asyncio
+async def test_create_ticket_router_with_photo_upload_success(
+    client: AsyncClient,
+    test_solicitante: User,
+    solicitante_headers: dict[str, str],
+    tmp_path,
+    monkeypatch,
+):
+    """Garante que solicitante consegue criar chamado enviando foto por multipart."""
+    upload_dir = tmp_path / "uploads" / "tickets"
+    monkeypatch.setattr(tickets_router, "TICKET_UPLOAD_DIR", upload_dir)
+
+    response = await client.post(
+        "/api/v1/tickets",
+        data={
+            "local": "Sala A1",
+            "tipo_manutencao": "Elétrica",
+            "descricao": "Tomada com mau contato.",
+        },
+        files={"photo": ("tomada.png", b"fake-png-content", "image/png")},
+        headers=solicitante_headers,
+    )
+
+    assert response.status_code == status.HTTP_201_CREATED
+    json_data = response.json()
+    assert json_data["solicitante_id"] == test_solicitante.matricula
+    assert json_data["photo_path"].startswith("/uploads/tickets/")
+    assert json_data["photo_path"].endswith(".png")
+    saved_filename = json_data["photo_path"].split("/")[-1]
+    assert (upload_dir / saved_filename).read_bytes() == b"fake-png-content"
+
+
+@pytest.mark.asyncio
+async def test_create_ticket_router_rejects_invalid_photo_extension(
+    client: AsyncClient,
+    solicitante_headers: dict[str, str],
+    tmp_path,
+    monkeypatch,
+):
+    """Garante que backend aceita apenas extensões seguras para foto."""
+    monkeypatch.setattr(tickets_router, "TICKET_UPLOAD_DIR", tmp_path / "uploads" / "tickets")
+
+    response = await client.post(
+        "/api/v1/tickets",
+        data={
+            "local": "Sala A1",
+            "tipo_manutencao": "Elétrica",
+            "descricao": "Tomada com mau contato.",
+        },
+        files={"photo": ("tomada.gif", b"fake-gif-content", "image/gif")},
+        headers=solicitante_headers,
+    )
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert response.json()["detail"] == "Formato de foto inválido. Envie apenas arquivos .jpg, .jpeg ou .png."
+
+
+@pytest.mark.asyncio
+async def test_create_ticket_router_rejects_photo_larger_than_10mb(
+    client: AsyncClient,
+    solicitante_headers: dict[str, str],
+    tmp_path,
+    monkeypatch,
+):
+    """Garante que backend limita foto a no máximo 10MB."""
+    monkeypatch.setattr(tickets_router, "TICKET_UPLOAD_DIR", tmp_path / "uploads" / "tickets")
+
+    response = await client.post(
+        "/api/v1/tickets",
+        data={
+            "local": "Sala A1",
+            "tipo_manutencao": "Elétrica",
+            "descricao": "Tomada com mau contato.",
+        },
+        files={"photo": ("tomada.jpg", b"x" * (10 * 1024 * 1024 + 1), "image/jpeg")},
+        headers=solicitante_headers,
+    )
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert response.json()["detail"] == "A foto deve ter no máximo 10MB."
 
 
 @pytest.mark.asyncio
