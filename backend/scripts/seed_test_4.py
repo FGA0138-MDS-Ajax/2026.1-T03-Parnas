@@ -5,6 +5,8 @@
 # Esse script cria
 #   3 solicitantes
 #   2 técnicos
+#   1 técnico pendente
+#   1 técnico reprovado
 #   1 gerente
 #   1 administrador
 #   4 tickets
@@ -23,7 +25,7 @@ sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from app.core.database import AsyncSessionLocal, engine
 from app.core.security import get_password_hash
-from app.models.user import User, UserRole
+from app.models.user import User, UserRole, ApprovalStatus
 from app.models.ticket import Ticket, TicketStatus
 from app.models.ticket_history import TicketHistory
 
@@ -69,6 +71,24 @@ TEST_USERS = [
         "nome": "Marcos Natan",
         "email": "marcos.natan@unb.br",
         "role": UserRole.ADMIN,
+    },
+
+    {
+        "matricula": "900000005",
+        "nome": "Tecnico Pendente",
+        "email": "tecnico.pendente@unb.br",
+        "role": UserRole.TECNICO,
+        "ativo": False,
+        "approval_status": ApprovalStatus.PENDENTE,
+    },
+
+    {
+        "matricula": "900000006",
+        "nome": "Tecnico Reprovado",
+        "email": "tecnico.rejeitado@unb.br",
+        "role": UserRole.TECNICO,
+        "ativo": False,
+        "approval_status": ApprovalStatus.REPROVADO,
     },
 ]
 
@@ -215,7 +235,8 @@ async def upsert_test_user(user_data: dict[str, object]) -> str:
             user.email = user_data["email"]
             user.senha_hash = password_hash
             user.role = user_data["role"]
-            user.ativo = True
+            user.ativo = user_data.get("ativo", True)
+            user.approval_status = user_data.get("approval_status", ApprovalStatus.APROVADO)
             action = "atualizado"
         else:
             user = User(
@@ -224,7 +245,8 @@ async def upsert_test_user(user_data: dict[str, object]) -> str:
                 email=user_data["email"],
                 senha_hash=password_hash,
                 role=user_data["role"],
-                ativo=True,
+                ativo=user_data.get("ativo", True),
+                approval_status=user_data.get("approval_status", ApprovalStatus.APROVADO),
             )
             session.add(user)
             action = "criado"
