@@ -42,3 +42,11 @@ class TicketUpdateStatus(BaseModel):
         if v not in allowed:
             raise ValueError(f"Status not allowed. Allowed values: {[s.value for s in allowed]}")
         return v
+
+class TicketPublicResponse(TicketBase):
+    id: int
+    status: TicketStatus
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
