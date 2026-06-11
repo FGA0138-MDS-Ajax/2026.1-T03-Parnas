@@ -12,10 +12,13 @@ Abaixo está a representação visual da modelagem física inicial do banco de d
 erDiagram
     users {
         VARCHAR(9) matricula PK "Matrícula do usuário (UnB)"
+        INTEGER id "ID sequencial autoincrementado"
         VARCHAR(100) nome "Nome completo"
         VARCHAR(150) email UK "E-mail acadêmico/institucional"
         VARCHAR(255) senha_hash "Senha criptografada (bcrypt)"
+        VARCHAR(100) area_manutencao "Área de manutenção do técnico"
         userrole role "Perfil de acesso (ENUM)"
+        userrole approval_status "Status de aprovação do usuário (ENUM)"
         BOOLEAN ativo "Indicador de conta ativa"
         TIMESTAMP created_at "Data de criação do registro"
         TIMESTAMP updated_at "Data da última atualização"
@@ -59,10 +62,13 @@ Armazena as credenciais, perfis de acesso e dados cadastrais dos quatro tipos de
 | Nome da Coluna | Tipo de Dado | Restrições | Padrão (Default) | Descrição |
 | :--- | :--- | :--- | :--- | :--- |
 | **`matricula`** | `VARCHAR(9)` | `PRIMARY KEY`, `CHECK` | *Nenhum* | Matrícula acadêmica do usuário (estudante/servidor). Deve possuir exatamente 9 dígitos numéricos. |
+| **`id`** | `INTEGER` | `NOT NULL`, `INDEX` | *Nenhum* | ID sequencial autoincrementado utilizando o *Identity(always=True)* para impedir intervenção externa
 | **`nome`** | `VARCHAR(100)` | `NOT NULL` | *Nenhum* | Nome completo do usuário. |
 | **`email`** | `VARCHAR(150)` | `UNIQUE`, `NOT NULL`, `INDEX` | *Nenhum* | Endereço de e-mail institucional/pessoal (chave de login alternativa). |
 | **`senha_hash`** | `VARCHAR(255)` | `NOT NULL` | *Nenhum* | Hash seguro da senha gerado utilizando o algoritmo **bcrypt**. |
+|**`area_manutencao`** | `VARCHAR(100)` | *Nenhum* | `NULL` | Área de manutenção designada ao técnico
 | **`role`** | `userrole` (ENUM) | `NOT NULL` | `'SOLICITANTE'` | Perfil de permissão e privilégios de acesso do usuário no sistema. |
+`approval_status` | `userrole` (ENUM) | `NOT NULL` | `'PENDENTE'` | Define o Status de aprovação do usuário.
 | **`ativo`** | `BOOLEAN` | `NOT NULL` | `true` | Define se a conta está ativa e com permissão para realizar login. |
 | **`created_at`** | `TIMESTAMP WITH TIME ZONE` | `NOT NULL` | `now()` | Registro de data/hora em que a conta do usuário foi cadastrada. |
 | **`updated_at`** | `TIMESTAMP WITH TIME ZONE` | `NOT NULL` | `now()` | Registro de data/hora da última alteração no cadastro do usuário. |

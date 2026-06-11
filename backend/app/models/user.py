@@ -1,5 +1,6 @@
+from enum import unique
 import enum
-from sqlalchemy import Boolean, CheckConstraint, DateTime, String, Enum
+from sqlalchemy import Boolean, CheckConstraint, DateTime, String, Enum, Integer, Identity
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
 
@@ -12,6 +13,10 @@ class UserRole(str, enum.Enum):
     TECNICO = "TECNICO"
     ADMIN = "ADMIN"
 
+class ApprovalStatus(str, enum.Enum):
+    APROVADO = "APROVADO"
+    REPROVADO = "REPROVADO"
+    PENDENTE = "PENDENTE"
 
 class User(Base):
     __tablename__ = "users"
@@ -20,7 +25,12 @@ class User(Base):
         CheckConstraint(
             "matricula ~ '^[0-9]{9}$'", name="ck_users_matricula_9_digitos"
         ),
-    )
+    )   
+
+
+
+    id: Mapped[int] = mapped_column(
+        Integer, Identity(always=True), index=True, nullable=False) 
 
     matricula: Mapped[str] = mapped_column(
         String(9), primary_key=True, index=True, nullable=False
@@ -39,6 +49,12 @@ class User(Base):
     )
 
     ativo: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+
+    approval_status: Mapped[ApprovalStatus] = mapped_column(
+        Enum(ApprovalStatus), nullable=False, default=ApprovalStatus.PENDENTE
+    )
+
+    area_manutencao: Mapped[str] = mapped_column(String(100), nullable=True)
 
     created_at: Mapped[DateTime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
