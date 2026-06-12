@@ -26,6 +26,10 @@ class TicketService:
         return await TicketRepository.get_by_status(db, TicketStatus.ABERTO)
 
     @staticmethod
+    async def get_open_tickets_by_others(db: AsyncSession, user: User) -> list[Ticket]:
+        return await TicketRepository.get_open_by_others(db, user.matricula)
+
+    @staticmethod
     async def get_all_tickets(db: AsyncSession) -> list[Ticket]:
         return await TicketRepository.get_all(db)
 
