@@ -160,7 +160,7 @@ async def test_create_ticket_router_forbidden(
         headers=tecnico_headers
     )
     assert response.status_code == status.HTTP_403_FORBIDDEN
-    assert response.json()["detail"] == "Sem permissão para realizar esta operação"
+    assert response.json()["detail"] == "Sem permissão para realizar esta operação."
     assert response.json()["status_code"] == status.HTTP_403_FORBIDDEN
 
 @pytest.mark.asyncio

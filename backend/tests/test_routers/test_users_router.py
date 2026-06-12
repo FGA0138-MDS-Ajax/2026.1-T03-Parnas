@@ -21,7 +21,7 @@ async def test_get_me_unauthorized(client: AsyncClient):
     # Sem header
     response = await client.get("/api/v1/users/me")
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
-    assert response.json()["detail"] == "Token de autenticação não informado"
+    assert response.json()["detail"] == "Token de autenticação não informado."
     assert response.json()["status_code"] == status.HTTP_401_UNAUTHORIZED
 
     # Token malformado

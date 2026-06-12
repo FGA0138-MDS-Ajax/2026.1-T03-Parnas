@@ -35,7 +35,7 @@ async def test_authenticate_user_email_not_found(db_session: AsyncSession):
         await AuthService.authenticate_user(db_session, login_data)
         
     assert exc_info.value.status_code == status.HTTP_401_UNAUTHORIZED
-    assert exc_info.value.detail == "Email ou senha incorretos"
+    assert exc_info.value.detail == "Email ou senha incorretos."
 
 @pytest.mark.asyncio
 async def test_authenticate_user_incorrect_password(db_session: AsyncSession, create_test_user):
@@ -55,7 +55,7 @@ async def test_authenticate_user_incorrect_password(db_session: AsyncSession, cr
         await AuthService.authenticate_user(db_session, login_data)
         
     assert exc_info.value.status_code == status.HTTP_401_UNAUTHORIZED
-    assert exc_info.value.detail == "Email ou senha incorretos"
+    assert exc_info.value.detail == "Email ou senha incorretos."
 
 @pytest.mark.asyncio
 async def test_authenticate_user_inactive(db_session: AsyncSession, create_test_user):
@@ -75,7 +75,7 @@ async def test_authenticate_user_inactive(db_session: AsyncSession, create_test_
         await AuthService.authenticate_user(db_session, login_data)
         
     assert exc_info.value.status_code == status.HTTP_400_BAD_REQUEST
-    assert exc_info.value.detail == "Usuário inativo"
+    assert exc_info.value.detail == "Usuário inativo."
 
 @pytest.mark.asyncio
 async def test_authenticate_tecnico_pendente(db_session: AsyncSession, create_test_user):
