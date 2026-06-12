@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import './login.css';
 import { ApiError } from '../../../features/shared/services/apiClient';
 import { authService, getDefaultRouteForRole } from '../../../features/shared/services/authService';
@@ -117,6 +118,25 @@ export default function LoginPage() {
             </svg>
           </button>
         </form>
+        
+        <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+          <span style={{
+            color: '#6B7A99',  
+            fontSize: '0.9rem',
+            textDecoration: 'none',
+            fontWeight: '300'
+          }}>
+            Não tem uma conta?
+          </span>
+          <Link href="/registro" style={{
+            color: '#1B7A3A', 
+            fontSize: '0.9rem',
+            textDecoration: 'none',
+            fontWeight: '500'
+          }}>
+            {'\u00A0'}Cadastre-se
+          </Link>
+        </div>
       </div>
     </div>
   );
