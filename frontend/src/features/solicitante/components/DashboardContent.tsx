@@ -15,6 +15,7 @@ export default function DashboardContent() {
   const [outrosChamados, setOutrosChamados] = useState<Ticket[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState<'nao_iniciados' | 'em_andamento' | 'concluidos'>('nao_iniciados');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -213,7 +214,7 @@ export default function DashboardContent() {
               padding: '1.25rem',
               borderRadius: '12px',
               background: 'linear-gradient(135deg, rgba(37, 87, 167, 0.05) 0%, rgba(13, 43, 94, 0.03) 100%)',
-              border: '1px dashed rgba(13, 43, 94, 0.3)',
+              border: '1px solid rgba(13, 43, 94, 0.15)',
               color: 'var(--navy)',
               fontFamily: 'Sora',
               fontWeight: 600,
@@ -226,7 +227,7 @@ export default function DashboardContent() {
               transition: 'all 0.2s ease'
             }}
           >
-            <span>Ver Outras Solicitações Abertas</span>
+            <span>Ver Outras Solicitações</span>
             <span style={{ 
               background: 'var(--navy-light)', 
               color: 'white', 
@@ -306,7 +307,7 @@ export default function DashboardContent() {
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <h3 style={{ margin: 0, fontFamily: 'Sora', color: 'var(--navy-dark)', fontSize: '1.3rem' }}>
-                Outras Solicitações Abertas
+                Outras Solicitações
               </h3>
               <button 
                 onClick={() => setIsModalOpen(false)}
@@ -335,24 +336,47 @@ export default function DashboardContent() {
                 />
               </div>
 
+              <div className="tabs-container" style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
+                <button 
+                  className={`tab-btn ${activeTab === 'nao_iniciados' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('nao_iniciados')}
+                >
+                  Não Iniciados
+                </button>
+                <button 
+                  className={`tab-btn ${activeTab === 'em_andamento' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('em_andamento')}
+                >
+                  Em Andamento
+                </button>
+              </div>
+
               <div className="tickets-list" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                {outrosChamados.filter((ticket) => 
-                  ticket.local.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                  ticket.tipo_manutencao.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                  ticket.descricao.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                  ticket.id.toString().includes(searchQuery)
-                ).length === 0 ? (
-                  <div className="empty-state" style={{ padding: '2rem 1rem', textAlign: 'center' }}>
-                    <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🔍</div>
-                    <p style={{ color: 'var(--gray-text)', margin: 0 }}>Nenhuma solicitação encontrada com este termo.</p>
-                  </div>
-                ) : (
-                  outrosChamados.filter((ticket) => 
-                    ticket.local.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    ticket.tipo_manutencao.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    ticket.descricao.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    ticket.id.toString().includes(searchQuery)
-                  ).map(ticket => (
+                {(() => {
+                  const filteredOutros = outrosChamados.filter((ticket) => {
+                    if (activeTab === 'nao_iniciados' && !['ABERTO', 'NAO_INICIADO'].includes(ticket.status)) return false;
+                    if (activeTab === 'em_andamento' && !['ATRIBUIDO', 'EM_ANDAMENTO'].includes(ticket.status)) return false;
+
+                    const query = searchQuery.toLowerCase();
+                    if (!query) return true;
+                    return (
+                      ticket.local.toLowerCase().includes(query) ||
+                      ticket.tipo_manutencao.toLowerCase().includes(query) ||
+                      ticket.descricao.toLowerCase().includes(query) ||
+                      ticket.id.toString().includes(query)
+                    );
+                  });
+
+                  if (filteredOutros.length === 0) {
+                    return (
+                      <div className="empty-state" style={{ padding: '2rem 1rem', textAlign: 'center' }}>
+                        <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🔍</div>
+                        <p style={{ color: 'var(--gray-text)', margin: 0 }}>Nenhuma solicitação encontrada nesta aba.</p>
+                      </div>
+                    );
+                  }
+
+                  return filteredOutros.map(ticket => (
                     <div key={ticket.id} style={{
                       padding: '1.25rem',
                       borderRadius: '12px',
@@ -373,8 +397,8 @@ export default function DashboardContent() {
                         {ticket.descricao}
                       </p>
                     </div>
-                  ))
-                )}
+                  ));
+                })()}
               </div>
             </div>
           </div>

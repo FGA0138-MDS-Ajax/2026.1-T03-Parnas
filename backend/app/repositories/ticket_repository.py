@@ -34,7 +34,12 @@ class TicketRepository:
     async def get_open_by_others(db: AsyncSession, solicitante_id: str) -> list[Ticket]:
         result = await db.execute(
             select(Ticket).where(
-                Ticket.status == TicketStatus.ABERTO,
+                Ticket.status.in_([
+                    TicketStatus.ABERTO, 
+                    TicketStatus.ATRIBUIDO, 
+                    TicketStatus.EM_ANDAMENTO, 
+                    TicketStatus.NAO_INICIADO
+                ]),
                 Ticket.solicitante_id != solicitante_id
             )
         )
