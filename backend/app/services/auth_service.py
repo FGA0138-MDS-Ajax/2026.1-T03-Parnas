@@ -15,14 +15,14 @@ class AuthService:
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Email ou senha incorretos",
+                detail="Email ou senha incorretos.",
                 headers={"WWW-Authenticate": "Bearer"},
             )
             
         if not verify_password(login_data.senha, user.senha_hash):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Email ou senha incorretos",
+                detail="Email ou senha incorretos.",
                 headers={"WWW-Authenticate": "Bearer"},
             )
             
@@ -43,7 +43,7 @@ class AuthService:
         if not user.ativo:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Usuário inativo",
+                detail="Usuário inativo.",
             )
             
         access_token = create_access_token(subject=user.matricula)
@@ -58,7 +58,7 @@ class AuthService:
         if existing_user:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Usuário com este email já existe",
+                detail="Usuário com este email já existe.",
             )
 
         if register_data.role in [UserRole.GERENTE, UserRole.ADMIN]:
