@@ -69,7 +69,7 @@ def _default_detail_for_status(status_code: int) -> str:
     details = {
         status.HTTP_400_BAD_REQUEST: "Requisição inválida.",
         status.HTTP_401_UNAUTHORIZED: "Autenticação necessária.",
-        status.HTTP_403_FORBIDDEN: "Você não tem permissão para realizar esta operação.",
+        status.HTTP_403_FORBIDDEN: "Usuário não possui permissão para acessar este recurso.",
         status.HTTP_404_NOT_FOUND: "Recurso não encontrado.",
     }
     return details.get(status_code, "Erro ao processar a requisição.")
@@ -85,7 +85,7 @@ def _translate_default_detail(detail: str, status_code: int) -> str:
     if detail in default_translations:
         return default_translations[detail]
     if status_code == status.HTTP_403_FORBIDDEN and detail == "Forbidden":
-        return "Você não tem permissão para realizar esta operação."
+        return "Usuário não possui permissão para acessar este recurso."
     return detail
 
 
