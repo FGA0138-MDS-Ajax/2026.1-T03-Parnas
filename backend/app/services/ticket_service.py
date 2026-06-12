@@ -123,10 +123,15 @@ class TicketService:
     async def get_ticket_detail_with_history(db: AsyncSession, ticket_id: int, user: User) -> dict:
         ticket = await TicketRepository.get_by_id(db, ticket_id)
         if not ticket:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chamado não encontrado")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Chamado não encontrado.")
         
+        # Bloqueia Técnicos 
         if user.role == UserRole.TECNICO and ticket.tecnico_id != user.matricula:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Você não tem permissão para acessar este chamado")
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Usuário não possui permissão para acessar este recurso.")
         
         history = await TicketHistoryRepository.get_by_ticket_id(db, ticket_id)
         

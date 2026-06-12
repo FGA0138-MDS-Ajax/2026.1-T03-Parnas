@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel, EmailStr, Field
 
 from app.models.user import UserRole
@@ -14,6 +16,7 @@ class RegisterRequest(BaseModel):
     email: EmailStr
     senha: str = Field(..., min_length=6)
     role: UserRole = UserRole.SOLICITANTE
+    area_manutencao: Optional[str] = None
 
 
 class TokenResponse(BaseModel):

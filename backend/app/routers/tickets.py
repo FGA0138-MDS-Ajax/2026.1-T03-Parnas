@@ -1,11 +1,16 @@
-from fastapi import APIRouter, Depends, status
+from pathlib import Path
+from uuid import uuid4
+
+from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile, status
+from fastapi.exceptions import RequestValidationError
+from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
-from app.core.dependencies import require_role
+from app.core.dependencies import require_role, get_current_user
 from app.models.user import User, UserRole
 from app.schemas.error import error_response_docs
-from app.schemas.ticket import TicketCreate, TicketResponse, TicketAssign, TicketUpdateStatus
+from app.schemas.ticket import TicketCreate, TicketResponse, TicketAssign, TicketUpdateStatus, TicketPublicResponse
 from app.services.ticket_service import TicketService
 
 router = APIRouter(
@@ -19,14 +24,109 @@ router = APIRouter(
     },
 )
 
+BACKEND_DIR = Path(__file__).resolve().parents[2]
+TICKET_UPLOAD_DIR = BACKEND_DIR / "uploads" / "tickets"
+MAX_PHOTO_SIZE_BYTES = 10 * 1024 * 1024
+ALLOWED_PHOTO_EXTENSIONS = {".jpg", ".jpeg", ".png"}
+ALLOWED_PHOTO_CONTENT_TYPES = {"image/jpeg", "image/png"}
+
 
 @router.post("", response_model=TicketResponse, status_code=status.HTTP_201_CREATED)
 async def create_ticket(
-    ticket_in: TicketCreate,
+    request: Request,
     current_user: User = Depends(require_role([UserRole.SOLICITANTE])),
     db: AsyncSession = Depends(get_db),
 ):
+    ticket_in = await _parse_ticket_create_request(request)
     return await TicketService.create_ticket(db, ticket_in, current_user)
+
+
+async def _parse_ticket_create_request(request: Request) -> TicketCreate:
+    content_type = request.headers.get("content-type", "")
+
+    if content_type.startswith("multipart/form-data"):
+        form = await request.form()
+        photo = form.get("photo")
+
+        if _is_uploaded_file(photo) and photo.filename:
+            ticket_in = _build_ticket_create(
+                {
+                    "local": form.get("local"),
+                    "tipo_manutencao": form.get("tipo_manutencao"),
+                    "descricao": form.get("descricao"),
+                }
+            )
+            photo_path = await _save_ticket_photo(photo)
+            return ticket_in.model_copy(update={"photo_path": photo_path})
+
+        payload = {
+            "local": form.get("local"),
+            "tipo_manutencao": form.get("tipo_manutencao"),
+            "descricao": form.get("descricao"),
+        }
+    else:
+        payload = await request.json()
+
+    return _build_ticket_create(payload)
+
+
+def _build_ticket_create(payload: dict) -> TicketCreate:
+    try:
+        return TicketCreate(**payload)
+    except ValidationError as exc:
+        raise RequestValidationError(_with_body_location(exc.errors())) from exc
+
+
+def _with_body_location(errors: list[dict]) -> list[dict]:
+    normalized_errors = []
+    for error in errors:
+        loc = tuple(error.get("loc", ()))
+        normalized_errors.append({**error, "loc": ("body", *loc)})
+    return normalized_errors
+
+
+def _is_uploaded_file(value: object) -> bool:
+    return isinstance(value, UploadFile) or (
+        hasattr(value, "filename") and hasattr(value, "content_type") and hasattr(value, "read")
+    )
+
+
+async def _save_ticket_photo(photo: UploadFile) -> str:
+    extension = Path(photo.filename or "").suffix.lower()
+    if extension not in ALLOWED_PHOTO_EXTENSIONS:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Formato de foto inválido. Envie apenas arquivos .jpg, .jpeg ou .png.",
+        )
+
+    if photo.content_type not in ALLOWED_PHOTO_CONTENT_TYPES:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Tipo de arquivo inválido. Envie apenas imagens JPG ou PNG.",
+        )
+
+    TICKET_UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+    filename = f"{uuid4().hex}{extension}"
+    destination = TICKET_UPLOAD_DIR / filename
+    total_size = 0
+
+    try:
+        with destination.open("wb") as file:
+            while chunk := await photo.read(1024 * 1024):
+                total_size += len(chunk)
+                if total_size > MAX_PHOTO_SIZE_BYTES:
+                    raise HTTPException(
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        detail="A foto deve ter no máximo 10MB.",
+                    )
+                file.write(chunk)
+    except HTTPException:
+        destination.unlink(missing_ok=True)
+        raise
+    finally:
+        await photo.close()
+
+    return f"/uploads/tickets/{filename}"
 
 
 @router.get("/me", response_model=list[TicketResponse])
@@ -56,6 +156,13 @@ async def get_in_progress_tickets(
 @router.get("", response_model=list[TicketResponse])
 async def get_all_tickets(
     current_user: User = Depends(require_role([UserRole.GERENTE])),
+    db: AsyncSession = Depends(get_db),
+):
+    return await TicketService.get_all_tickets(db)
+
+@router.get("/public", response_model=list[TicketPublicResponse])
+async def get_all_tickets_public(
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
     return await TicketService.get_all_tickets(db)
