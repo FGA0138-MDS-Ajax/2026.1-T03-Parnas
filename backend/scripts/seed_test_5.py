@@ -114,6 +114,7 @@ TEST_TICKETS = [
     {
         "local": "UED",
         "descricao": "Buraco na parede.",
+        "photo_path": "buracoparede.jpeg",
         "tipo_manutencao": "Estrutural",
         "solicitante_id": "242012345",
         "historico": {}
@@ -121,6 +122,7 @@ TEST_TICKETS = [
     {
         "local": "UAC",
         "descricao": "Ninho de pássaro no teto.",
+        "photo_path": "semenergia.jpg",
         "tipo_manutencao": "Estrutural",
         "solicitante_id": "251087284",
         "historico": {
@@ -136,6 +138,7 @@ TEST_TICKETS = [
     {
         "local": "LDTEA",
         "descricao": "Lâmpada queimada.",
+        "photo_path": "lampadaquebrada.webp",
         "tipo_manutencao": "Energia",
         "solicitante_id": "242099873",
         "historico": {
@@ -202,6 +205,7 @@ async def upsert_test_ticket(ticket_data: dict[str, object]) -> str:
             descricao=ticket_data['descricao'],
             tipo_manutencao=ticket_data['tipo_manutencao'],
             solicitante_id=ticket_data['solicitante_id'],
+            photo_path=ticket_data.get('photo_path')
         )
 
         session.add(ticket)
@@ -224,13 +228,22 @@ async def upsert_test_ticket(ticket_data: dict[str, object]) -> str:
 
             # atribuir tecnico se necessario
             if tecid:
+                # coloca o técnico no ticket
                 stmt = (
                     update(Ticket)
                     .filter(Ticket.id==ticket.id)
                     .values(tecnico_id=tecid)
                 )
                 
+                # aponta o local de manutencao do tecnico
+                stmt2 = (
+                    update(User)
+                    .filter(User.matricula==tecid)
+                    .values(area_manutencao=ticket_data['local'])
+                )
+
                 await session.execute(stmt)
+                await session.execute(stmt2)
                 await session.commit()
 
             # atribuir novo estado de ticket
