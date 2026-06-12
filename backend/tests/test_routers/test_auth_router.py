@@ -44,7 +44,7 @@ async def test_login_invalid_credentials(client: AsyncClient, create_test_user):
     )
     
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
-    assert response.json()["detail"] == "Email ou senha incorretos"
+    assert response.json()["detail"] == "Email ou senha incorretos."
     assert response.json()["status_code"] == status.HTTP_401_UNAUTHORIZED
     assert response.json()["path"] == "/api/v1/auth/login"
 
