@@ -27,5 +27,5 @@ async def test_get_me_unauthorized(client: AsyncClient):
     # Token malformado
     response = await client.get("/api/v1/users/me", headers={"Authorization": "Bearer invalido"})
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
-    assert response.json()["detail"] == "Não foi possível validar as credenciais"
+    assert response.json()["detail"] == "Não foi possível validar as credenciais."
     assert response.json()["path"] == "/api/v1/users/me"
