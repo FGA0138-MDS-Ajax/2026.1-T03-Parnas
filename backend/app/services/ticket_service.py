@@ -125,19 +125,7 @@ class TicketService:
         if not ticket:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chamado não encontrado")
         
-        # PRINT DE DEBUG 
-        print(f"\n\n=== DEBUG ISSUE #106 ===")
-        print(f"ID do Dono do Chamado (no banco): {ticket.solicitante_id} (Tipo: {type(ticket.solicitante_id)})")
-        print(f"Matrícula do Cara Logado: {user.matricula} (Tipo: {type(user.matricula)})")
-        print(f"ID do Usuário Logado (se houver): {getattr(user, 'id', 'Não tem id')}")
-        print(f"=========================\n\n")
-
-        # Bloqueia Técnicos 
         if user.role == UserRole.TECNICO and ticket.tecnico_id != user.matricula:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Você não tem permissão para acessar este chamado")
-        
-        # Bloqueia Solicitantes de verem chamados alheios
-        if user.role == UserRole.SOLICITANTE and ticket.solicitante_id != user.matricula:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Você não tem permissão para acessar este chamado")
         
         history = await TicketHistoryRepository.get_by_ticket_id(db, ticket_id)
