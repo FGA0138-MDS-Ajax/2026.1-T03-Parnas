@@ -53,7 +53,7 @@ class AuthService:
     async def register_user(
         db: AsyncSession, register_data: RegisterRequest
     ) -> TokenResponse:
-        # Check if user already exists
+        # Check if user already exists by email
         existing_user = await UserRepository.get_by_email(db, email=register_data.email)
         if existing_user:
             raise HTTPException(
@@ -66,6 +66,25 @@ class AuthService:
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Não é possível criar contas de Gerente ou Administrador por esta rota.",
             )
+
+        # Check if matricula already exists (if provided)
+        if register_data.matricula:
+            existing_matricula = await UserRepository.get_by_matricula(db, matricula=register_data.matricula)
+            if existing_matricula:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Usuário com esta matrícula já existe.",
+                )
+
+        # Gerar matrícula automática para técnicos caso não informada
+        if register_data.role == UserRole.TECNICO and not register_data.matricula:
+            import random
+            while True:
+                matricula_gerada = "9" + "".join([str(random.randint(0, 9)) for _ in range(8)])
+                existing = await UserRepository.get_by_matricula(db, matricula=matricula_gerada)
+                if not existing:
+                    register_data.matricula = matricula_gerada
+                    break
 
         # Definindo Status de aprovação baseado na Role
         status_aprovacao = ApprovalStatus.APROVADO

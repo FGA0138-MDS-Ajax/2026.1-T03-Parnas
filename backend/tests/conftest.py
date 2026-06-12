@@ -54,6 +54,7 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
     global _db_initialized
     if not _db_initialized:
         async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.drop_all)
             await conn.run_sync(Base.metadata.create_all)
         _db_initialized = True
 
