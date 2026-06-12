@@ -18,7 +18,7 @@ erDiagram
         VARCHAR(255) senha_hash "Senha criptografada (bcrypt)"
         VARCHAR(100) area_manutencao "Área de manutenção do técnico"
         userrole role "Perfil de acesso (ENUM)"
-        userrole approval_status "Status de aprovação do usuário (ENUM)"
+        approvalstatus approval_status "Status de aprovação do usuário (ENUM)"
         BOOLEAN ativo "Indicador de conta ativa"
         TIMESTAMP created_at "Data de criação do registro"
         TIMESTAMP updated_at "Data da última atualização"
@@ -29,6 +29,7 @@ erDiagram
         VARCHAR(200) local "Local da manutenção (ex: FCTE, Lab)"
         VARCHAR(100) tipo_manutencao "Categoria de serviço (ex: Elétrica)"
         TEXT descricao "Descrição detalhada do problema"
+        VARCHAR(500) photo_path "Caminho da foto anexada ao chamado (Nullable)"
         ticketstatus status "Estado do chamado (ENUM)"
         VARCHAR(9) solicitante_id FK "FK apontando para users.matricula"
         VARCHAR(9) tecnico_id FK "FK apontando para users.matricula (Nullable)"
@@ -68,7 +69,7 @@ Armazena as credenciais, perfis de acesso e dados cadastrais dos quatro tipos de
 | **`senha_hash`** | `VARCHAR(255)` | `NOT NULL` | *Nenhum* | Hash seguro da senha gerado utilizando o algoritmo **bcrypt**. |
 |**`area_manutencao`** | `VARCHAR(100)` | *Nenhum* | `NULL` | Área de manutenção designada ao técnico
 | **`role`** | `userrole` (ENUM) | `NOT NULL` | `'SOLICITANTE'` | Perfil de permissão e privilégios de acesso do usuário no sistema. |
-`approval_status` | `userrole` (ENUM) | `NOT NULL` | `'PENDENTE'` | Define o Status de aprovação do usuário.
+| **`approval_status`** | `approvalstatus` (ENUM) | `NOT NULL` | `'PENDENTE'` | Define o status de aprovação do usuário (APROVADO, PENDENTE, REPROVADO). |
 | **`ativo`** | `BOOLEAN` | `NOT NULL` | `true` | Define se a conta está ativa e com permissão para realizar login. |
 | **`created_at`** | `TIMESTAMP WITH TIME ZONE` | `NOT NULL` | `now()` | Registro de data/hora em que a conta do usuário foi cadastrada. |
 | **`updated_at`** | `TIMESTAMP WITH TIME ZONE` | `NOT NULL` | `now()` | Registro de data/hora da última alteração no cadastro do usuário. |
@@ -90,6 +91,7 @@ Centraliza as solicitações de manutenção de infraestrutura abertas pela comu
 | **`status`** | `ticketstatus` (ENUM) | `NOT NULL` | `'ABERTO'` | Status do ciclo de vida em que o chamado se encontra. |
 | **`solicitante_id`** | `VARCHAR(9)` | `FOREIGN KEY` (`users.matricula`), `NOT NULL` | *Nenhum* | Matrícula do usuário solicitante (autor da abertura do ticket). |
 | **`tecnico_id`** | `VARCHAR(9)` | `FOREIGN KEY` (`users.matricula`), `NULLABLE` | `NULL` | Matrícula do técnico encarregado de executar a manutenção (atribuído pelo gerente ou capturado pela fila). |
+| **`photo_path`** | `VARCHAR(500)` | *Nenhum* | `NULL` | Caminho do arquivo da foto anexada à solicitação de manutenção. |
 | **`created_at`** | `TIMESTAMP WITH TIME ZONE` | `NOT NULL` | `now()` | Registro de data/hora em que o chamado de manutenção foi formalizado. |
 | **`updated_at`** | `TIMESTAMP WITH TIME ZONE` | `NOT NULL` | `now()` | Registro de data/hora da última alteração no ciclo de vida ou detalhes do chamado. |
 
@@ -139,6 +141,12 @@ Define as etapas sequenciais do fluxo de trabalho e atendimento das demandas de 
 - **`CONCLUIDO`**: Manutenção executada e finalizada com sucesso. O chamado é movido para etapa de avaliação.
 - **`CANCELADO`**: Chamado arquivado por duplicidade, erro de dados ou solicitação do autor antes da execução.
 - **`NAO_INICIADO`**: Estado neutro/histórico para chamados que aguardam agendamento prévio ou liberação de insumos.
+
+### 3.3 `approvalstatus`
+Controla o fluxo de aceitação e aprovação de novos cadastros no sistema (principalmente para o perfil técnico):
+- **`PENDENTE`**: O cadastro do técnico foi submetido e aguarda aprovação de um gerente.
+- **`APROVADO`**: Cadastro aprovado pelo gerente. O usuário está autorizado a realizar login e acessar o sistema.
+- **`REPROVADO`**: Cadastro reprovado pelo gerente. O usuário não está autorizado a acessar o sistema.
 
 ---
 

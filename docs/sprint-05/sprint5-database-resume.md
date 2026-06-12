@@ -1,4 +1,4 @@
-# Resumo Tarefa 1 - Adição do Campo `photo_path` ao Chamado
+# Resumo Tarefa 1 (Database) - Adição do Campo `photo_path` ao Chamado
 
 Todas as etapas do plano de implementação foram concluídas com sucesso. O campo `photo_path` foi adicionado na tabela de chamados (`tickets`) de forma opcional (`nullable=True`), mapeado nos modelos do ORM SQLAlchemy, estruturado nos schemas de requisição e resposta do Pydantic, integrado na camada de persistência e validado por testes automatizados.
 
@@ -58,3 +58,5 @@ docker compose exec backend pytest
 ```
 ======================= 56 passed, 2 warnings in 12.44s ========================
 ```
+
+---
