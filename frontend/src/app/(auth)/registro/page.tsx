@@ -16,6 +16,42 @@ interface RegistrationData {
   areaManutencao: string;
 }
 
+// Definindo a interface para a requisição de registro
+interface RegisterRequest {
+  matricula: string;
+  nome: string;
+  email: string;
+  senha: string;
+  role: 'SOLICITANTE' | 'TECNICO';
+  area_manutencao?: string;
+}
+
+// Definindo a interface para a resposta da API
+interface ApiResponse {
+  access_token?: string;
+  token_type?: string;
+  detail?: string;
+}
+
+// Função para registrar usuário via API
+const registerUser = async (userData: RegisterRequest): Promise<ApiResponse> => {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'}/auth/register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userData),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.detail || 'Erro desconhecido durante o registro');
+  }
+
+  return data;
+};
+
 export default function RegistroPage() {
   const router = useRouter();
   const [formData, setFormData] = useState<RegistrationData>({
@@ -58,18 +94,19 @@ export default function RegistroPage() {
       return;
     }
 
-    if (formData.tipoUsuario === 'SOLICITANTE' && !formData.matricula) {
-      setErro('Matrícula é obrigatória para solicitantes.');
+    // Validar matrícula para ambos os tipos de usuário, pois é obrigatória no backend
+    if (!formData.matricula) {
+      setErro('Matrícula é obrigatória para todos os usuários.');
+      return;
+    }
+
+    if (formData.matricula.length !== 9 || !/^\d{9}$/.test(formData.matricula)) {
+      setErro('Matrícula deve ter 9 dígitos numéricos.');
       return;
     }
 
     if (formData.tipoUsuario === 'TECNICO' && !formData.areaManutencao) {
       setErro('Área de manutenção é obrigatória para técnicos.');
-      return;
-    }
-
-    if (formData.tipoUsuario === 'SOLICITANTE' && formData.matricula.length !== 9) {
-      setErro('Matrícula deve ter 9 dígitos numéricos.');
       return;
     }
 
@@ -85,17 +122,37 @@ export default function RegistroPage() {
 
     setIsLoading(true);
 
-    // Simulação do cadastro bem-sucedido
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      // Preparar dados para envio - sempre inclui matricula para ambos os tipos de usuário
+      const registerData: RegisterRequest = {
+        matricula: formData.matricula,
+        nome: formData.nome,
+        email: formData.email,
+        senha: formData.senha,
+        role: formData.tipoUsuario,
+        ...(formData.tipoUsuario === 'TECNICO' && { area_manutencao: formData.areaManutencao }),
+      };
+
+      // Chamar API de registro
+      const response = await registerUser(registerData);
+
+      // Mostrar mensagem de sucesso diferente conforme o tipo de usuário
       if (formData.tipoUsuario === 'SOLICITANTE') {
         setSucesso('Cadastro realizado com sucesso. Você já pode fazer login.');
+        
+        // Salvar token se for retornado (para solicitante aprovado imediatamente)
+        if (response.access_token) {
+          localStorage.setItem('keepunb_token', response.access_token);
+        }
+        
         // Redirecionar para login após 2 segundos
         setTimeout(() => {
           router.push('/login');
         }, 2000);
       } else {
+        // Para técnico, a resposta pode ser diferente (sem token imediato)
         setSucesso('Cadastro enviado para aprovação. Aguarde a aprovação de um gerente para acessar o sistema.');
+        
         // Limpar o formulário para novo cadastro
         setFormData({
           nome: '',
@@ -107,7 +164,11 @@ export default function RegistroPage() {
           areaManutencao: '',
         });
       }
-    }, 1000);
+    } catch (error: any) {
+      setErro(error.message || 'Ocorreu um erro durante o cadastro. Por favor, tente novamente.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -219,30 +280,28 @@ export default function RegistroPage() {
             </select>
           </div>
 
-          {formData.tipoUsuario === 'SOLICITANTE' && (
-            <div className="input-group">
-              <div className="input-icon-left">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="9" cy="7" r="4"></circle>
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                </svg>
-              </div>
-              <input
-                id="matricula"
-                name="matricula"
-                type="text"
-                value={formData.matricula}
-                onChange={handleChange}
-                required
-                className="login-input"
-                placeholder="Matrícula (9 dígitos)"
-                maxLength={9}
-                pattern="[0-9]{9}"
-              />
+          <div className="input-group">
+            <div className="input-icon-left">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
             </div>
-          )}
+            <input
+              id="matricula"
+              name="matricula"
+              type="text"
+              value={formData.matricula}
+              onChange={handleChange}
+              required
+              className="login-input"
+              placeholder="Matrícula (9 dígitos)"
+              maxLength={9}
+              pattern="[0-9]{9}"
+            />
+          </div>
 
           {formData.tipoUsuario === 'TECNICO' && (
             <div className="input-group">
