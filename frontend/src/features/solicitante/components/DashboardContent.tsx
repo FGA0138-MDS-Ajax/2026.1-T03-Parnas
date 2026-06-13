@@ -67,9 +67,18 @@ export default function DashboardContent() {
       }
     };
     
+    const handleCustomOpen = () => {
+      setIsModalOpen(true);
+    };
+    
     handleHashChange();
     window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener('openOutrasSolicitacoes', handleCustomOpen);
+    
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('openOutrasSolicitacoes', handleCustomOpen);
+    };
   }, []);
 
   const getStatusBadgeClass = (status: string) => {
