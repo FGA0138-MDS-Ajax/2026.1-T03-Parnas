@@ -867,6 +867,9 @@
   .menu-li-nova {
     display: block !important;
   }
+  .menu-li-outras {
+    display: none !important;
+  }
   
   /* Se o link da Nova Solicitação estiver ativo (estamos na página nova-solicitacao), inverte: exibe o Início e esconde a Nova Solicitação */
   .sidebar-menu:has(.menu-li-nova .menu-item-link.active) .menu-li-dashboard {

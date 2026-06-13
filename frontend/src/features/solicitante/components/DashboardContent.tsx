@@ -59,6 +59,19 @@ export default function DashboardContent() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const handleHashChange = () => {
+      if (window.location.hash === '#outras-solicitacoes') {
+        setIsModalOpen(true);
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+    };
+    
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
       case 'ABERTO': return 'aberto';
