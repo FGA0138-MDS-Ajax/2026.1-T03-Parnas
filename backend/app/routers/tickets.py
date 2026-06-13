@@ -137,6 +137,14 @@ async def get_my_tickets(
     return await TicketService.get_user_tickets(db, current_user)
 
 
+@router.get("/open/others", response_model=list[TicketPublicResponse])
+async def get_open_tickets_by_others(
+    current_user: User = Depends(require_role([UserRole.SOLICITANTE])),
+    db: AsyncSession = Depends(get_db),
+):
+    return await TicketService.get_open_tickets_by_others(db, current_user)
+
+
 @router.get("/open", response_model=list[TicketResponse])
 async def get_open_tickets(
     current_user: User = Depends(require_role([UserRole.GERENTE])),

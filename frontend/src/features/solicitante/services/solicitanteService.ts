@@ -7,6 +7,10 @@ export const solicitanteService = {
     return await apiRequest<Ticket[]>('/tickets/me');
   },
 
+  async getOutrosChamados(): Promise<Ticket[]> {
+    return await apiRequest<Ticket[]>('/tickets/open/others');
+  },
+
   async criarChamado(input: NovaSolicitacaoInput): Promise<Ticket> {
     return await apiRequest<Ticket>('/tickets', {
       method: 'POST',

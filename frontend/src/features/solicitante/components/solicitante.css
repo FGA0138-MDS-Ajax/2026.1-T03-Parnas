@@ -755,6 +755,69 @@
   to { transform: rotate(360deg); }
 }
 
+/* Modal e Busca - Outras Solicitações */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(4, 12, 30, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease forwards;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(13, 43, 94, 0.08);
+}
+
+.modal-body {
+  max-height: 65vh;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+.modal-body::-webkit-scrollbar-track {
+  background: rgba(13, 43, 94, 0.05);
+  border-radius: 10px;
+}
+.modal-body::-webkit-scrollbar-thumb {
+  background: rgba(13, 43, 94, 0.2);
+  border-radius: 10px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(13, 43, 94, 0.1);
+  background: rgba(13, 43, 94, 0.03);
+  color: var(--navy-dark);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--navy-light);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(37, 87, 167, 0.15);
+}
+
 @media (max-width: 992px) {
   .solicitante-layout {
     flex-direction: column;
@@ -803,6 +866,9 @@
   }
   .menu-li-nova {
     display: block !important;
+  }
+  .menu-li-outras {
+    display: none !important;
   }
   
   /* Se o link da Nova Solicitação estiver ativo (estamos na página nova-solicitacao), inverte: exibe o Início e esconde a Nova Solicitação */
@@ -919,4 +985,43 @@
   .stepper-icon {
     margin-bottom: 0;
   }
+}
+
+/* Tabs do Modal */
+.tabs-container {
+  scrollbar-width: thin;
+}
+
+.tabs-container::-webkit-scrollbar {
+  height: 4px;
+}
+.tabs-container::-webkit-scrollbar-thumb {
+  background: rgba(13, 43, 94, 0.2);
+  border-radius: 10px;
+}
+
+.tab-btn {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border-radius: 100px;
+  background: rgba(13, 43, 94, 0.05);
+  color: var(--gray-text);
+  border: 1px solid rgba(13, 43, 94, 0.1);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  background: rgba(13, 43, 94, 0.08);
+  color: var(--navy-dark);
+}
+
+.tab-btn.active {
+  background: var(--navy-light);
+  color: var(--white);
+  border-color: var(--navy-light);
+  box-shadow: 0 4px 10px rgba(37, 87, 167, 0.2);
 }

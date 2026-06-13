@@ -12,6 +12,10 @@ export default function DashboardContent() {
   const [userMatricula, setUserMatricula] = useState('211043210');
   const [stats, setStats] = useState<SolicitanteDashboardStats>({ total: 0, abertos: 0, emAndamento: 0, concluidos: 0 });
   const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [outrosChamados, setOutrosChamados] = useState<Ticket[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState<'nao_iniciados' | 'em_andamento' | 'concluidos'>('nao_iniciados');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -35,14 +39,16 @@ export default function DashboardContent() {
         // Pequena pausa para animação
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        const [tickets, dashboardStats] = await Promise.all([
+        const [tickets, dashboardStats, outros] = await Promise.all([
           solicitanteService.getChamados(),
-          solicitanteService.getEstatisticas()
+          solicitanteService.getEstatisticas(),
+          solicitanteService.getOutrosChamados()
         ]);
 
         setStats(dashboardStats);
         // Pega todas as solicitações
         setTickets(tickets);
+        setOutrosChamados(outros);
       } catch (e) {
         console.error('Erro ao buscar dados do dashboard do solicitante:', e);
       } finally {
@@ -51,6 +57,28 @@ export default function DashboardContent() {
     };
 
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      if (window.location.hash === '#outras-solicitacoes') {
+        setIsModalOpen(true);
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+    };
+    
+    const handleCustomOpen = () => {
+      setIsModalOpen(true);
+    };
+    
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    window.addEventListener('openOutrasSolicitacoes', handleCustomOpen);
+    
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('openOutrasSolicitacoes', handleCustomOpen);
+    };
   }, []);
 
   const getStatusBadgeClass = (status: string) => {
@@ -198,6 +226,40 @@ export default function DashboardContent() {
               ))}
             </div>
           )}
+          
+          <button 
+            className="other-requests-trigger"
+            onClick={() => setIsModalOpen(true)}
+            style={{
+              marginTop: '1.5rem',
+              width: '100%',
+              padding: '1.25rem',
+              borderRadius: '12px',
+              background: 'linear-gradient(135deg, rgba(37, 87, 167, 0.05) 0%, rgba(13, 43, 94, 0.03) 100%)',
+              border: '1px solid rgba(13, 43, 94, 0.15)',
+              color: 'var(--navy)',
+              fontFamily: 'Sora',
+              fontWeight: 600,
+              fontSize: '1rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.75rem',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <span>Ver Outras Solicitações</span>
+            <span style={{ 
+              background: 'var(--navy-light)', 
+              color: 'white', 
+              borderRadius: '100px', 
+              padding: '0.2rem 0.6rem', 
+              fontSize: '0.8rem' 
+            }}>
+              {outrosChamados.length}
+            </span>
+          </button>
         </div>
 
         {/* Painel da Direita - Atalhos Rápidos */}
@@ -260,6 +322,110 @@ export default function DashboardContent() {
           </div>
         </div>
       </div>
+
+      {/* Modal de Outras Solicitações */}
+      {isModalOpen && (
+        <div className="modal-backdrop" onClick={() => setIsModalOpen(false)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3 style={{ margin: 0, fontFamily: 'Sora', color: 'var(--navy-dark)', fontSize: '1.3rem' }}>
+                Outras Solicitações
+              </h3>
+              <button 
+                onClick={() => setIsModalOpen(false)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  fontSize: '1.8rem',
+                  color: 'var(--gray-text)',
+                  cursor: 'pointer',
+                  padding: '0 0.5rem',
+                  lineHeight: 1
+                }}
+              >
+                &times;
+              </button>
+            </div>
+            
+            <div className="modal-body">
+              <div className="search-bar-container" style={{ marginBottom: '1.5rem' }}>
+                <input 
+                  type="text" 
+                  className="search-input" 
+                  placeholder="Pesquisar por local, categoria ou descrição..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+
+              <div className="tabs-container" style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
+                <button 
+                  className={`tab-btn ${activeTab === 'nao_iniciados' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('nao_iniciados')}
+                >
+                  Não Iniciados
+                </button>
+                <button 
+                  className={`tab-btn ${activeTab === 'em_andamento' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('em_andamento')}
+                >
+                  Em Andamento
+                </button>
+              </div>
+
+              <div className="tickets-list" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {(() => {
+                  const filteredOutros = outrosChamados.filter((ticket) => {
+                    if (activeTab === 'nao_iniciados' && !['ABERTO', 'NAO_INICIADO'].includes(ticket.status)) return false;
+                    if (activeTab === 'em_andamento' && !['ATRIBUIDO', 'EM_ANDAMENTO'].includes(ticket.status)) return false;
+
+                    const query = searchQuery.toLowerCase();
+                    if (!query) return true;
+                    return (
+                      ticket.local.toLowerCase().includes(query) ||
+                      ticket.tipo_manutencao.toLowerCase().includes(query) ||
+                      ticket.descricao.toLowerCase().includes(query) ||
+                      ticket.id.toString().includes(query)
+                    );
+                  });
+
+                  if (filteredOutros.length === 0) {
+                    return (
+                      <div className="empty-state" style={{ padding: '2rem 1rem', textAlign: 'center' }}>
+                        <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🔍</div>
+                        <p style={{ color: 'var(--gray-text)', margin: 0 }}>Nenhuma solicitação encontrada nesta aba.</p>
+                      </div>
+                    );
+                  }
+
+                  return filteredOutros.map(ticket => (
+                    <div key={ticket.id} style={{
+                      padding: '1.25rem',
+                      borderRadius: '12px',
+                      background: '#ffffff',
+                      border: '1px solid rgba(13, 43, 94, 0.12)',
+                      boxShadow: '0 2px 6px rgba(13, 43, 94, 0.03)',
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
+                        <span style={{ fontFamily: 'Sora', fontSize: '0.92rem', fontWeight: 600, color: '#000000' }}>#{ticket.id} — {ticket.local}</span>
+                        <span className={`badge-status ${getStatusBadgeClass(ticket.status)}`} style={{ transform: 'scale(0.85)', transformOrigin: 'left' }}>
+                          {translateStatus(ticket.status)}
+                        </span>
+                      </div>
+                      <span style={{ fontSize: '0.78rem', color: 'var(--gray-text)', display: 'block', marginBottom: '0.35rem' }}>
+                        Categoria: <strong>{ticket.tipo_manutencao}</strong> • Aberto em: {new Date(ticket.created_at).toLocaleDateString('pt-BR')} às {new Date(ticket.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                      <p style={{ fontSize: '0.88rem', color: '#4A5568', margin: 0 }}>
+                        {ticket.descricao}
+                      </p>
+                    </div>
+                  ));
+                })()}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
