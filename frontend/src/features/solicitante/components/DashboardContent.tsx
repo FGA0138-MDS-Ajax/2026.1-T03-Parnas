@@ -1,4 +1,4 @@
-// DashboardContent.tsx — Painel Geral e Métricas para a Área do Solicitante
+
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -19,24 +19,38 @@ export default function DashboardContent() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Carrega dados de autenticação provisória ou real
+
     if (typeof window !== 'undefined') {
       const email = localStorage.getItem('keepunb_email') || 'solicitante@gmail.com';
+      const nome = localStorage.getItem('keepunb_nome') || '';
       const matricula = localStorage.getItem('keepunb_matricula') || '211043210';
       setUserMatricula(matricula);
       
-      if (email.includes('solicitante')) {
+      if (nome) {
+        const formattedName = nome
+          .replace(/\./g, ' ')
+          .split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+        setUserName(formattedName);
+      } else if (email.includes('solicitante')) {
         setUserName('Gabriel Sousa');
       } else {
         const parsedName = email.split('@')[0];
-        setUserName(parsedName.charAt(0).toUpperCase() + parsedName.slice(1));
+        const formattedName = parsedName
+          .replace(/\./g, ' ')
+          .split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+        setUserName(formattedName);
       }
     }
 
+    // Busca as métricas gerais e as listas de chamados do solicitante
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        // Pequena pausa para animação
+
         await new Promise(resolve => setTimeout(resolve, 500));
         
         const [tickets, dashboardStats, outros] = await Promise.all([
@@ -46,7 +60,7 @@ export default function DashboardContent() {
         ]);
 
         setStats(dashboardStats);
-        // Pega todas as solicitações
+
         setTickets(tickets);
         setOutrosChamados(outros);
       } catch (e) {
@@ -59,6 +73,7 @@ export default function DashboardContent() {
     fetchData();
   }, []);
 
+  // Controla a abertura do modal de "Outras Solicitações" através da URL (hash) ou evento customizado
   useEffect(() => {
     const handleHashChange = () => {
       if (window.location.hash === '#outras-solicitacoes') {
@@ -116,7 +131,6 @@ export default function DashboardContent() {
   return (
     <div style={{ animation: 'fadeIn 0.4s ease forwards' }}>
       
-      {/* Mensagem de Boas-Vindas */}
       <div style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
@@ -134,7 +148,7 @@ export default function DashboardContent() {
             Olá, {userName}! <span style={{ fontSize: '1.6rem' }}>👋</span>
           </h2>
           <p style={{ color: 'var(--gray-text)', fontSize: '0.98rem', marginTop: '0.35rem' }}>
-            Acompanhe a conservação da infraestrutura do campus FCTE. Seu papel faz a diferença!
+            Acompanhe a conservação da infraestrutura da FCTE.
           </p>
         </div>
         
@@ -149,7 +163,6 @@ export default function DashboardContent() {
         </div>
       </div>
 
-      {/* Grid de KPIs */}
       <div className="kpis-grid">
         <div className="kpi-card kpi-total">
           <span className="kpi-label">Total Solicitado</span>
@@ -174,7 +187,7 @@ export default function DashboardContent() {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.1fr) minmax(0, 1fr)', gap: '2rem', flexWrap: 'wrap' }} className="responsive-dashboard-grid">
-        {/* Painel da Esquerda - Minhas Solicitações */}
+        
         <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
             <h3 style={{ fontFamily: 'Sora', fontSize: '1.25rem', fontWeight: 600, margin: 0 }}>
@@ -262,7 +275,6 @@ export default function DashboardContent() {
           </button>
         </div>
 
-        {/* Painel da Direita - Atalhos Rápidos */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           <div className="glass-card" style={{ 
             background: 'linear-gradient(135deg, rgba(27, 122, 58, 0.12) 0%, rgba(13, 43, 94, 0.1) 100%)', 
@@ -323,7 +335,6 @@ export default function DashboardContent() {
         </div>
       </div>
 
-      {/* Modal de Outras Solicitações */}
       {isModalOpen && (
         <div className="modal-backdrop" onClick={() => setIsModalOpen(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
