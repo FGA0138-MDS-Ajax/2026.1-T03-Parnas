@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { Ticket, DashboardStats } from '../types';
 import { gerenteService } from '../services/gerenteService';
 import ModalAtribuicao from './ModalAtribuicao';
+import AprovarTecnicos from './AprovarTecnicos';
 
 export default function Dashboard() {
   const [stats, setStats] = useState<DashboardStats>({
@@ -304,6 +305,9 @@ export default function Dashboard() {
           </div>
         )}
       </section>
+
+      {/* COMPONENTE DE APROVAÇÃO DE TÉCNICOS */}
+      <AprovarTecnicos />
 
       {/* MODAL DE ATRIBUIÇÃO */}
       {isModalOpen && selectedTicket && (
