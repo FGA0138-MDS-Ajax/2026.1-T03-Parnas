@@ -1,4 +1,4 @@
-// layout.tsx — Layout da Área do Gerente com identidade visual KeepUnB
+
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -19,19 +19,30 @@ export default function GerenteLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
-    // Fecha a barra lateral automaticamente na mudança de página
+
     setIsSidebarOpen(false);
   }, [pathname]);
 
   useEffect(() => {
-    // Tenta recuperar o nome real do usuario autenticado
+
     if (typeof window !== 'undefined') {
       const email = localStorage.getItem('keepunb_email') || '';
       const nome = localStorage.getItem('keepunb_nome') || '';
       if (nome) {
-        setUserName(nome);
+        const formattedName = nome
+          .replace(/\./g, ' ')
+          .split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+        setUserName(formattedName);
       } else if (email) {
-        setUserName(email.split('@')[0]);
+        const parsedName = email.split('@')[0];
+        const formattedName = parsedName
+          .replace(/\./g, ' ')
+          .split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+        setUserName(formattedName);
       }
     }
   }, []);
@@ -51,14 +62,12 @@ export default function GerenteLayout({
   return (
     <AuthGuard allowedRoles={['GERENTE']}>
     <div className={`gerente-layout ${isSidebarOpen ? 'sidebar-open' : ''}`}>
-      {/* SIDEBAR DO GERENTE */}
+      
       <aside className={`gerente-sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header-mobile">
           <div className="sidebar-logo">
-            {/* Ícone de ferramenta SVG nativo do React */}
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--green-light)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}>
-              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
-            </svg>
+            
+            <img src="/logo-red.png" width="36" height="36" alt="KeepUnB" style={{ marginRight: '6px' }} />
             <span>Keep<em>UnB</em></span>
           </div>
 
@@ -83,7 +92,6 @@ export default function GerenteLayout({
           </button>
         </div>
 
-        {/* NAVEGAÇÃO */}
         <nav style={{ flex: 1 }} className="sidebar-nav">
           <ul className="sidebar-menu">
             <li>
@@ -122,7 +130,6 @@ export default function GerenteLayout({
           </ul>
         </nav>
 
-        {/* PERFIL DO USUÁRIO LOGADO */}
         <div className="sidebar-user">
           <div className="user-avatar">
             {userName.substring(0, 2).toUpperCase()}
@@ -141,7 +148,6 @@ export default function GerenteLayout({
         </div>
       </aside>
 
-      {/* CONTEÚDO PRINCIPAL DA ROTA */}
       <main className="gerente-content">
         {children}
       </main>
