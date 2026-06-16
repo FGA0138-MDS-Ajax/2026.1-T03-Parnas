@@ -66,7 +66,7 @@ async def get_ticket_comments(
 #PATCH: update_comment_ocultar
 #   Oculta um comentário.
 #   (TODO), verificar quem está ocultando o comentário.
-@router.patch("{comment_id}/ocultar", response_model=list[CommentResponse])
+@router.patch("/{comment_id}/ocultar", response_model=list[CommentResponse])
 async def update_comment_ocultar(
     comment_id: int,
     ####Requer que o usuário seja administrador ou gerente.
@@ -80,7 +80,7 @@ async def update_comment_ocultar(
 #PATCH: update_comment_revelar
 #   Revela um comentário.
 #   (TODO), verificar quem está revelando o comentário.
-@router.patch("{comment_id}/revelar", response_model=list[CommentResponse])
+@router.patch("/{comment_id}/revelar", response_model=list[CommentResponse])
 async def update_comment_revelar(
     comment_id: int,
     current_user: User=Depends(require_role([UserRole.ADMIN, UserRole.GERENTE])),
