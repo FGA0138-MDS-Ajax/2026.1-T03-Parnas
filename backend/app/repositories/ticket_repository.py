@@ -12,7 +12,8 @@ class TicketRepository:
             descricao=ticket_in.descricao,
             status=TicketStatus.ABERTO,
             solicitante_id=solicitante_id,
-            tecnico_id=None
+            tecnico_id=None,
+            photo_path=ticket_in.photo_path
         )
         db.add(db_ticket)
         await db.commit()
@@ -27,6 +28,21 @@ class TicketRepository:
     @staticmethod
     async def get_by_status(db: AsyncSession, status: TicketStatus) -> list[Ticket]:
         result = await db.execute(select(Ticket).where(Ticket.status == status))
+        return list(result.scalars().all())
+
+    @staticmethod
+    async def get_open_by_others(db: AsyncSession, solicitante_id: str) -> list[Ticket]:
+        result = await db.execute(
+            select(Ticket).where(
+                Ticket.status.in_([
+                    TicketStatus.ABERTO, 
+                    TicketStatus.ATRIBUIDO, 
+                    TicketStatus.EM_ANDAMENTO, 
+                    TicketStatus.NAO_INICIADO
+                ]),
+                Ticket.solicitante_id != solicitante_id
+            )
+        )
         return list(result.scalars().all())
 
     @staticmethod

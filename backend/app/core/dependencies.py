@@ -19,14 +19,14 @@ async def get_current_user(
     if credentials is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token de autenticação não informado",
+            detail="Token de autenticação não informado.",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
     token = credentials.credentials
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Não foi possível validar as credenciais",
+        detail="Não foi possível validar as credenciais.",
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
@@ -43,7 +43,7 @@ async def get_current_user(
     if user is None:
         raise credentials_exception
     if not user.ativo:
-        raise HTTPException(status_code=400, detail="Usuário inativo")
+        raise HTTPException(status_code=400, detail="Usuário inativo.")
     
     return user
 
@@ -52,7 +52,7 @@ def require_role(allowed_roles: list[UserRole]):
         if current_user.role not in allowed_roles:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail="Sem permissão para realizar esta operação"
+                detail="Sem permissão para realizar esta operação."
             )
         return current_user
     return role_checker

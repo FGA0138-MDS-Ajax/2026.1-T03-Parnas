@@ -19,8 +19,6 @@ import asyncio
 import sys
 from pathlib import Path
 
-from sqlalchemy import select, text
-
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from app.core.database import AsyncSessionLocal, engine
@@ -28,6 +26,24 @@ from app.core.security import get_password_hash
 from app.models.user import User, UserRole, ApprovalStatus
 from app.models.ticket import Ticket, TicketStatus
 from app.models.ticket_history import TicketHistory
+
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy import select, text, update
+
+#   Pietro
+#   Como esse script é rodado fora do Docker,
+#   Nos referimos ao banco de dados pelo localhost
+engine = create_async_engine(
+    "postgresql+asyncpg://keepunb:changeme@localhost:5432/keepunb_dev",
+    echo=True,
+    future=True,
+)
+
+AsyncSessionLocal = async_sessionmaker(
+    engine,
+    class_=AsyncSession,
+    expire_on_commit=False,
+)
 
 TEST_USERS = [
     {
@@ -98,6 +114,7 @@ TEST_TICKETS = [
     {
         "local": "UED",
         "descricao": "Buraco na parede.",
+        "photo_path": "buracoparede.jpeg",
         "tipo_manutencao": "Estrutural",
         "solicitante_id": "242012345",
         "historico": {}
@@ -105,6 +122,7 @@ TEST_TICKETS = [
     {
         "local": "UAC",
         "descricao": "Ninho de pássaro no teto.",
+        "photo_path": "semenergia.jpg",
         "tipo_manutencao": "Estrutural",
         "solicitante_id": "251087284",
         "historico": {
@@ -120,6 +138,7 @@ TEST_TICKETS = [
     {
         "local": "LDTEA",
         "descricao": "Lâmpada queimada.",
+        "photo_path": "lampadaquebrada.webp",
         "tipo_manutencao": "Energia",
         "solicitante_id": "242099873",
         "historico": {
@@ -186,6 +205,7 @@ async def upsert_test_ticket(ticket_data: dict[str, object]) -> str:
             descricao=ticket_data['descricao'],
             tipo_manutencao=ticket_data['tipo_manutencao'],
             solicitante_id=ticket_data['solicitante_id'],
+            photo_path=ticket_data.get('photo_path')
         )
 
         session.add(ticket)
@@ -204,10 +224,37 @@ async def upsert_test_ticket(ticket_data: dict[str, object]) -> str:
         for k, hist_data in ticket_data['historico'].items():
             print(hist_data)
             tecid = hist_data.get('tecnico_id')
+            nusta = hist_data.get('new_status')
+
+            # atribuir tecnico se necessario
             if tecid:
-                # atribuir tecnico
-                tikid = ticket.id
-                session.execute(text("UPDATE tickets SET tecnico_id = tecid WHERE id = tikid;"))
+                # coloca o técnico no ticket
+                stmt = (
+                    update(Ticket)
+                    .filter(Ticket.id==ticket.id)
+                    .values(tecnico_id=tecid)
+                )
+                
+                # aponta o local de manutencao do tecnico
+                stmt2 = (
+                    update(User)
+                    .filter(User.matricula==tecid)
+                    .values(area_manutencao=ticket_data['local'])
+                )
+
+                await session.execute(stmt)
+                await session.execute(stmt2)
+                await session.commit()
+
+            # atribuir novo estado de ticket
+            stmt= (
+                update(Ticket)
+                .filter(Ticket.id==ticket.id)
+                .values(status=nusta)
+            )
+
+            await session.execute(stmt)
+            await session.commit()
 
             ticket_history = TicketHistory(
                 previous_status=hist_data['previous_status'],

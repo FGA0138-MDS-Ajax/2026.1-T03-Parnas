@@ -1,11 +1,19 @@
 """Ponto de entrada da aplicação FastAPI — KeepUnB."""
 
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
+from app.routers import auth, users, tickets, technicians, comments
 from app.core.error_handlers import register_error_handlers
 from app.core.openapi import configure_openapi
 from app.routers import auth, users, tickets, technicians
+
+BACKEND_DIR = Path(__file__).resolve().parents[1]
+UPLOADS_DIR = BACKEND_DIR / "uploads"
+UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
 
 app = FastAPI(
     title="KeepUnB API",
@@ -16,6 +24,7 @@ app = FastAPI(
 )
 
 register_error_handlers(app)
+app.mount("/uploads", StaticFiles(directory=UPLOADS_DIR), name="uploads")
 
 # Configuração de CORS
 app.add_middleware(
@@ -30,6 +39,7 @@ app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(tickets.router)
 app.include_router(technicians.router)
+app.include_router(comments.router)
 configure_openapi(app)
 
 

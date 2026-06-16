@@ -5,8 +5,11 @@ import React, { useEffect, useState } from 'react';
 import { Ticket, DashboardStats } from '../types';
 import { gerenteService } from '../services/gerenteService';
 import ModalAtribuicao from './ModalAtribuicao';
+import AprovarTecnicos from './AprovarTecnicos';
 
 export default function Dashboard() {
+  const [userName, setUserName] = useState('Gerente de Operações');
+  const [userMatricula, setUserMatricula] = useState('123456789');
   const [stats, setStats] = useState<DashboardStats>({
     abertos: 0,
     atribuidos: 0,
@@ -42,6 +45,32 @@ export default function Dashboard() {
 
   useEffect(() => {
     loadData();
+
+    if (typeof window !== 'undefined') {
+      const email = localStorage.getItem('keepunb_email') || 'gerente@gmail.com';
+      const nome = localStorage.getItem('keepunb_nome') || '';
+      const matricula = localStorage.getItem('keepunb_matricula') || '242012345';
+      setUserMatricula(matricula);
+      
+      if (nome) {
+        const formattedName = nome
+          .replace(/\./g, ' ')
+          .split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+        setUserName(formattedName);
+      } else if (email.includes('gerente')) {
+        setUserName('Gerente de Operações');
+      } else {
+        const parsedName = email.split('@')[0];
+        const formattedName = parsedName
+          .replace(/\./g, ' ')
+          .split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+        setUserName(formattedName);
+      }
+    }
   }, []);
 
   const handleOpenAssign = (ticket: Ticket) => {
@@ -98,7 +127,7 @@ export default function Dashboard() {
   return (
     <div>
       {/* HEADER */}
-      <header className="content-header">
+      <header className="content-header" style={{ marginBottom: '1.5rem' }}>
         <div>
           <h1 className="content-title">Painel de Controle</h1>
           <p className="content-subtitle">Fila geral de triagem e distribuição de chamados técnicos do campus FCTE.</p>
@@ -112,6 +141,39 @@ export default function Dashboard() {
           <span>Atualizar Dados</span>
         </button>
       </header>
+
+      {/* GREETING CARD */}
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        marginBottom: '2.5rem',
+        background: 'linear-gradient(135deg, rgba(37, 87, 167, 0.12) 0%, rgba(13, 43, 94, 0.08) 100%)',
+        padding: '1.75rem 2.25rem',
+        borderRadius: '20px',
+        border: '1px solid rgba(13, 43, 94, 0.08)',
+        flexWrap: 'wrap',
+        gap: '1.5rem'
+      }}>
+        <div>
+          <h2 style={{ fontFamily: 'Sora', fontSize: '1.8rem', fontWeight: 700, margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--navy-dark)' }}>
+            Olá, {userName}! <span style={{ fontSize: '1.6rem' }}>👋</span>
+          </h2>
+          <p style={{ color: 'var(--gray-text)', fontSize: '0.98rem', marginTop: '0.35rem' }}>
+            Acompanhe as demandas de manutenção e coordene a equipe de infraestrutura.
+          </p>
+        </div>
+        
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ textAlign: 'right' }}>
+            <span style={{ fontSize: '0.78rem', color: 'var(--gray-text)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>Perfil do Gerente</span>
+            <span style={{ fontSize: '0.9rem', color: 'var(--navy-dark)', fontWeight: 600 }}>Matrícula: {userMatricula}</span>
+          </div>
+          <div className="user-avatar" style={{ width: '48px', height: '48px', fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--navy-light)', color: 'white', borderRadius: '50%', fontWeight: 'bold' }}>
+            {userName.substring(0, 2).toUpperCase()}
+          </div>
+        </div>
+      </div>
 
       {/* KPI CARDS */}
       <section className="kpi-grid">
@@ -305,6 +367,9 @@ export default function Dashboard() {
         )}
       </section>
 
+      {/* COMPONENTE DE APROVAÇÃO DE TÉCNICOS */}
+      <AprovarTecnicos />
+
       {/* MODAL DE ATRIBUIÇÃO */}
       {isModalOpen && selectedTicket && (
         <ModalAtribuicao
@@ -336,12 +401,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      <style jsx global>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      `}</style>
+      {/* Global styles moved to global.css or App Router layout for better performance */}
     </div>
   );
 }

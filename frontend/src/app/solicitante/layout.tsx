@@ -1,4 +1,4 @@
-// layout.tsx — Layout da Área do Solicitante com identidade visual KeepUnB
+
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -19,7 +19,7 @@ export default function SolicitanteLayout({
   const [userMatricula, setUserMatricula] = useState('');
 
   useEffect(() => {
-    // Tenta carregar informações salvas no localStorage
+
     if (typeof window !== 'undefined') {
       const email = localStorage.getItem('keepunb_email') || '';
       const nome = localStorage.getItem('keepunb_nome') || '';
@@ -27,10 +27,20 @@ export default function SolicitanteLayout({
       setUserMatricula(matricula);
 
       if (nome) {
-        setUserName(nome);
+        const formattedName = nome
+          .replace(/\./g, ' ')
+          .split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+        setUserName(formattedName);
       } else if (email) {
         const parsedName = email.split('@')[0];
-        setUserName(parsedName.charAt(0).toUpperCase() + parsedName.slice(1));
+        const formattedName = parsedName
+          .replace(/\./g, ' ')
+          .split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+        setUserName(formattedName);
       }
     }
   }, []);
@@ -50,17 +60,14 @@ export default function SolicitanteLayout({
   return (
     <AuthGuard allowedRoles={['SOLICITANTE']}>
     <div className="solicitante-layout">
-      {/* SIDEBAR DO SOLICITANTE */}
+      
       <aside className="solicitante-sidebar">
         <div className="sidebar-logo">
-          {/* Ícone de operário/manutenção SVG nativo */}
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--green-light)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px' }}>
-            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
-          </svg>
+          
+          <img src="/logo-red.png" width="36" height="36" alt="KeepUnB" style={{ marginRight: '8px' }} />
           <span>Keep<em>UnB</em></span>
         </div>
 
-        {/* NAVEGAÇÃO INTERNA */}
         <nav style={{ flex: 1 }}>
           <ul className="sidebar-menu">
             <li className="menu-li-dashboard">
@@ -81,11 +88,31 @@ export default function SolicitanteLayout({
                 <span>Nova Solicitação</span>
               </Link>
             </li>
+            
+            <li className="menu-li-outras">
+              <Link 
+                href="/solicitante/dashboard#outras-solicitacoes" 
+                className="menu-item-link"
+                onClick={(e) => {
+                  if (pathname === '/solicitante/dashboard') {
+                    e.preventDefault();
+                    window.dispatchEvent(new Event('openOutrasSolicitacoes'));
+                  }
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                <span>Outras Solicitações</span>
+              </Link>
+            </li>
 
           </ul>
         </nav>
 
-        {/* INFORMAÇÕES DE LOGIN E LOGOUT */}
         <div className="sidebar-user">
           <div className="user-avatar">
             {userName.substring(0, 2).toUpperCase()}
@@ -104,7 +131,6 @@ export default function SolicitanteLayout({
         </div>
       </aside>
 
-      {/* ÁREA DE CONTEÚDO PRINCIPAL DA ROTA */}
       <main className="solicitante-content">
         {children}
       </main>

@@ -1,7 +1,7 @@
-/* solicitante.css — Estilos da Área do Solicitante Padronizados com o Gerente (Light Mode) */
+/* tecnico.css — Estilos da Área do tecnico Padronizados com o Gerente (Light Mode) */
 
 /* Layout do Painel (Fundo Branco das Páginas) */
-.solicitante-layout {
+.tecnico-layout {
   display: flex;
   min-height: 100vh;
   background: var(--white);
@@ -10,7 +10,7 @@
 }
 
 /* Sidebar Estilizada 100% IDÊNTICA ao Gerente */
-.solicitante-sidebar {
+.tecnico-sidebar {
   width: 280px;
   background: var(--navy-dark);
   border-right: 1px solid rgba(255, 255, 255, 0.08);
@@ -157,7 +157,7 @@
 }
 
 /* Área de Conteúdo Principal (Fundo Branco) */
-.solicitante-content {
+.tecnico-content {
   flex: 1;
   padding: 2.5rem 3rem;
   overflow-y: auto;
@@ -494,14 +494,14 @@
   background: var(--white);
 }
 
-.solicitante-table {
+.tecnico-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
   font-size: 0.95rem;
 }
 
-.solicitante-table th {
+.tecnico-table th {
   font-family: 'Sora', sans-serif;
   background: rgba(13, 43, 94, 0.02);
   padding: 1.1rem 1.5rem;
@@ -513,24 +513,24 @@
   border-bottom: 1px solid rgba(13, 43, 94, 0.08);
 }
 
-.solicitante-table td {
+.tecnico-table td {
   padding: 1.1rem 1.5rem;
   border-bottom: 1px solid rgba(13, 43, 94, 0.04);
   color: #2d3748;
   transition: all 0.2s ease;
 }
 
-.solicitante-table tbody tr {
+.tecnico-table tbody tr {
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.solicitante-table tbody tr:hover td {
+.tecnico-table tbody tr:hover td {
   background: rgba(13, 43, 94, 0.01);
   color: var(--navy-dark);
 }
 
-.solicitante-table tr.expanded td {
+.tecnico-table tr.expanded td {
   background: rgba(13, 43, 94, 0.02);
 }
 
@@ -819,11 +819,11 @@
 }
 
 @media (max-width: 992px) {
-  .solicitante-layout {
+  .tecnico-layout {
     flex-direction: column;
   }
   
-  .solicitante-sidebar {
+  .tecnico-sidebar {
     width: 100%;
     padding: 0.75rem 1.5rem !important;
     border-right: none;
@@ -848,7 +848,7 @@
     display: none !important;
   }
   
-  .solicitante-sidebar nav {
+  .tecnico-sidebar nav {
     flex: none !important;
     margin-left: auto !important;
   }
@@ -933,7 +933,7 @@
     color: #ff4a4a !important;
   }
   
-  .solicitante-content {
+  .tecnico-content {
     padding: 1.5rem !important;
   }
   
@@ -947,7 +947,7 @@
 }
 
 @media (max-width: 576px) {
-  .solicitante-content {
+  .tecnico-content {
     padding: 1.5rem 1rem;
   }
   

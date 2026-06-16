@@ -28,6 +28,28 @@ async def test_create_ticket_success(db_session: AsyncSession, test_solicitante:
     assert ticket.status == TicketStatus.ABERTO
     assert ticket.solicitante_id == test_solicitante.matricula
     assert ticket.tecnico_id is None
+    assert ticket.photo_path is None
+
+
+@pytest.mark.asyncio
+async def test_create_ticket_with_photo_path_success(db_session: AsyncSession, test_solicitante: User):
+    """Garante que um ticket pode ser criado com photo_path preenchido."""
+    ticket_in = TicketCreate(
+        local="Prédio da Computação - Sala A1",
+        tipo_manutencao="Ar condicionado",
+        descricao="Ar condicionado não está refrigerando a sala.",
+        photo_path="uploads/images/ar_condicionado.png"
+    )
+
+    ticket = await TicketRepository.create(
+        db=db_session,
+        ticket_in=ticket_in,
+        solicitante_id=test_solicitante.matricula
+    )
+
+    assert ticket.id is not None
+    assert ticket.photo_path == "uploads/images/ar_condicionado.png"
+
 
 @pytest.mark.asyncio
 async def test_get_by_solicitante_id(

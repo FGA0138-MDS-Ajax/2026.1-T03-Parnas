@@ -21,7 +21,7 @@ from app.core.database import Base, get_db
 
 from app.core.security import create_access_token
 from app.main import app
-from app.models.user import User, UserRole
+from app.models.user import User, UserRole, ApprovalStatus
 from app.models.ticket import Ticket, TicketStatus
 
 
@@ -54,6 +54,7 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
     global _db_initialized
     if not _db_initialized:
         async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.drop_all)
             await conn.run_sync(Base.metadata.create_all)
         _db_initialized = True
 
@@ -98,7 +99,8 @@ def create_test_user(db_session: AsyncSession):
         email: str,
         senha: str = "senha123",
         role: UserRole = UserRole.SOLICITANTE,
-        ativo: bool = True
+        ativo: bool = True,
+        approval_status: ApprovalStatus = ApprovalStatus.APROVADO
     ) -> User:
         user = User(
             matricula=matricula,
@@ -106,7 +108,8 @@ def create_test_user(db_session: AsyncSession):
             email=email,
             senha_hash=get_password_hash(senha),
             role=role,
-            ativo=ativo
+            ativo=ativo,
+            approval_status=approval_status
         )
         db_session.add(user)
         await db_session.commit()

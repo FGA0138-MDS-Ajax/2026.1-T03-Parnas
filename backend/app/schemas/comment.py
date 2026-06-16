@@ -8,7 +8,7 @@ from pydantic import BaseModel, EmailStr
 
 # Base: propriedades básicas do comentário
 #       não inclui propriedades geradas proceduralmente, como IDs ou tempo/data
-class CommentBase():
+class CommentBase(BaseModel):
     mensagem: str
     ocultado: bool
 
