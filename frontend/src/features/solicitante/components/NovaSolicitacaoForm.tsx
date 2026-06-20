@@ -11,14 +11,14 @@ export default function NovaSolicitacaoForm() {
   const [local, setLocal] = useState('');
   const [tipoManutencao, setTipoManutencao] = useState('Elétrica');
   const [descricao, setDescricao] = useState('');
-  const [foto, setFoto] = useState<File | null>(null);
-  const [fotoPreview, setFotoPreview] = useState<string | null>(null);
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [PhotoPreview, setPhotoPreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [createdTicketId, setCreatedTicketId] = useState<number | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const handleFotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
 
     if (file) {
@@ -34,8 +34,8 @@ export default function NovaSolicitacaoForm() {
           return;
         }
       setErrorMsg('');
-      setFoto(file);
-      setFotoPreview(URL.createObjectURL(file));
+      setPhoto(file);
+      setPhotoPreview(URL.createObjectURL(file));
     }
   };
 
@@ -67,8 +67,8 @@ export default function NovaSolicitacaoForm() {
       // Limpa os campos
       setLocal('');
       setDescricao('');
-      setFoto(null);
-      setFotoPreview(null);
+      setPhoto(null);
+      setPhotoPreview(null);
     } catch (e: any) {
       setErrorMsg(e.message || 'Falha ao registrar chamado. Tente novamente.');
     } finally {
@@ -144,24 +144,24 @@ export default function NovaSolicitacaoForm() {
 
           {/* Foto */}
           <div className="form-group">
-            <label htmlFor="foto" className="form-label">
+            <label htmlFor="photo" className="form-label">
               Foto da Ocorrência (opcional)
             </label>
             <input
               id="photo"
               type="file"
-              accept="image/png, image/jpeg, image/webp"
-              onChange={handleFotoChange}
+              accept="image/png, image/jpeg"
+              onChange={handlePhotoChange}
               className="form-input"
             />
-            {fotoPreview && (
+            {PhotoPreview && (
               <div style={{ marginTop: '0.75rem' }}>
                 <img
-                  src={fotoPreview}
+                  src={PhotoPreview}
                   alt="Pré-visualização"
                   style={{ maxWidth: '200px', maxHeight: '200px', borderRadius: '10px', border: '1px solid rgba(13,43,94,0.15)' }}
                 />
-                <p style={{ fontSize: '0.8rem', color: 'var(--gray-text)', marginTop: '0.25rem' }}>{foto?.name}</p>
+                <p style={{ fontSize: '0.8rem', color: 'var(--gray-text)', marginTop: '0.25rem' }}>{photo?.name}</p>
               </div>
             )}
           </div>
