@@ -142,7 +142,7 @@ export default function RegistroPage() {
         
         // Salvar token se for retornado (para solicitante aprovado imediatamente)
         if (response.access_token) {
-          localStorage.setItem('keepunb_token', response.access_token);
+          sessionStorage.setItem('keepunb_token', response.access_token);
         }
         
         // Redirecionar para login após 2 segundos

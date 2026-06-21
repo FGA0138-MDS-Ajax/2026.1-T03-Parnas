@@ -15,7 +15,7 @@ class GerenteService {
   private API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
 
   private getAuthHeaders(): HeadersInit {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('keepunb_token') : null;
+    const token = typeof window !== 'undefined' ? sessionStorage.getItem('keepunb_token') : null;
     
     if (!token) {
       throw new Error('Usuário não autenticado');
@@ -63,6 +63,23 @@ class GerenteService {
       return await response.json();
     } catch (error) {
       console.error('Erro ao obter chamados abertos:', error);
+      throw error;
+    }
+  }
+
+  async getTodosChamados(): Promise<Ticket[]> {
+    try {
+      const response = await fetch(`${this.API_BASE_URL}/tickets`, {
+        headers: this.getAuthHeaders(),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erro na requisição: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Erro ao obter todos os chamados:', error);
       throw error;
     }
   }

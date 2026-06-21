@@ -15,7 +15,7 @@ export class ApiError extends Error {
 
 export const getStoredToken = () => {
   if (typeof window === 'undefined') return null;
-  return localStorage.getItem('keepunb_token');
+  return sessionStorage.getItem('keepunb_token');
 };
 
 export async function apiRequest<T>(
@@ -38,21 +38,24 @@ export async function apiRequest<T>(
     headers,
   });
 
+  const data = await response.json().catch(() => null);
+
   // Handle different status codes specifically
   if (response.status === 401) {
     // Clear auth session and redirect to login
     if (typeof window !== 'undefined') {
-      localStorage.removeItem('keepunb_token');
-      localStorage.removeItem('keepunb_role');
-      localStorage.removeItem('keepunb_email');
-      localStorage.removeItem('keepunb_matricula');
-      localStorage.removeItem('keepunb_nome');
-      window.location.href = '/login';
+      sessionStorage.removeItem('keepunb_token');
+      sessionStorage.removeItem('keepunb_role');
+      sessionStorage.removeItem('keepunb_email');
+      sessionStorage.removeItem('keepunb_matricula');
+      sessionStorage.removeItem('keepunb_nome');
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
     }
-    throw new ApiError('Acesso não autorizado. Faça login novamente.', 401);
+    const message = data?.detail || 'Acesso não autorizado. Faça login novamente.';
+    throw new ApiError(message, 401);
   }
-
-  const data = await response.json().catch(() => null);
 
   if (!response.ok) {
     const message = data?.detail || 'Erro ao comunicar com a API.';
