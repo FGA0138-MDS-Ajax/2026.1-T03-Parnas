@@ -16,10 +16,12 @@ const statusLabels: Record<Ticket['status'], string> = {
 };
 
 const statusClasse = (status: Ticket['status']) => {
-  if (status === 'EM_ANDAMENTO') return 'tecnico-pill tecnico-pill-info';
-  if (status === 'CONCLUIDO') return 'tecnico-pill tecnico-pill-success';
-  if (status === 'CANCELADO') return 'tecnico-pill tecnico-pill-danger';
-  return 'tecnico-pill tecnico-pill-warning';
+  if (status === 'EM_ANDAMENTO') return 'badge-status em_andamento';
+  if (status === 'CONCLUIDO') return 'badge-status concluido';
+  if (status === 'CANCELADO') return 'badge-status cancelado';
+  if (status === 'ATRIBUIDO') return 'badge-status atribuido';
+  if (status === 'ABERTO') return 'badge-status aberto';
+  return 'badge-status';
 };
 
 export default function DetalheChamadoTecnicoPage() {
@@ -83,21 +85,21 @@ export default function DetalheChamadoTecnicoPage() {
   };
 
   if (isLoading) {
-    return <p className="tecnico-card chamado-feedback">Carregando chamado...</p>;
+    return <p className="glass-card chamado-feedback">Carregando chamado...</p>;
   }
 
   if (notFoundMessage || !chamado) {
     return (
-      <section className="tecnico-page">
-        <div className="tecnico-card chamado-empty-state">
-          <span className="tecnico-kicker">Chamado indisponivel</span>
-          <h1 className="tecnico-title">Nao foi possivel abrir este chamado</h1>
+      <div style={{ animation: 'fadeIn 0.4s ease forwards' }}>
+        <div className="glass-card chamado-empty-state">
+          <span style={{ color: 'var(--green)', fontFamily: 'Sora', fontSize: '0.85rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Chamado indisponivel</span>
+          <h1 className="page-title">Nao foi possivel abrir este chamado</h1>
           <p className="tecnico-subtitle">
             {notFoundMessage || 'Este chamado nao esta disponivel para o seu perfil tecnico.'}
           </p>
 
           <button
-            className="tecnico-button"
+            className="btn-secondary"
             onClick={() => router.push('/tecnico/fila')}
             type="button"
           >
@@ -117,34 +119,33 @@ export default function DetalheChamadoTecnicoPage() {
             justify-self: start;
           }
         `}</style>
-      </section>
+      </div>
     );
   }
 
   const statusLabel = statusLabels[chamado.status];
 
   return (
-    <section className="tecnico-page">
-      {error && <p className="tecnico-card chamado-feedback">{error}</p>}
+    <div style={{ animation: 'fadeIn 0.4s ease forwards' }}>
+      {error && <p className="chamado-feedback">{error}</p>}
 
-      <div className="tecnico-hero chamado-hero">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <span className="tecnico-kicker">Detalhe do chamado</span>
-          <h1 className="tecnico-title">{chamado.tipo_manutencao}</h1>
-          <p className="tecnico-subtitle">
-            Visualize os dados principais do chamado e atualize o andamento do atendimento conforme a
-            execucao em campo.
+          <span style={{ color: 'var(--green)', fontFamily: 'Sora', fontSize: '0.85rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Detalhe do chamado</span>
+          <h1 className="page-title" style={{ marginTop: '0.5rem' }}>{chamado.tipo_manutencao}</h1>
+          <p className="page-subtitle">
+            Visualize os dados principais do chamado e atualize o andamento do atendimento conforme a execucao em campo.
           </p>
         </div>
 
-        <aside className="tecnico-card chamado-status-card" aria-label="Status atual do chamado">
-          <span className="chamado-id">CH-{String(chamado.id).padStart(3, '0')}</span>
+        <aside className="glass-card" style={{ padding: '1.25rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: 'center' }} aria-label="Status atual do chamado">
+          <span style={{ color: 'var(--green)', fontFamily: 'Sora', fontSize: '1rem', fontWeight: 800, letterSpacing: '0.12em' }}>CH-{String(chamado.id).padStart(3, '0')}</span>
           <span className={statusClasse(chamado.status)}>{statusLabel}</span>
         </aside>
       </div>
 
       <div className="chamado-layout">
-        <article className="tecnico-card chamado-card">
+        <article className="glass-card chamado-card">
           <div className="chamado-section-header">
             <div>
               <span className="chamado-section-kicker">Dados principais</span>
@@ -179,7 +180,7 @@ export default function DetalheChamadoTecnicoPage() {
           </div>
         </article>
 
-        <aside className="tecnico-card chamado-actions">
+        <aside className="glass-card chamado-actions">
           <div>
             <span className="chamado-section-kicker">Atualizacao</span>
             <h2>Andamento do atendimento</h2>
@@ -206,7 +207,7 @@ export default function DetalheChamadoTecnicoPage() {
 
           <div className="chamado-button-row">
             <button
-              className="tecnico-button tecnico-button-secondary"
+              className="btn-secondary"
               disabled={isUpdating || chamado.status !== 'ATRIBUIDO'}
               onClick={() => updateStatus('EM_ANDAMENTO')}
               type="button"
@@ -215,7 +216,7 @@ export default function DetalheChamadoTecnicoPage() {
             </button>
 
             <button
-              className="tecnico-button"
+              className="btn-primary"
               disabled={isUpdating || chamado.status === 'CONCLUIDO'}
               onClick={() => updateStatus('CONCLUIDO')}
               type="button"
@@ -417,6 +418,6 @@ export default function DetalheChamadoTecnicoPage() {
           }
         }
       `}</style>
-    </section>
+    </div>
   );
 }

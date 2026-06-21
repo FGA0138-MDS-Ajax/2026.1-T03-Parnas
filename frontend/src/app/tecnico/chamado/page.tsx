@@ -28,5 +28,5 @@ export default function ChamadoAtualPage() {
     void redirectToCurrentTicket();
   }, [router]);
 
-  return <p className="tecnico-card">Carregando chamado atual...</p>;
+  return <p className="glass-card">Carregando chamado atual...</p>;
 }

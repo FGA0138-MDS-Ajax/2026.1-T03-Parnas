@@ -73,18 +73,20 @@ docker compose exec backend alembic upgrade head
 ```
 
 ### Popular o banco com dados de teste (Seed):
-Para facilitar o desenvolvimento e testes locais, você pode popular o banco com contas de teste que representam cada um dos perfis do sistema (Solicitante, Técnico, Gerente e Administrador). A senha padrão para todos os usuários criados é `123`.
+Para facilitar o desenvolvimento e testes locais, você pode popular o banco com a massa de dados de teste oficial, contendo contas de teste com diferentes status e chamados em diversos estados do ciclo de vida. A senha padrão para todos os usuários criados é `123`.
 
 Perfis e e-mails de teste para login:
-- solicitante.teste@unb.br
-- gerente.teste@unb.br
-- tecnico.teste@unb.br
-- admin.teste@unb.br
-- senha: `123` para todos
+- **Solicitantes:** `solicitante1@unb.br`, `solicitante2@unb.br`, `solicitante3@unb.br`
+- **Técnicos (Ativos):** `tecnico1@unb.br`, `tecnico2@unb.br`
+- **Técnico (Pendente):** `tecnico_pendente@unb.br`
+- **Técnico (Reprovado):** `tecnico_reprovado@unb.br`
+- **Gerentes:** `gerente1@unb.br`, `gerente2@unb.br`
+- **Administradores:** `admin1@unb.br`, `admin2@unb.br`
+- **Senha para todos:** `123`
 
-Execute o script de seed no container do backend:
+Execute o script de seed oficial no container do backend:
 ```bash
-docker compose exec backend python scripts/seed_test_users.py
+docker compose exec backend python scripts/seed_test_5.py
 ```
 
 ---

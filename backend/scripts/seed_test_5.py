@@ -27,81 +27,77 @@ from app.models.user import User, UserRole, ApprovalStatus
 from app.models.ticket import Ticket, TicketStatus
 from app.models.ticket_history import TicketHistory
 
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy import select, text, update
-
-#   Pietro
-#   Como esse script é rodado fora do Docker,
-#   Nos referimos ao banco de dados pelo localhost
-engine = create_async_engine(
-    "postgresql+asyncpg://keepunb:changeme@localhost:5432/keepunb_dev",
-    echo=True,
-    future=True,
-)
-
-AsyncSessionLocal = async_sessionmaker(
-    engine,
-    class_=AsyncSession,
-    expire_on_commit=False,
-)
 
 TEST_USERS = [
     {
-        "matricula": "242012345",
-        "nome": "Ana Beatriz",
-        "email": "ana.beatriz@unb.br",
+        "matricula": "100000001",
+        "nome": "Solicitante Um",
+        "email": "solicitante1@unb.br",
         "role": UserRole.SOLICITANTE,
     },
     {
-        "matricula": "251087284",
-        "nome": "César Dantas",
-        "email": "cesar.dantas@unb.br",
+        "matricula": "100000002",
+        "nome": "Solicitante Dois",
+        "email": "solicitante2@unb.br",
         "role": UserRole.SOLICITANTE,
     },
     {
-        "matricula": "242099873",
-        "nome": "Elaine Fagundes",
-        "email": "elaine.fagundes@unb.br",
+        "matricula": "100000003",
+        "nome": "Solicitante Tres",
+        "email": "solicitante3@unb.br",
         "role": UserRole.SOLICITANTE,
     },
     {
-        "matricula": "171073654",
-        "nome": "Gerson Heron",
-        "email": "gerson.heron@unb.br",
+        "matricula": "200000001",
+        "nome": "Tecnico Um",
+        "email": "tecnico1@unb.br",
         "role": UserRole.TECNICO,
     },
     {
-        "matricula": "192034342",
-        "nome": "Italo Javier",
-        "email": "italo.javier@unb.br",
+        "matricula": "200000002",
+        "nome": "Tecnico Dois",
+        "email": "tecnico2@unb.br",
         "role": UserRole.TECNICO,
     },
     {
-        "matricula": "152099878",
-        "nome": "Kayla Lisa",
-        "email": "kayla.lisa@unb.br",
+        "matricula": "300000001",
+        "nome": "Gerente Um",
+        "email": "gerente1@unb.br",
         "role": UserRole.GERENTE,
     },
     {
-        "matricula": "201056567",
-        "nome": "Marcos Natan",
-        "email": "marcos.natan@unb.br",
+        "matricula": "300000002",
+        "nome": "Gerente Dois",
+        "email": "gerente2@unb.br",
+        "role": UserRole.GERENTE,
+    },
+    {
+        "matricula": "400000001",
+        "nome": "Admin Um",
+        "email": "admin1@unb.br",
+        "role": UserRole.ADMIN,
+    },
+    {
+        "matricula": "400000002",
+        "nome": "Admin Dois",
+        "email": "admin2@unb.br",
         "role": UserRole.ADMIN,
     },
 
     {
-        "matricula": "900000005",
+        "matricula": "200000003",
         "nome": "Tecnico Pendente",
-        "email": "tecnico.pendente@unb.br",
+        "email": "tecnico_pendente@unb.br",
         "role": UserRole.TECNICO,
         "ativo": False,
         "approval_status": ApprovalStatus.PENDENTE,
     },
 
     {
-        "matricula": "900000006",
+        "matricula": "200000004",
         "nome": "Tecnico Reprovado",
-        "email": "tecnico.rejeitado@unb.br",
+        "email": "tecnico_reprovado@unb.br",
         "role": UserRole.TECNICO,
         "ativo": False,
         "approval_status": ApprovalStatus.REPROVADO,
@@ -116,7 +112,7 @@ TEST_TICKETS = [
         "descricao": "Buraco na parede.",
         "photo_path": "buracoparede.jpeg",
         "tipo_manutencao": "Estrutural",
-        "solicitante_id": "242012345",
+        "solicitante_id": "100000001",
         "historico": {}
     },
     {
@@ -124,14 +120,14 @@ TEST_TICKETS = [
         "descricao": "Ninho de pássaro no teto.",
         "photo_path": "semenergia.jpg",
         "tipo_manutencao": "Estrutural",
-        "solicitante_id": "251087284",
+        "solicitante_id": "100000002",
         "historico": {
             "1":{
                 "previous_status": TicketStatus.ABERTO,
                 "new_status": TicketStatus.ATRIBUIDO,
                 "action": "Atribuído à um técnico.",
-                "user_id": "152099878",
-                "tecnico_id": "171073654",
+                "user_id": "300000001",
+                "tecnico_id": "200000001",
             }
         }
     },
@@ -140,20 +136,20 @@ TEST_TICKETS = [
         "descricao": "Lâmpada queimada.",
         "photo_path": "lampadaquebrada.webp",
         "tipo_manutencao": "Energia",
-        "solicitante_id": "242099873",
+        "solicitante_id": "100000003",
         "historico": {
             "1":{
                 "previous_status": TicketStatus.ABERTO,
                 "new_status": TicketStatus.ATRIBUIDO,
                 "action": "Atribuído à um técnico.",
-                "user_id": "152099878",
-                "tecnico_id": "171073654",
+                "user_id": "300000001",
+                "tecnico_id": "200000001",
             },
             "2":{
                 "previous_status": TicketStatus.ATRIBUIDO,
                 "new_status": TicketStatus.EM_ANDAMENTO,
                 "action": "Técnico está trabalhando no problema.",
-                "user_id": "152099878",
+                "user_id": "300000001",
             }
         }
     },
@@ -161,26 +157,26 @@ TEST_TICKETS = [
         "local": "RU",
         "descricao": "Torneira sem pressão.",
         "tipo_manutencao": "Hidráulico",
-        "solicitante_id": "242099873",
+        "solicitante_id": "100000003",
         "historico": {
             "1":{
                 "previous_status": TicketStatus.ABERTO,
                 "new_status": TicketStatus.ATRIBUIDO,
                 "action": "Atribuído à um técnico.",
-                "user_id": "152099878",
-                "tecnico_id": "192034342",
+                "user_id": "300000001",
+                "tecnico_id": "200000002",
             },
             "2":{
                 "previous_status": TicketStatus.ATRIBUIDO,
                 "new_status": TicketStatus.EM_ANDAMENTO,
                 "action": "Técnico está trabalhando no problema.",
-                "user_id": "152099878",
+                "user_id": "300000001",
             },
             "3":{
                 "previous_status": TicketStatus.EM_ANDAMENTO,
                 "new_status": TicketStatus.CONCLUIDO,
                 "action": "Problema resolvido!",
-                "user_id": "152099878",
+                "user_id": "300000001",
             }
         }
     },
