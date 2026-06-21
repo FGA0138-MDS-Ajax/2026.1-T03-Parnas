@@ -38,7 +38,7 @@ def admin_pin_headers(test_admin: User) -> dict[str, str]:
     return {"Authorization": f"Bearer {token}"}
 
 
-@pytest.mark.anyio
+@pytest.mark.asyncio
 async def test_verify_pin_success(client: AsyncClient, test_admin: User, admin_headers: dict[str, str]):
     response = await client.post(
         "/api/v1/admin/verify-pin",
@@ -51,7 +51,7 @@ async def test_verify_pin_success(client: AsyncClient, test_admin: User, admin_h
     assert data["token_type"] == "bearer"
 
 
-@pytest.mark.anyio
+@pytest.mark.asyncio
 async def test_verify_pin_wrong_pin(client: AsyncClient, test_admin: User, admin_headers: dict[str, str]):
     response = await client.post(
         "/api/v1/admin/verify-pin",
@@ -62,7 +62,7 @@ async def test_verify_pin_wrong_pin(client: AsyncClient, test_admin: User, admin
     assert response.json()["detail"] == "PIN incorreto."
 
 
-@pytest.mark.anyio
+@pytest.mark.asyncio
 async def test_verify_pin_not_admin(client: AsyncClient, solicitante_headers: dict[str, str]):
     response = await client.post(
         "/api/v1/admin/verify-pin",
@@ -72,7 +72,7 @@ async def test_verify_pin_not_admin(client: AsyncClient, solicitante_headers: di
     assert response.status_code == 403
 
 
-@pytest.mark.anyio
+@pytest.mark.asyncio
 async def test_change_pin_success(
     client: AsyncClient,
     test_admin: User,
@@ -93,7 +93,7 @@ async def test_change_pin_success(
     assert verify_password("5678", test_admin.admin_pin_hash)
 
 
-@pytest.mark.anyio
+@pytest.mark.asyncio
 async def test_change_pin_wrong_current(client: AsyncClient, admin_pin_headers: dict[str, str]):
     response = await client.post(
         "/api/v1/admin/change-pin",
@@ -104,7 +104,7 @@ async def test_change_pin_wrong_current(client: AsyncClient, admin_pin_headers: 
     assert response.json()["detail"] == "PIN atual incorreto."
 
 
-@pytest.mark.anyio
+@pytest.mark.asyncio
 async def test_list_users_success(
     client: AsyncClient,
     test_solicitante: User,
@@ -119,14 +119,14 @@ async def test_list_users_success(
     assert test_solicitante.email in emails
 
 
-@pytest.mark.anyio
+@pytest.mark.asyncio
 async def test_list_users_no_pin(client: AsyncClient, admin_headers: dict[str, str]):
     response = await client.get("/api/v1/admin/users", headers=admin_headers)
     assert response.status_code == 403
     assert "PIN administrativo não verificado" in response.json()["detail"]
 
 
-@pytest.mark.anyio
+@pytest.mark.asyncio
 async def test_create_manager_success(client: AsyncClient, admin_pin_headers: dict[str, str], db_session: AsyncSession):
     manager_data = {
         "nome": "Novo Gerente",
@@ -153,7 +153,7 @@ async def test_create_manager_success(client: AsyncClient, admin_pin_headers: di
     assert db_user.matricula == "555555555"
 
 
-@pytest.mark.anyio
+@pytest.mark.asyncio
 async def test_create_manager_auto_matricula(client: AsyncClient, admin_pin_headers: dict[str, str], db_session: AsyncSession):
     manager_data = {
         "nome": "Gerente Auto Matricula",
@@ -171,7 +171,7 @@ async def test_create_manager_auto_matricula(client: AsyncClient, admin_pin_head
     assert len(data["matricula"]) == 9
 
 
-@pytest.mark.anyio
+@pytest.mark.asyncio
 async def test_update_user_success(
     client: AsyncClient,
     test_solicitante: User,
@@ -192,7 +192,7 @@ async def test_update_user_success(
     assert test_solicitante.nome == "Nome Atualizado pelo Admin"
 
 
-@pytest.mark.anyio
+@pytest.mark.asyncio
 async def test_deactivate_user_success(
     client: AsyncClient,
     test_solicitante: User,
@@ -210,7 +210,7 @@ async def test_deactivate_user_success(
     assert test_solicitante.ativo is False
 
 
-@pytest.mark.anyio
+@pytest.mark.asyncio
 async def test_delete_user_success_no_tickets(
     client: AsyncClient,
     test_solicitante: User,
@@ -228,7 +228,7 @@ async def test_delete_user_success_no_tickets(
     assert res.scalars().first() is None
 
 
-@pytest.mark.anyio
+@pytest.mark.asyncio
 async def test_delete_technician_cascade_null(
     client: AsyncClient,
     test_tecnico: User,
@@ -266,7 +266,7 @@ async def test_delete_technician_cascade_null(
     assert db_ticket.tecnico_id is None
 
 
-@pytest.mark.anyio
+@pytest.mark.asyncio
 async def test_delete_solicitante_sentinela_migration(
     client: AsyncClient,
     test_solicitante: User,
@@ -331,7 +331,7 @@ async def test_delete_solicitante_sentinela_migration(
     assert db_history.user_id == "000000000"
 
 
-@pytest.mark.anyio
+@pytest.mark.asyncio
 async def test_delete_sentinela_fails(
     client: AsyncClient,
     admin_pin_headers: dict[str, str],
