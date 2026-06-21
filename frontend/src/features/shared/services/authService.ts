@@ -14,19 +14,19 @@ export const getDefaultRouteForRole = (role: UserRole) => {
 
 export const clearAuthSession = () => {
   if (typeof window === 'undefined') return;
-  localStorage.removeItem('keepunb_token');
-  localStorage.removeItem('keepunb_role');
-  localStorage.removeItem('keepunb_email');
-  localStorage.removeItem('keepunb_matricula');
-  localStorage.removeItem('keepunb_nome');
+  sessionStorage.removeItem('keepunb_token');
+  sessionStorage.removeItem('keepunb_role');
+  sessionStorage.removeItem('keepunb_email');
+  sessionStorage.removeItem('keepunb_matricula');
+  sessionStorage.removeItem('keepunb_nome');
 };
 
 export const saveAuthUser = (user: AuthUser) => {
   if (typeof window === 'undefined') return;
-  localStorage.setItem('keepunb_role', user.role);
-  localStorage.setItem('keepunb_email', user.email);
-  localStorage.setItem('keepunb_matricula', user.matricula);
-  localStorage.setItem('keepunb_nome', user.nome);
+  sessionStorage.setItem('keepunb_role', user.role);
+  sessionStorage.setItem('keepunb_email', user.email);
+  sessionStorage.setItem('keepunb_matricula', user.matricula);
+  sessionStorage.setItem('keepunb_nome', user.nome);
 };
 
 export const authService = {
@@ -38,7 +38,7 @@ export const authService = {
       body: JSON.stringify(credentials),
     });
 
-    localStorage.setItem('keepunb_token', token.access_token);
+    sessionStorage.setItem('keepunb_token', token.access_token);
 
     try {
       const user = await this.getCurrentUser();

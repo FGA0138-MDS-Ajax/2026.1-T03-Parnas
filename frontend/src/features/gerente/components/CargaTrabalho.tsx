@@ -9,9 +9,11 @@ export default function CargaTrabalho() {
   const [tecnicos, setTecnicos] = useState<Technician[]>([]);
   const [chamados, setChamados] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const loadData = async () => {
     setLoading(true);
+    setError(false);
     try {
       const [tecnicosData, chamadosData] = await Promise.all([
         gerenteService.getTecnicosDisponiveis(),
@@ -21,6 +23,7 @@ export default function CargaTrabalho() {
       setChamados(chamadosData);
     } catch (e) {
       console.error('Erro ao carregar dados de atribuição e carga de trabalho', e);
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -71,6 +74,11 @@ export default function CargaTrabalho() {
         <div className="table-empty-state">
           <div className="empty-icon" style={{ animation: 'spin 1.5s linear infinite' }}>⏳</div>
           <p>Carregando distribuição de carga técnica...</p>
+        </div>
+      ) : error ? (
+        <div className="table-empty-state" style={{ backgroundColor: 'var(--off-white)', borderRadius: '14px' }}>
+          <div className="empty-icon">⚠️</div>
+          <p>Erro ao carregar dados da equipe. Tente atualizar a página.</p>
         </div>
       ) : tecnicos.length === 0 ? (
         <div className="table-empty-state">

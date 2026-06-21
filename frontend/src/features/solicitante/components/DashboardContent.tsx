@@ -23,9 +23,9 @@ export default function DashboardContent() {
   useEffect(() => {
 
     if (typeof window !== 'undefined') {
-      const email = localStorage.getItem('keepunb_email') || 'solicitante@gmail.com';
-      const nome = localStorage.getItem('keepunb_nome') || '';
-      const matricula = localStorage.getItem('keepunb_matricula') || '211043210';
+      const email = sessionStorage.getItem('keepunb_email') || 'solicitante@gmail.com';
+      const nome = sessionStorage.getItem('keepunb_nome') || '';
+      const matricula = sessionStorage.getItem('keepunb_matricula') || '211043210';
       setUserMatricula(matricula);
       
       if (nome) {

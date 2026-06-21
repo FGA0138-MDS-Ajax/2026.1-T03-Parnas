@@ -26,8 +26,8 @@ export default function GerenteLayout({
   useEffect(() => {
 
     if (typeof window !== 'undefined') {
-      const email = localStorage.getItem('keepunb_email') || '';
-      const nome = localStorage.getItem('keepunb_nome') || '';
+      const email = sessionStorage.getItem('keepunb_email') || '';
+      const nome = sessionStorage.getItem('keepunb_nome') || '';
       if (nome) {
         const formattedName = nome
           .replace(/\./g, ' ')
