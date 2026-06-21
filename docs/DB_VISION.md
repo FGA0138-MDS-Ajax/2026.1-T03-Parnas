@@ -16,6 +16,7 @@ erDiagram
         VARCHAR(100) nome "Nome completo"
         VARCHAR(150) email UK "E-mail acadêmico/institucional"
         VARCHAR(255) senha_hash "Senha criptografada (bcrypt)"
+        VARCHAR(255) admin_pin_hash "PIN administrativo (hasheado, Nullable)"
         VARCHAR(100) area_manutencao "Área de manutenção do técnico"
         userrole role "Perfil de acesso (ENUM)"
         approvalstatus approval_status "Status de aprovação do usuário (ENUM)"
@@ -67,6 +68,7 @@ Armazena as credenciais, perfis de acesso e dados cadastrais dos quatro tipos de
 | **`nome`** | `VARCHAR(100)` | `NOT NULL` | *Nenhum* | Nome completo do usuário. |
 | **`email`** | `VARCHAR(150)` | `UNIQUE`, `NOT NULL`, `INDEX` | *Nenhum* | Endereço de e-mail institucional/pessoal (chave de login alternativa). |
 | **`senha_hash`** | `VARCHAR(255)` | `NOT NULL` | *Nenhum* | Hash seguro da senha gerado utilizando o algoritmo **bcrypt**. |
+| **`admin_pin_hash`** | `VARCHAR(255)` | *Nenhum* | `NULL` | Hash seguro do PIN do administrador (hasheado). Nullable para outros perfis. |
 |**`area_manutencao`** | `VARCHAR(100)` | *Nenhum* | `NULL` | Área de manutenção designada ao técnico
 | **`role`** | `userrole` (ENUM) | `NOT NULL` | `'SOLICITANTE'` | Perfil de permissão e privilégios de acesso do usuário no sistema. |
 | **`approval_status`** | `approvalstatus` (ENUM) | `NOT NULL` | `'PENDENTE'` | Define o status de aprovação do usuário (APROVADO, PENDENTE, REPROVADO). |
