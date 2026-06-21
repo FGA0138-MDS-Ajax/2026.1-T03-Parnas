@@ -65,7 +65,7 @@ async def test_get_in_progress_tickets_service(db_session: AsyncSession, test_so
 @pytest.mark.asyncio
 async def test_assign_technician_success(db_session: AsyncSession, test_solicitante: User, test_tecnico: User, create_test_ticket):
     """Garante que atribuir um técnico ativo a um chamado aberto funciona com sucesso."""
-    ticket = await create_test_ticket("Sala 1", "Eletricidade", "Tomada", test_solicitante.matricula, status=TicketStatus.ABERTO)
+    ticket = await create_test_ticket("Sala 1", "Elétrica", "Tomada", test_solicitante.matricula, status=TicketStatus.ABERTO)
 
     tecnico_matricula = test_tecnico.matricula
     ticket_id = ticket.id
@@ -119,6 +119,36 @@ async def test_assign_technician_invalid_technician(db_session: AsyncSession, te
         await TicketService.assign_technician(db_session, ticket.id, "000000000", "900000002")
     assert exc_info.value.status_code == status.HTTP_404_NOT_FOUND
     assert exc_info.value.detail == "O técnico informado não existe no sistema"
+
+@pytest.mark.asyncio
+async def test_assign_technician_rejects_incompatible_area(
+    db_session: AsyncSession,
+    test_solicitante: User,
+    create_test_user,
+    create_test_ticket,
+):
+    """Garante que gerente não atribua chamado a técnico de outra área."""
+    ticket = await create_test_ticket("Sala 1", "Elétrica", "Tomada", test_solicitante.matricula, status=TicketStatus.ABERTO)
+    tecnico_hidraulica = await create_test_user(
+        "777777778",
+        "Técnico Hidráulica",
+        "tec_hidraulica@teste.com",
+        role=UserRole.TECNICO,
+        ativo=True,
+        area_manutencao="Hidráulica",
+    )
+
+    with pytest.raises(HTTPException) as exc_info:
+        await TicketService.assign_technician(
+            db_session,
+            ticket.id,
+            tecnico_hidraulica.matricula,
+            "900000002",
+        )
+
+    assert exc_info.value.status_code == status.HTTP_400_BAD_REQUEST
+    assert exc_info.value.detail == "A área do técnico não é compatível com o tipo de manutenção do chamado"
+
 
 @pytest.mark.asyncio
 async def test_get_tickets_by_technician_service(db_session: AsyncSession, test_solicitante: User, test_tecnico: User, create_test_ticket):

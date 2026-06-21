@@ -12,6 +12,15 @@ async def test_get_available_technicians_service(db_session: AsyncSession, creat
     tec_ativo = await create_test_user("111111111", "Técnico Ativo", "tec1@teste.com", role=UserRole.TECNICO, ativo=True)
     # Técnico inativo
     await create_test_user("222222222", "Técnico Inativo", "tec2@teste.com", role=UserRole.TECNICO, ativo=False)
+    # Técnico pendente
+    await create_test_user(
+        "444444444",
+        "Técnico Pendente",
+        "tec_pendente@teste.com",
+        role=UserRole.TECNICO,
+        ativo=True,
+        approval_status=ApprovalStatus.PENDENTE,
+    )
     # Solicitante ativo
     await create_test_user("333333333", "Solicitante", "solic@teste.com", role=UserRole.SOLICITANTE, ativo=True)
 

@@ -12,6 +12,8 @@ interface ModalAtribuicaoProps {
   onError: (erroMsg: string) => void;
 }
 
+const normalizarArea = (value: string | null | undefined) => value?.trim().toLowerCase() || '';
+
 export default function ModalAtribuicao({
   ticket,
   onClose,
@@ -28,10 +30,15 @@ export default function ModalAtribuicao({
       setLoadingTecnicos(true);
       try {
         const data = await gerenteService.getTecnicosDisponiveis();
-        setTecnicos(data);
-        if (data.length > 0) {
-          // Pré-seleciona o primeiro
-          setSelectedTecnicoId(data[0].matricula);
+        const tecnicosCompativeis = data.filter(
+          (tecnico) => normalizarArea(tecnico.area_manutencao) === normalizarArea(ticket.tipo_manutencao)
+        );
+        setTecnicos(tecnicosCompativeis);
+        if (tecnicosCompativeis.length > 0) {
+          // Pré-seleciona o primeiro técnico compatível com a área do chamado
+          setSelectedTecnicoId(tecnicosCompativeis[0].matricula);
+        } else {
+          setSelectedTecnicoId('');
         }
       } catch (e: any) {
         console.error(e);
@@ -41,7 +48,7 @@ export default function ModalAtribuicao({
       }
     };
     fetchTecnicos();
-  }, [onError]);
+  }, [onError, ticket.tipo_manutencao]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,6 +82,8 @@ export default function ModalAtribuicao({
         <div className="modal-ticket-summary">
           <div className="summary-label">Chamado Selecionado</div>
           <div className="summary-value-title">#{ticket.id} — {ticket.local}</div>
+          <div className="summary-label" style={{ marginTop: '0.5rem' }}>Área do Chamado</div>
+          <div className="summary-value-title">{ticket.tipo_manutencao}</div>
           <div className="summary-label" style={{ marginTop: '0.5rem' }}>Problema Relatado</div>
           <p className="summary-value-desc">{ticket.descricao}</p>
         </div>
@@ -82,7 +91,7 @@ export default function ModalAtribuicao({
         {/* FORMULÁRIO DE SELEÇÃO */}
         <form onSubmit={handleSubmit}>
           <div className="modal-form-group">
-            <label className="form-group-label">Escolha um Técnico Ativo Disponível:</label>
+            <label className="form-group-label">Escolha um Técnico da Área {ticket.tipo_manutencao}:</label>
             
             {loadingTecnicos ? (
               <div style={{ textAlign: 'center', padding: '2rem 0', color: 'var(--gray-text)', fontSize: '0.88rem' }}>
@@ -90,7 +99,7 @@ export default function ModalAtribuicao({
               </div>
             ) : tecnicos.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '2rem 0', color: '#EF4444', fontSize: '0.88rem' }}>
-                Nenhum técnico disponível ou ativo no banco.
+                Nenhum técnico ativo e aprovado para a área {ticket.tipo_manutencao}.
               </div>
             ) : (
               <div className="technicians-list-select">
@@ -115,7 +124,9 @@ export default function ModalAtribuicao({
                     
                     <div className="option-details">
                       <div className="option-name">{tec.nome}</div>
-                      <div className="option-matricula">Matrícula: {tec.matricula} • {tec.email}</div>
+                      <div className="option-matricula">
+                        Matrícula: {tec.matricula} • {tec.email} • {tec.area_manutencao}
+                      </div>
                     </div>
                   </div>
                 ))}
