@@ -180,3 +180,30 @@ async def test_update_ticket(
     assert in_db.tecnico_id == tecnico_matricula
 
 
+@pytest.mark.asyncio
+async def test_count_active_tickets_by_technician(
+    db_session: AsyncSession,
+    test_solicitante: User,
+    test_tecnico: User,
+    create_test_ticket
+):
+    """Garante que a contagem de chamados ativos por técnico considera apenas status corretos."""
+    # Chamado em status ABERTO sem técnico
+    await create_test_ticket("Sala 1", "Ar", "Quebrado", test_solicitante.matricula, status=TicketStatus.ABERTO)
+    
+    # Chamado atribuído (ativo)
+    await create_test_ticket("Sala 2", "Ar", "Quebrado", test_solicitante.matricula, tecnico_id=test_tecnico.matricula, status=TicketStatus.ATRIBUIDO)
+    
+    # Chamado em andamento (ativo)
+    await create_test_ticket("Sala 3", "Ar", "Quebrado", test_solicitante.matricula, tecnico_id=test_tecnico.matricula, status=TicketStatus.EM_ANDAMENTO)
+    
+    # Chamado concluído (inativo)
+    await create_test_ticket("Sala 4", "Ar", "Quebrado", test_solicitante.matricula, tecnico_id=test_tecnico.matricula, status=TicketStatus.CONCLUIDO)
+    
+    # Chamado cancelado (inativo)
+    await create_test_ticket("Sala 5", "Ar", "Quebrado", test_solicitante.matricula, tecnico_id=test_tecnico.matricula, status=TicketStatus.CANCELADO)
+
+    count = await TicketRepository.count_active_tickets_by_technician(db_session, test_tecnico.matricula)
+    assert count == 2
+
+
