@@ -9,7 +9,7 @@ app.core.security.verify_password = lambda plain, hashed: hashed == f"mocked_has
 get_password_hash = app.core.security.get_password_hash
 
 import asyncio
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Optional
 import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy import text
@@ -101,7 +101,7 @@ def create_test_user(db_session: AsyncSession):
         role: UserRole = UserRole.SOLICITANTE,
         ativo: bool = True,
         approval_status: ApprovalStatus = ApprovalStatus.APROVADO,
-        area_manutencao: str | None = None
+        area_manutencao: Optional[str] = None
     ) -> User:
         user = User(
             matricula=matricula,
@@ -127,7 +127,7 @@ def create_test_ticket(db_session: AsyncSession):
         tipo_manutencao: str,
         descricao: str,
         solicitante_id: str,
-        tecnico_id: str | None = None,
+        tecnico_id: Optional[str] = None,
         status: TicketStatus = TicketStatus.ABERTO
     ) -> Ticket:
         ticket = Ticket(
