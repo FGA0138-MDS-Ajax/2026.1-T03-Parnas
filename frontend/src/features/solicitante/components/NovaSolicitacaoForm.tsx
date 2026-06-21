@@ -11,10 +11,33 @@ export default function NovaSolicitacaoForm() {
   const [local, setLocal] = useState('');
   const [tipoManutencao, setTipoManutencao] = useState('Elétrica');
   const [descricao, setDescricao] = useState('');
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [PhotoPreview, setPhotoPreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [createdTicketId, setCreatedTicketId] = useState<number | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+
+    if (file) {
+      const tiposValidos = ['image/jpeg', 'image/png'];
+        if (!tiposValidos.includes(file.type)) {
+          setErrorMsg('Formato de imagem inválido. Use JPG ou PNG.');
+          e.target.value = '';
+          return;
+        }
+        if (file.size > 10 * 1024 * 1024) {
+          setErrorMsg('A imagem deve ter no máximo 10MB.');
+          e.target.value = '';
+          return;
+        }
+      setErrorMsg('');
+      setPhoto(file);
+      setPhotoPreview(URL.createObjectURL(file));
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +57,8 @@ export default function NovaSolicitacaoForm() {
       const ticket = await solicitanteService.criarChamado({
         local: local.trim(),
         tipo_manutencao: tipoManutencao,
-        descricao: descricao.trim()
+        descricao: descricao.trim(),
+        photo,
       });
 
       setCreatedTicketId(ticket.id);
@@ -43,6 +67,8 @@ export default function NovaSolicitacaoForm() {
       // Limpa os campos
       setLocal('');
       setDescricao('');
+      setPhoto(null);
+      setPhotoPreview(null);
     } catch (e: any) {
       setErrorMsg(e.message || 'Falha ao registrar chamado. Tente novamente.');
     } finally {
@@ -114,6 +140,30 @@ export default function NovaSolicitacaoForm() {
               placeholder="Por favor, forneça o máximo de detalhes possível sobre a falha (ex: ruídos, perigos, peças quebradas) para facilitar o trabalho de triagem e execução da equipe técnica."
               rows={6}
             />
+          </div>
+
+          {/* Foto */}
+          <div className="form-group">
+            <label htmlFor="photo" className="form-label">
+              Foto da Ocorrência (opcional)
+            </label>
+            <input
+              id="photo"
+              type="file"
+              accept="image/png, image/jpeg"
+              onChange={handlePhotoChange}
+              className="form-input"
+            />
+            {PhotoPreview && (
+              <div style={{ marginTop: '0.75rem' }}>
+                <img
+                  src={PhotoPreview}
+                  alt="Pré-visualização"
+                  style={{ maxWidth: '200px', maxHeight: '200px', borderRadius: '10px', border: '1px solid rgba(13,43,94,0.15)' }}
+                />
+                <p style={{ fontSize: '0.8rem', color: 'var(--gray-text)', marginTop: '0.25rem' }}>{photo?.name}</p>
+              </div>
+            )}
           </div>
 
           {/* Botões */}
