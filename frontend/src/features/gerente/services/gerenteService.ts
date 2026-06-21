@@ -29,18 +29,24 @@ class GerenteService {
 
   async getDashboardStats(): Promise<DashboardStats> {
     try {
-      const response = await fetch(`${this.API_BASE_URL}/manager/dashboard-stats`, {
-        headers: this.getAuthHeaders(),
-      });
+      const [ticketsResponse, tecnicosResponse] = await Promise.all([
+        fetch(`${this.API_BASE_URL}/tickets`, { headers: this.getAuthHeaders() }),
+        fetch(`${this.API_BASE_URL}/technicians/available`, { headers: this.getAuthHeaders() })
+      ]);
 
-      if (!response.ok) {
-        throw new Error(`Erro na requisição: ${response.status}`);
-      }
+      const allTickets = ticketsResponse.ok ? await ticketsResponse.json() : [];
+      const tecnicos = tecnicosResponse.ok ? await tecnicosResponse.json() : [];
 
-      return await response.json();
+      return {
+        abertos: allTickets.filter((t: any) => t.status === 'ABERTO').length,
+        atribuidos: allTickets.filter((t: any) => t.status === 'ATRIBUIDO').length,
+        emAndamento: allTickets.filter((t: any) => t.status === 'EM_ANDAMENTO').length,
+        concluidos: allTickets.filter((t: any) => t.status === 'CONCLUIDO').length,
+        totalTecnicos: tecnicos.length,
+      };
     } catch (error) {
       console.error('Erro ao obter estatísticas do dashboard:', error);
-      throw error;
+      return { abertos: 0, atribuidos: 0, emAndamento: 0, concluidos: 0, totalTecnicos: 0 };
     }
   }
 
@@ -92,6 +98,47 @@ class GerenteService {
       return await response.json();
     } catch (error) {
       console.error('Erro ao aprovar técnico:', error);
+      throw error;
+    }
+  }
+
+  async getTecnicosDisponiveis(): Promise<any[]> {
+    try {
+      const response = await fetch(`${this.API_BASE_URL}/technicians/available`, {
+        headers: this.getAuthHeaders(),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erro na requisição: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Erro ao obter técnicos disponíveis:', error);
+      throw error;
+    }
+  }
+
+  async atribuirChamado(ticketId: number, tecnicoId: string): Promise<any> {
+    try {
+      const response = await fetch(`${this.API_BASE_URL}/tickets/${ticketId}/assign`, {
+        method: 'PATCH',
+        headers: this.getAuthHeaders(),
+        body: JSON.stringify({ tecnico_id: tecnicoId }),
+      });
+
+      if (!response.ok) {
+        let errDetails = '';
+        try {
+          const err = await response.json();
+          errDetails = err.detail || '';
+        } catch (e) {}
+        throw new Error(errDetails || `Erro ao atribuir chamado: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Erro ao atribuir chamado:', error);
       throw error;
     }
   }
