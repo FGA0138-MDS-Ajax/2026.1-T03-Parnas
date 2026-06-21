@@ -56,6 +56,8 @@ class User(Base):
 
     area_manutencao: Mapped[str] = mapped_column(String(100), nullable=True)
 
+    admin_pin_hash: Mapped[str | None] = mapped_column(String(255), nullable=True)
+
     created_at: Mapped[DateTime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
