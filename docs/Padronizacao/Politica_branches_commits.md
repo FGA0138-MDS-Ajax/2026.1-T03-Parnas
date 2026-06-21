@@ -60,24 +60,25 @@ Cada tarefa, bug ou melhoria da Sprint deve possuir uma issue correspondente no 
 
 ### Template de Issue
 
-```markdown
-**Descrição:**
-[Descreva de forma concisa o objetivo desta issue, a funcionalidade proposta ou o problema a ser resolvido.]
+**Descrição:**    
 
-**Deve conter:**
-- [ ] [Elemento ou comportamento esperado 1]
-- [ ] [Elemento ou comportamento esperado 2]
+- [Descreva de forma concisa o objetivo desta issue, a funcionalidade proposta ou o problema a ser resolvido.]
+
+**Deve conter:**  
+
+- [ ] [Elemento ou comportamento esperado 1]  
+- [ ] [Elemento ou comportamento esperado 2]  
 
 **Critérios de aceitação:**
 
-OBSERVAÇÃO: Descreva brevemente os comportamentos esperados ou regras de negócio a serem validadas para aceitação da issue.
+--> OBSERVAÇÃO: Descreva brevemente os comportamentos esperados ou regras de negócio a serem validadas para aceitação da issue.  
 
-- [ ] [Exemplo: Ao clicar no botão enviar, o usuário deve ser redirecionado e ver uma mensagem de sucesso]
+- [ ] [Exemplo: Ao clicar no botão enviar, o usuário deve ser redirecionado e ver uma mensagem de sucesso]  
 - [ ] [Exemplo: O sistema deve retornar erro 400 se o campo CPF estiver vazio]
 
 **Detalhes técnicos:**
+
 - [Defina tecnologias envolvidas, novas dependências, rotas de API afetadas, modelagens de dados ou variáveis de ambiente necessárias.]
-```
 
 ---
 
