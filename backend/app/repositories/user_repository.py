@@ -87,3 +87,13 @@ class UserRepository:
         await db.commit()
         await db.refresh(db_user)
         return db_user
+
+    @staticmethod
+    async def get_all(db: AsyncSession) -> list[User]:
+        result = await db.execute(select(User))
+        return list(result.scalars().all())
+
+    @staticmethod
+    async def delete(db: AsyncSession, user: User) -> None:
+        await db.delete(user)
+        await db.commit()

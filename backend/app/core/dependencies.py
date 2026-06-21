@@ -56,3 +56,35 @@ def require_role(allowed_roles: list[UserRole]):
             )
         return current_user
     return role_checker
+
+
+async def require_admin_pin(
+    current_user: User = Depends(require_role([UserRole.ADMIN])),
+    credentials: HTTPAuthorizationCredentials | None = Depends(security),
+) -> User:
+    if credentials is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token de autenticação não informado.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    token = credentials.credentials
+    try:
+        payload = jwt.decode(
+            token, settings.SECRET_KEY, algorithms=["HS256"]
+        )
+        pin_verified = payload.get("pin_verified", False)
+        if not pin_verified:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="PIN administrativo não verificado. Valide o PIN primeiro."
+            )
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Não foi possível validar as credenciais.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    return current_user
