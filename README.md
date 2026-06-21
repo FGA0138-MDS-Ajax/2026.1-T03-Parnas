@@ -1,4 +1,4 @@
-# KeepUnB — Sistema de Gestão de solicitações de manutenção da UnB-FCTE
+# KeepUnB - Sistema de Gestão de solicitações de manutenção da UnB-FCTE
 
 O **KeepUnB** é uma plataforma centralizada e inteligente desenvolvida para otimizar, automatizar e rastrear as solicitações de manutenção corretiva e preventiva na Universidade de Brasília (UnB). 
 
@@ -98,25 +98,27 @@ Após o build e a inicialização, você poderá acessar:
 - **Backend API (FastAPI):** http://localhost:8000
 - **Documentação Automática da API (Swagger UI):** http://localhost:8000/docs
 
-### 4. Popular o Banco com Usuários de Teste (Seed)
+### 4. Popular o Banco com Usuários e Chamados de Teste (Seed)
 
-Para testar as diferentes funcionalidades e permissões do sistema, execute as migrações de banco e o script para criar os usuários de testes:
+Para testar as diferentes funcionalidades, permissões e fluxos de chamados do sistema, execute as migrações de banco e o script de seed oficial:
 
 ```bash
 # Rodar as migrações do banco
 docker compose exec backend alembic upgrade head
 
-# Criar os usuários de teste
-docker compose exec backend python scripts/seed_test_users.py
+# Criar os usuários e chamados de teste (Seed Oficial)
+docker compose exec backend python scripts/seed_test_5.py
 ```
 
 Você poderá acessar o sistema utilizando as seguintes credenciais:
 * **Senha para todos:** `123`
 * **E-mails por perfil:**
-  * **Solicitante:** `solicitante.teste@unb.br`
-  * **Técnico:** `tecnico.teste@unb.br`
-  * **Gerente:** `gerente.teste@unb.br`
-  * **Administrador:** `admin.teste@unb.br`
+  * **Solicitantes:** `solicitante1@unb.br`, `solicitante2@unb.br`, `solicitante3@unb.br`
+  * **Técnicos (Ativos):** `tecnico1@unb.br`, `tecnico2@unb.br`
+  * **Técnico (Pendente):** `tecnico_pendente@unb.br`
+  * **Técnico (Reprovado):** `tecnico_reprovado@unb.br`
+  * **Gerentes:** `gerente1@unb.br`, `gerente2@unb.br`
+  * **Administradores:** `admin1@unb.br`, `admin2@unb.br`
 
 ##  Estrutura do Repositório
 
