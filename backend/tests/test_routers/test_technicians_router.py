@@ -15,6 +15,14 @@ async def test_get_available_technicians_router(
     # Cria técnicos ativo e inativo
     tec_ativo = await create_test_user("777777777", "Tec Ativo", "tec_ativo@unb.br", role=UserRole.TECNICO, ativo=True)
     await create_test_user("888888888", "Tec Inativo", "tec_inativo@unb.br", role=UserRole.TECNICO, ativo=False)
+    await create_test_user(
+        "999999999",
+        "Tec Pendente",
+        "tec_pendente_available@unb.br",
+        role=UserRole.TECNICO,
+        ativo=True,
+        approval_status=ApprovalStatus.PENDENTE,
+    )
 
     response = await client.get("/api/v1/technicians/available", headers=gerente_headers)
     

@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.ticket import Ticket, TicketStatus
-from app.models.user import User, UserRole
+from app.models.user import ApprovalStatus, User, UserRole
 from app.repositories.ticket_repository import TicketRepository
 from app.repositories.user_repository import UserRepository
 from app.repositories.ticket_history_repository import TicketHistoryRepository
@@ -39,6 +39,26 @@ class TicketService:
             db,
             [TicketStatus.ATRIBUIDO, TicketStatus.EM_ANDAMENTO],
         )
+
+    @staticmethod
+    async def suggest_technician(db: AsyncSession, ticket_id: int) -> dict:
+        ticket = await TicketRepository.get_by_id(db, ticket_id)
+        if not ticket:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chamado não encontrado")
+
+        suggestion = await UserRepository.suggest_technician_by_area(db, ticket.tipo_manutencao)
+        if not suggestion:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Nenhum técnico disponível para a área do chamado",
+            )
+
+        technician, active_tickets_count = suggestion
+        return {
+            "nome": technician.nome,
+            "area_manutencao": technician.area_manutencao,
+            "quantidade_chamados_ativos": active_tickets_count,
+        }
 
     @staticmethod
     async def assign_technician(db: AsyncSession, ticket_id: int, tecnico_id: str, manager_id: str) -> Ticket:
@@ -84,6 +104,18 @@ class TicketService:
                 detail="O técnico selecionado está inativo no sistema"
             )
 
+        if tecnico.approval_status != ApprovalStatus.APROVADO:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="O técnico selecionado não está aprovado no sistema"
+            )
+
+        if not TicketService._is_area_compatible(tecnico.area_manutencao, ticket.tipo_manutencao):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="A área do técnico não é compatível com o tipo de manutenção do chamado"
+            )
+
         #Atualização automática dos campos e do status para ATRIBUIDO
         ticket.tecnico_id = tecnico.matricula
         ticket.status = TicketStatus.ATRIBUIDO
@@ -99,6 +131,12 @@ class TicketService:
         )
         
         return updated_ticket
+
+    @staticmethod
+    def _is_area_compatible(area_manutencao: str | None, tipo_manutencao: str) -> bool:
+        if not area_manutencao:
+            return False
+        return area_manutencao.strip().lower() == tipo_manutencao.strip().lower()
 
     @staticmethod
     async def get_tickets_by_technician(db: AsyncSession, tecnico_id: str) -> list[Ticket]:
