@@ -33,7 +33,7 @@ erDiagram
         VARCHAR(500) photo_path "Caminho da foto anexada ao chamado (Nullable)"
         ticketstatus status "Estado do chamado (ENUM)"
         VARCHAR(9) solicitante_id FK "FK apontando para users.matricula"
-        VARCHAR(9) tecnico_id FK "FK apontando para users.matricula (Nullable)"
+        VARCHAR(9) tecnico_id FK "FK apontando para users.matricula (Nullable, ON DELETE SET NULL)"
         TIMESTAMP created_at "Data de abertura do chamado"
         TIMESTAMP updated_at "Data da última alteração"
     }
@@ -103,7 +103,7 @@ Centraliza as solicitações de manutenção de infraestrutura abertas pela comu
 | **`descricao`** | `TEXT` | `NOT NULL` | *Nenhum* | Texto detalhado enviado pelo solicitante relatando a anomalia ou problema. |
 | **`status`** | `ticketstatus` (ENUM) | `NOT NULL` | `'ABERTO'` | Status do ciclo de vida em que o chamado se encontra. |
 | **`solicitante_id`** | `VARCHAR(9)` | `FOREIGN KEY` (`users.matricula`), `NOT NULL` | *Nenhum* | Matrícula do usuário solicitante (autor da abertura do ticket). |
-| **`tecnico_id`** | `VARCHAR(9)` | `FOREIGN KEY` (`users.matricula`), `NULLABLE` | `NULL` | Matrícula do técnico encarregado de executar a manutenção (atribuído pelo gerente ou capturado pela fila). |
+| **`tecnico_id`** | `VARCHAR(9)` | `FOREIGN KEY` (`users.matricula`), `NULLABLE`, `ON DELETE SET NULL` | `NULL` | Matrícula do técnico encarregado de executar a manutenção. Se o técnico for excluído do banco, o chamado é automaticamente desatribuído (retorna para NULL). |
 | **`photo_path`** | `VARCHAR(500)` | *Nenhum* | `NULL` | Caminho do arquivo da foto anexada à solicitação de manutenção. |
 | **`created_at`** | `TIMESTAMP WITH TIME ZONE` | `NOT NULL` | `now()` | Registro de data/hora em que o chamado de manutenção foi formalizado. |
 | **`updated_at`** | `TIMESTAMP WITH TIME ZONE` | `NOT NULL` | `now()` | Registro de data/hora da última alteração no ciclo de vida ou detalhes do chamado. |
@@ -111,7 +111,9 @@ Centraliza as solicitações de manutenção de infraestrutura abertas pela comu
 > [!IMPORTANT]
 > As chaves estrangeiras (`FK`) nesta tabela seguem rigidamente a convenção do projeto de serem explicitamente nomeadas no banco de dados como:
 > - **`fk_tickets_solicitante_users`** apontando para `users.matricula`.
-> - **`fk_tickets_tecnico_users`** apontando para `users.matricula`.
+> - **`fk_tickets_tecnico_users`** apontando para `users.matricula` (configurada com a diretiva `ON DELETE SET NULL`).
+> 
+> **Nota de Deleção Física (Usuário Sentinela):** Ao realizar a exclusão de qualquer usuário que possua tickets cadastrados como solicitante, o backend reatribui previamente a FK `solicitante_id` para o usuário sentinela `"000000000"` ("Usuário Excluído") a fim de preservar a integridade dos dados antes da remoção física.
 
 ---
 
@@ -132,6 +134,8 @@ Armazena o registro histórico de todas as alterações e ações críticas real
 > As chaves estrangeiras (`FK`) nesta tabela seguem rigidamente a convenção do projeto de serem explicitamente nomeadas no banco de dados como:
 > - **`fk_ticket_histories_tickets`** apontando para `tickets.id`.
 > - **`fk_ticket_histories_users`** apontando para `users.matricula`.
+> 
+> **Nota de Deleção Física (Usuário Sentinela):** Se um usuário que possui registros históricos de chamados vinculados for deletado fisicamente do banco de dados, as ocorrências correspondentes em `user_id` são migradas programaticamente no backend para a conta sentinela `"000000000"`.
 
 ---
 
@@ -151,6 +155,8 @@ Armazena comentários e observações adicionados por usuários e técnicos em c
 > As chaves estrangeiras (`FK`) nesta tabela foram criadas de forma implícita e apontam para:
 > - `user_id` apontando para `users.matricula`.
 > - `ticket_id` apontando para `tickets.id`.
+> 
+> **Nota de Deleção Física (Usuário Sentinela):** Se o autor de um comentário for excluído do sistema, o backend migra a chave estrangeira `user_id` do comentário para a conta sentinela `"000000000"` antes de efetuar a remoção do usuário do banco de dados.
 
 ---
 
