@@ -38,6 +38,7 @@ nav:
   - Documentação:
       - Documento de Visão: "visao/visao.md"
       - Documento de Arquitetura: "arq/arq.md"
+      - Comunicação, API e autenticação: "comunicacao/api-e-autenticacao.md"
       - Identidade Visual: "identidade_visual/identidade_visual.md"
       - Padronização: "padronizacao/politica_branches_commits.md"
       - Sobre o banco de dados: "banco-de-dados/diagrama-relacionamento-inicial.md"
