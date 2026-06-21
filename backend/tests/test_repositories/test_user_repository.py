@@ -3,7 +3,7 @@ from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.user import User, UserRole
+from app.models.user import ApprovalStatus, User, UserRole
 from app.repositories.user_repository import UserRepository
 
 @pytest.mark.asyncio
@@ -126,6 +126,14 @@ async def test_get_available_technicians(db_session: AsyncSession, create_test_u
         email="tec2@teste.com",
         role=UserRole.TECNICO,
         ativo=False
+    )
+    await create_test_user(
+        matricula="555555555",
+        nome="Técnico Pendente",
+        email="tec_pendente@teste.com",
+        role=UserRole.TECNICO,
+        ativo=True,
+        approval_status=ApprovalStatus.PENDENTE
     )
     # 3. Solicitante ativo (não deve ser retornado)
     await create_test_user(

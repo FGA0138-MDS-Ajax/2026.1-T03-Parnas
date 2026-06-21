@@ -10,7 +10,14 @@ from app.core.database import get_db
 from app.core.dependencies import require_role, get_current_user
 from app.models.user import User, UserRole
 from app.schemas.error import error_response_docs
-from app.schemas.ticket import TicketCreate, TicketResponse, TicketAssign, TicketUpdateStatus, TicketPublicResponse
+from app.schemas.ticket import (
+    TicketAssign,
+    TicketCreate,
+    TicketPublicResponse,
+    TicketResponse,
+    TicketTechnicianSuggestionResponse,
+    TicketUpdateStatus,
+)
 from app.services.ticket_service import TicketService
 
 router = APIRouter(
@@ -182,6 +189,20 @@ async def get_assigned_tickets(
     db: AsyncSession = Depends(get_db),
 ):
     return await TicketService.get_tickets_by_technician(db, current_user.matricula)
+
+
+@router.get(
+    "/{ticket_id}/suggest-technician",
+    response_model=TicketTechnicianSuggestionResponse,
+    summary="Sugerir técnico para um chamado",
+)
+async def suggest_technician(
+    ticket_id: int,
+    current_user: User = Depends(require_role([UserRole.GERENTE])),
+    db: AsyncSession = Depends(get_db),
+):
+    """Sugere o técnico aprovado, ativo e compatível com menor carga de chamados ativos."""
+    return await TicketService.suggest_technician(db, ticket_id)
 
 
 @router.patch("/{ticket_id}/assign", response_model=TicketResponse)

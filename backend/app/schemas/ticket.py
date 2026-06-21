@@ -32,6 +32,11 @@ class TicketResponse(TicketBase):
 class TicketAssign(BaseModel):
     tecnico_id: str
 
+class TicketTechnicianSuggestionResponse(BaseModel):
+    nome: str
+    area_manutencao: str
+    quantidade_chamados_ativos: int
+
 class TicketUpdateStatus(BaseModel):
     status: TicketStatus
 

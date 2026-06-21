@@ -4,7 +4,7 @@ from fastapi import status
 
 from app.routers import tickets as tickets_router
 from app.models.ticket import Ticket, TicketStatus
-from app.models.user import User, UserRole
+from app.models.user import ApprovalStatus, User, UserRole
 from app.core.security import create_access_token
 
 @pytest.mark.asyncio
@@ -267,6 +267,109 @@ async def test_get_assigned_tickets_router(
     assert res_solic.status_code == status.HTTP_403_FORBIDDEN
 
 @pytest.mark.asyncio
+async def test_suggest_technician_router_returns_least_loaded_matching_technician(
+    client: AsyncClient,
+    test_solicitante: User,
+    gerente_headers: dict[str, str],
+    create_test_user,
+    create_test_ticket
+):
+    """Garante sugestão de técnico ativo, aprovado, compatível e com menor carga."""
+    busy_technician = await create_test_user(
+        "444444444",
+        "Tecnico Ocupado",
+        "tecnico_ocupado@teste.com",
+        role=UserRole.TECNICO,
+        area_manutencao="Elétrica",
+    )
+    suggested_technician = await create_test_user(
+        "555555555",
+        "Tecnico Livre",
+        "tecnico_livre@teste.com",
+        role=UserRole.TECNICO,
+        area_manutencao="Elétrica",
+    )
+    await create_test_user(
+        "666666666",
+        "Tecnico Hidraulica",
+        "tecnico_hidraulica@teste.com",
+        role=UserRole.TECNICO,
+        area_manutencao="Hidráulica",
+    )
+    await create_test_user(
+        "777777777",
+        "Solicitante Elétrica",
+        "solicitante_eletrica@teste.com",
+        role=UserRole.SOLICITANTE,
+        area_manutencao="Elétrica",
+    )
+    await create_test_user(
+        "888888888",
+        "Tecnico Pendente",
+        "tecnico_pendente@teste.com",
+        role=UserRole.TECNICO,
+        approval_status=ApprovalStatus.PENDENTE,
+        area_manutencao="Elétrica",
+    )
+    await create_test_user(
+        "999999999",
+        "Tecnico Inativo",
+        "tecnico_inativo@teste.com",
+        role=UserRole.TECNICO,
+        ativo=False,
+        area_manutencao="Elétrica",
+    )
+    ticket = await create_test_ticket(
+        "Sala 1",
+        "Elétrica",
+        "Tomada com mau contato",
+        test_solicitante.matricula,
+    )
+    await create_test_ticket(
+        "Sala 2",
+        "Elétrica",
+        "Lâmpada queimada",
+        test_solicitante.matricula,
+        tecnico_id=busy_technician.matricula,
+        status=TicketStatus.ATRIBUIDO,
+    )
+
+    response = await client.get(
+        f"/api/v1/tickets/{ticket.id}/suggest-technician",
+        headers=gerente_headers,
+    )
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == {
+        "nome": suggested_technician.nome,
+        "area_manutencao": "Elétrica",
+        "quantidade_chamados_ativos": 0,
+    }
+
+
+@pytest.mark.asyncio
+async def test_suggest_technician_router_requires_manager(
+    client: AsyncClient,
+    test_solicitante: User,
+    solicitante_headers: dict[str, str],
+    create_test_ticket
+):
+    """Garante que apenas gerente possa solicitar sugestão de técnico."""
+    ticket = await create_test_ticket(
+        "Sala 1",
+        "Elétrica",
+        "Tomada com mau contato",
+        test_solicitante.matricula,
+    )
+
+    response = await client.get(
+        f"/api/v1/tickets/{ticket.id}/suggest-technician",
+        headers=solicitante_headers,
+    )
+
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+
+@pytest.mark.asyncio
 async def test_assign_ticket_router(
     client: AsyncClient,
     test_solicitante: User,
@@ -276,7 +379,7 @@ async def test_assign_ticket_router(
     create_test_ticket
 ):
     """Garante que a atribuição de chamado funcione quando requisitada por gerente."""
-    ticket = await create_test_ticket("Sala 1", "Ar", "Quebrado", test_solicitante.matricula, status=TicketStatus.ABERTO)
+    ticket = await create_test_ticket("Sala 1", "Elétrica", "Quebrado", test_solicitante.matricula, status=TicketStatus.ABERTO)
 
     # Armazena matrículas e ID antes do expire_all nos bastidores
     tecnico_matricula = test_tecnico.matricula
