@@ -38,6 +38,8 @@ export async function apiRequest<T>(
     headers,
   });
 
+  const data = await response.json().catch(() => null);
+
   // Handle different status codes specifically
   if (response.status === 401) {
     // Clear auth session and redirect to login
@@ -47,12 +49,13 @@ export async function apiRequest<T>(
       sessionStorage.removeItem('keepunb_email');
       sessionStorage.removeItem('keepunb_matricula');
       sessionStorage.removeItem('keepunb_nome');
-      window.location.href = '/login';
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
     }
-    throw new ApiError('Acesso não autorizado. Faça login novamente.', 401);
+    const message = data?.detail || 'Acesso não autorizado. Faça login novamente.';
+    throw new ApiError(message, 401);
   }
-
-  const data = await response.json().catch(() => null);
 
   if (!response.ok) {
     const message = data?.detail || 'Erro ao comunicar com a API.';

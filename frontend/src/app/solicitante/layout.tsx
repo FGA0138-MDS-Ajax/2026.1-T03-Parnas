@@ -21,9 +21,9 @@ export default function SolicitanteLayout({
   useEffect(() => {
 
     if (typeof window !== 'undefined') {
-      const email = localStorage.getItem('keepunb_email') || '';
-      const nome = localStorage.getItem('keepunb_nome') || '';
-      const matricula = localStorage.getItem('keepunb_matricula') || '';
+      const email = sessionStorage.getItem('keepunb_email') || '';
+      const nome = sessionStorage.getItem('keepunb_nome') || '';
+      const matricula = sessionStorage.getItem('keepunb_matricula') || '';
       setUserMatricula(matricula);
 
       if (nome) {

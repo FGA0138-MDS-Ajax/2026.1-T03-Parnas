@@ -37,8 +37,8 @@ export default function FilaChamadosPage() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const nome = localStorage.getItem('keepunb_nome') || '';
-      const email = localStorage.getItem('keepunb_email') || '';
+      const nome = sessionStorage.getItem('keepunb_nome') || '';
+      const email = sessionStorage.getItem('keepunb_email') || '';
 
       if (nome) {
         const formattedName = nome
