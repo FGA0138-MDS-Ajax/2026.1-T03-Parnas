@@ -100,7 +100,8 @@ def create_test_user(db_session: AsyncSession):
         senha: str = "senha123",
         role: UserRole = UserRole.SOLICITANTE,
         ativo: bool = True,
-        approval_status: ApprovalStatus = ApprovalStatus.APROVADO
+        approval_status: ApprovalStatus = ApprovalStatus.APROVADO,
+        admin_pin_hash: str | None = None
     ) -> User:
         user = User(
             matricula=matricula,
@@ -109,7 +110,8 @@ def create_test_user(db_session: AsyncSession):
             senha_hash=get_password_hash(senha),
             role=role,
             ativo=ativo,
-            approval_status=approval_status
+            approval_status=approval_status,
+            admin_pin_hash=admin_pin_hash
         )
         db_session.add(user)
         await db_session.commit()

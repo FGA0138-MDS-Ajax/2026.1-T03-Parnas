@@ -66,6 +66,17 @@ class TicketRepository:
         return list(result.scalars().all())
 
     @staticmethod
+    async def count_active_tickets_by_technician(db: AsyncSession, tecnico_id: str) -> int:
+        from sqlalchemy import func
+        result = await db.execute(
+            select(func.count(Ticket.id)).where(
+                Ticket.tecnico_id == tecnico_id,
+                Ticket.status.in_([TicketStatus.ATRIBUIDO, TicketStatus.EM_ANDAMENTO])
+            )
+        )
+        return result.scalar() or 0
+
+    @staticmethod
     async def update(db: AsyncSession, db_ticket: Ticket) -> Ticket:
         db.add(db_ticket)
         await db.commit()
