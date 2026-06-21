@@ -48,10 +48,21 @@ erDiagram
         TIMESTAMP created_at "Data e hora do registro"
     }
 
+    comments {
+        INTEGER id PK "ID sequencial autoincrementado"
+        VARCHAR(9) user_id FK "FK apontando para users.matricula"
+        INTEGER ticket_id FK "FK apontando para tickets.id"
+        TEXT mensagem "Mensagem do comentário"
+        BOOLEAN ocultado "Indicador de comentário ocultado"
+        TIMESTAMP created_at "Data e hora do registro"
+    }
+
     users ||--o{ tickets : "solicita (solicitante_id)"
     users ||--o{ tickets : "executa (tecnico_id)"
     tickets ||--o{ ticket_histories : "possui (ticket_id)"
     users ||--o{ ticket_histories : "registra (user_id)"
+    users ||--o{ comments : "escreve (user_id)"
+    tickets ||--o{ comments : "possui (ticket_id)"
 ```
 
 ---
@@ -64,12 +75,12 @@ Armazena as credenciais, perfis de acesso e dados cadastrais dos quatro tipos de
 | Nome da Coluna | Tipo de Dado | Restrições | Padrão (Default) | Descrição |
 | :--- | :--- | :--- | :--- | :--- |
 | **`matricula`** | `VARCHAR(9)` | `PRIMARY KEY`, `CHECK` | *Nenhum* | Matrícula acadêmica do usuário (estudante/servidor). Deve possuir exatamente 9 dígitos numéricos. |
-| **`id`** | `INTEGER` | `NOT NULL`, `INDEX` | *Nenhum* | ID sequencial autoincrementado utilizando o *Identity(always=True)* para impedir intervenção externa
+| **`id`** | `INTEGER` | `NOT NULL`, `INDEX` | *Nenhum* | ID sequencial autoincrementado utilizando o *Identity(always=True)* para impedir intervenção externa |
 | **`nome`** | `VARCHAR(100)` | `NOT NULL` | *Nenhum* | Nome completo do usuário. |
 | **`email`** | `VARCHAR(150)` | `UNIQUE`, `NOT NULL`, `INDEX` | *Nenhum* | Endereço de e-mail institucional/pessoal (chave de login alternativa). |
 | **`senha_hash`** | `VARCHAR(255)` | `NOT NULL` | *Nenhum* | Hash seguro da senha gerado utilizando o algoritmo **bcrypt**. |
 | **`admin_pin_hash`** | `VARCHAR(255)` | *Nenhum* | `NULL` | Hash seguro do PIN do administrador (hasheado). Nullable para outros perfis. |
-|**`area_manutencao`** | `VARCHAR(100)` | *Nenhum* | `NULL` | Área de manutenção designada ao técnico
+| **`area_manutencao`** | `VARCHAR(100)` | *Nenhum* | `NULL` | Área de manutenção designada ao técnico |
 | **`role`** | `userrole` (ENUM) | `NOT NULL` | `'SOLICITANTE'` | Perfil de permissão e privilégios de acesso do usuário no sistema. |
 | **`approval_status`** | `approvalstatus` (ENUM) | `NOT NULL` | `'PENDENTE'` | Define o status de aprovação do usuário (APROVADO, PENDENTE, REPROVADO). |
 | **`ativo`** | `BOOLEAN` | `NOT NULL` | `true` | Define se a conta está ativa e com permissão para realizar login. |
@@ -121,6 +132,25 @@ Armazena o registro histórico de todas as alterações e ações críticas real
 > As chaves estrangeiras (`FK`) nesta tabela seguem rigidamente a convenção do projeto de serem explicitamente nomeadas no banco de dados como:
 > - **`fk_ticket_histories_tickets`** apontando para `tickets.id`.
 > - **`fk_ticket_histories_users`** apontando para `users.matricula`.
+
+---
+
+### 2.4 Tabela `comments`
+Armazena comentários e observações adicionados por usuários e técnicos em chamados específicos.
+
+| Nome da Coluna | Tipo de Dado | Restrições | Padrão (Default) | Descrição |
+| :--- | :--- | :--- | :--- | :--- |
+| **`id`** | `INTEGER` | `PRIMARY KEY`, `INDEX`, `AUTOINCREMENT` | *Nenhum* | ID autoincrementado gerado sequencialmente pelo PostgreSQL para identificação única do comentário. |
+| **`user_id`** | `VARCHAR(9)` | `FOREIGN KEY` (`users.matricula`), `NOT NULL` | *Nenhum* | Matrícula do usuário autor do comentário. |
+| **`ticket_id`** | `INTEGER` | `FOREIGN KEY` (`tickets.id`), `NOT NULL` | *Nenhum* | ID do chamado associado ao comentário. |
+| **`mensagem`** | `TEXT` | `NOT NULL` | *Nenhum* | Conteúdo textual do comentário. |
+| **`ocultado`** | `BOOLEAN` | `NOT NULL` | `false` | Define se o comentário está ocultado (para moderação de conteúdo impróprio). |
+| **`created_at`** | `TIMESTAMP WITH TIME ZONE` | `NOT NULL` | `now()` | Registro de data/hora em que o comentário foi postado. |
+
+> [!IMPORTANT]
+> As chaves estrangeiras (`FK`) nesta tabela foram criadas de forma implícita e apontam para:
+> - `user_id` apontando para `users.matricula`.
+> - `ticket_id` apontando para `tickets.id`.
 
 ---
 

@@ -7,7 +7,7 @@ Foram realizadas com sucesso todas as alterações estruturais, de lógica de ac
 ## 1. Alterações Estruturais e de Modelagem
 
 ### Suporte ao PIN Administrativo
-- Modificamos o modelo de usuário [user.py]ara incluir o atributo `admin_pin_hash`:
+- Modificamos o modelo de usuário [user.py] para incluir o atributo `admin_pin_hash`:
   ```python
   admin_pin_hash: Mapped[str | None] = mapped_column(String(255), nullable=True)
   ```
