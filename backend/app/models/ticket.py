@@ -37,7 +37,7 @@ class Ticket(Base):
     )
 
     tecnico_id: Mapped[str | None] = mapped_column(
-        String(9), ForeignKey("users.matricula"), nullable=True
+        String(9), ForeignKey("users.matricula", ondelete="SET NULL"), nullable=True
     )
 
     photo_path: Mapped[str | None] = mapped_column(

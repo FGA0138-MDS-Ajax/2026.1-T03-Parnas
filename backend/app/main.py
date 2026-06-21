@@ -6,10 +6,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from app.routers import auth, users, tickets, technicians, comments
+from app.routers import auth, users, tickets, technicians, comments, admin
 from app.core.error_handlers import register_error_handlers
 from app.core.openapi import configure_openapi
-from app.routers import auth, users, tickets, technicians
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 UPLOADS_DIR = BACKEND_DIR / "uploads"
@@ -40,6 +39,7 @@ app.include_router(users.router)
 app.include_router(tickets.router)
 app.include_router(technicians.router)
 app.include_router(comments.router)
+app.include_router(admin.router)
 configure_openapi(app)
 
 
