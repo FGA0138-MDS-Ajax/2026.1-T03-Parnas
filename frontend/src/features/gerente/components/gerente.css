@@ -1034,8 +1034,6 @@
   stroke: var(--green-light);
   stroke-width: 3.8;
   stroke-linecap: round;
-  stroke-dasharray: 75 25; /* Ex: 75% concluídos */
-  stroke-dashoffset: 25;
   transform: rotate(-90deg);
   transform-origin: 50% 50%;
   transition: stroke-dasharray 1s ease-out;

@@ -36,7 +36,8 @@ export default function PainelRelatorios() {
   const emCurso = chamados.filter(c => c.status === 'EM_ANDAMENTO' || c.status === 'ATRIBUIDO').length;
   const abertos = chamados.filter(c => c.status === 'ABERTO').length;
   
-  const taxaResolucao = total > 0 ? Math.round((concluidos / total) * 100) : 0;
+  const taxaResolucaoExata = total > 0 ? (concluidos / total) * 100 : 0;
+  const taxaResolucao = Math.round(taxaResolucaoExata);
 
   // 2. Cálculos de Categoria (Hidráulica, Elétrica, Refrigeração, Outros)
   const getVolumetriaCategoria = (cat: string) => {
@@ -56,7 +57,7 @@ export default function PainelRelatorios() {
   // 3. SVG Donut das métricas (stroke-dasharray e dashoffset)
   // Perímetro do círculo com r=15.91549430918954 é exatamente 100.
   // Isso facilita definir dasharray como "porcentagem restante"
-  const strokeDashArray = `${taxaResolucao} ${100 - taxaResolucao}`;
+  const strokeDashArray = `${taxaResolucaoExata} ${100 - taxaResolucaoExata}`;
   const strokeDashOffset = 25; // Começa no topo (-90deg)
 
   const handleExportPDF = () => {
@@ -168,6 +169,7 @@ export default function PainelRelatorios() {
                     r="15.91549430918954" 
                     strokeDasharray={strokeDashArray}
                     strokeDashoffset={strokeDashOffset}
+                    style={{ opacity: taxaResolucaoExata === 0 ? 0 : 1 }}
                   />
                   <text x="18" y="15.5" className="donut-center-text">{taxaResolucao}%</text>
                   <text x="18" y="23" className="donut-center-label">Resolvidos</text>
