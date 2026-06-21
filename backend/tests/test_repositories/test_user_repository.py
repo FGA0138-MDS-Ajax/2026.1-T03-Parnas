@@ -149,3 +149,23 @@ async def test_get_available_technicians(db_session: AsyncSession, create_test_u
     assert len(technicians) == 1
     assert technicians[0].matricula == tec_ativo.matricula
     assert technicians[0].nome == "Técnico Ativo"
+
+
+@pytest.mark.asyncio
+async def test_create_admin_with_pin_hash(db_session: AsyncSession, create_test_user):
+    """Garante que um administrador pode ter um PIN hash associado à sua conta."""
+    admin = await create_test_user(
+        matricula="444444444",
+        nome="Admin Teste",
+        email="admintest@teste.com",
+        role=UserRole.ADMIN,
+        admin_pin_hash="mocked_pin_hash"
+    )
+
+    assert admin.admin_pin_hash == "mocked_pin_hash"
+
+    # Confere persistência no banco
+    db_session.expire_all()
+    found = await UserRepository.get_by_matricula(db_session, "444444444")
+    assert found is not None
+    assert found.admin_pin_hash == "mocked_pin_hash"
