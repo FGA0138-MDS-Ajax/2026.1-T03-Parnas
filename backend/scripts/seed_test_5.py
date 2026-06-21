@@ -31,6 +31,14 @@ from sqlalchemy import select, text, update
 
 TEST_USERS = [
     {
+        "matricula": "000000000",
+        "nome": "Usuário Excluído",
+        "email": "excluido@unb.br",
+        "role": UserRole.SOLICITANTE,
+        "ativo": False,
+        "approval_status": ApprovalStatus.APROVADO,
+    },
+    {
         "matricula": "100000001",
         "nome": "Solicitante Um",
         "email": "solicitante1@unb.br",
