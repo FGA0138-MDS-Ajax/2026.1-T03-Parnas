@@ -1,5 +1,5 @@
 // gerenteService.ts - Serviços para funcionalidades do gerente
-import { Ticket, DashboardStats, Technician } from '../types';
+import { Ticket, DashboardStats, Technician, TechnicianSuggestion } from '../types';
 
 export interface TecnicoPendente {
   id: number;
@@ -132,6 +132,28 @@ class GerenteService {
       return await response.json();
     } catch (error) {
       console.error('Erro ao obter técnicos disponíveis:', error);
+      throw error;
+    }
+  }
+
+  async sugerirTecnico(ticketId: number): Promise<TechnicianSuggestion> {
+    try {
+      const response = await fetch(`${this.API_BASE_URL}/tickets/${ticketId}/suggest-technician`, {
+        headers: this.getAuthHeaders(),
+      });
+
+      if (!response.ok) {
+        let errDetails = '';
+        try {
+          const err = await response.json();
+          errDetails = err.detail || '';
+        } catch (e) {}
+        throw new Error(errDetails || `Erro ao sugerir técnico: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Erro ao sugerir técnico:', error);
       throw error;
     }
   }

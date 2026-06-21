@@ -30,6 +30,13 @@ export interface Technician {
   role: 'TECNICO' | 'SOLICITANTE' | 'GERENTE' | 'ADMIN';
 }
 
+export interface TechnicianSuggestion {
+  tecnico_id: string;
+  nome: string;
+  area_manutencao: string;
+  quantidade_chamados_ativos: number;
+}
+
 export interface DashboardStats {
   abertos: number;
   atribuidos: number;
