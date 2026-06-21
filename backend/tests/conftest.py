@@ -104,17 +104,20 @@ def create_test_user(db_session: AsyncSession):
         area_manutencao: Optional[str] = None, 
         admin_pin_hash: Optional[str] = None
     ) -> User:
-        user = User(
-            matricula=matricula,
-            nome=nome,
-            email=email,
-            senha_hash=get_password_hash(senha),
-            role=role,
-            ativo=ativo,
-            approval_status=approval_status,
-            area_manutencao=area_manutencao,
-            admin_pin_hash=admin_pin_hash
-        )
+        user_data = {
+            "matricula": matricula,
+            "nome": nome,
+            "email": email,
+            "senha_hash": get_password_hash(senha),
+            "role": role,
+            "ativo": ativo,
+            "approval_status": approval_status,
+            "area_manutencao": area_manutencao,
+        }
+        if admin_pin_hash is not None:
+            user_data["admin_pin_hash"] = admin_pin_hash
+
+        user = User(**user_data)
         db_session.add(user)
         await db_session.commit()
         await db_session.refresh(user)
