@@ -25,6 +25,8 @@ export interface Technician {
   nome: string;
   email: string;
   ativo: boolean;
+  approval_status: 'APROVADO' | 'REPROVADO' | 'PENDENTE';
+  area_manutencao: string | null;
   role: 'TECNICO' | 'SOLICITANTE' | 'GERENTE' | 'ADMIN';
 }
 

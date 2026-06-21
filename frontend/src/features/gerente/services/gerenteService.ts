@@ -1,5 +1,5 @@
 // gerenteService.ts - Serviços para funcionalidades do gerente
-import { Ticket, DashboardStats } from '../types';
+import { Ticket, DashboardStats, Technician } from '../types';
 
 export interface TecnicoPendente {
   id: number;
@@ -102,7 +102,7 @@ class GerenteService {
     }
   }
 
-  async getTecnicosDisponiveis(): Promise<any[]> {
+  async getTecnicosDisponiveis(): Promise<Technician[]> {
     try {
       const response = await fetch(`${this.API_BASE_URL}/technicians/available`, {
         headers: this.getAuthHeaders(),
