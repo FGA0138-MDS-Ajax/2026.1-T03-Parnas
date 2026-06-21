@@ -1,9 +1,11 @@
 import pytest
 from httpx import AsyncClient
 from fastapi import status
+from sqlalchemy import select
 
 from app.routers import tickets as tickets_router
 from app.models.ticket import Ticket, TicketStatus
+from app.models.ticket_history import TicketHistory
 from app.models.user import ApprovalStatus, User, UserRole
 from app.core.security import create_access_token
 
@@ -341,6 +343,7 @@ async def test_suggest_technician_router_returns_least_loaded_matching_technicia
 
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == {
+        "tecnico_id": suggested_technician.matricula,
         "nome": suggested_technician.nome,
         "area_manutencao": "Elétrica",
         "quantidade_chamados_ativos": 0,
@@ -372,6 +375,7 @@ async def test_suggest_technician_router_requires_manager(
 @pytest.mark.asyncio
 async def test_assign_ticket_router(
     client: AsyncClient,
+    db_session,
     test_solicitante: User,
     test_tecnico: User,
     test_gerente: User,
@@ -395,6 +399,64 @@ async def test_assign_ticket_router(
     json_data = response.json()
     assert json_data["tecnico_id"] == tecnico_matricula
     assert json_data["status"] == TicketStatus.ATRIBUIDO.value
+
+    result = await db_session.execute(
+        select(TicketHistory).where(TicketHistory.ticket_id == ticket_id)
+    )
+    history_entries = list(result.scalars().all())
+    assignment_history = [
+        history
+        for history in history_entries
+        if history.action == f"Técnico atribuído: {tecnico_matricula}"
+    ]
+    assert len(assignment_history) == 1
+    assert assignment_history[0].user_id == test_gerente.matricula
+    assert assignment_history[0].previous_status == TicketStatus.ABERTO
+    assert assignment_history[0].new_status == TicketStatus.ATRIBUIDO
+    assert assignment_history[0].created_at is not None
+
+
+@pytest.mark.asyncio
+async def test_assign_ticket_router_accepts_suggested_technician(
+    client: AsyncClient,
+    test_solicitante: User,
+    gerente_headers: dict[str, str],
+    create_test_user,
+    create_test_ticket
+):
+    """Garante que gerente consiga aceitar o técnico sugerido pelo sistema."""
+    suggested_technician = await create_test_user(
+        "555555555",
+        "Tecnico Eletrica",
+        "tecnico_eletrica@teste.com",
+        role=UserRole.TECNICO,
+        area_manutencao="Elétrica",
+    )
+    ticket = await create_test_ticket(
+        "Sala 1",
+        "Elétrica",
+        "Tomada com mau contato",
+        test_solicitante.matricula,
+        status=TicketStatus.ABERTO,
+    )
+
+    suggestion_response = await client.get(
+        f"/api/v1/tickets/{ticket.id}/suggest-technician",
+        headers=gerente_headers,
+    )
+    suggested_tecnico_id = suggestion_response.json()["tecnico_id"]
+
+    assign_response = await client.patch(
+        f"/api/v1/tickets/{ticket.id}/assign",
+        json={"tecnico_id": suggested_tecnico_id},
+        headers=gerente_headers,
+    )
+
+    assert suggestion_response.status_code == status.HTTP_200_OK
+    assert suggested_tecnico_id == suggested_technician.matricula
+    assert assign_response.status_code == status.HTTP_200_OK
+    assert assign_response.json()["tecnico_id"] == suggested_technician.matricula
+    assert assign_response.json()["status"] == TicketStatus.ATRIBUIDO.value
 
 @pytest.mark.asyncio
 async def test_update_ticket_status_router(

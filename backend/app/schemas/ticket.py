@@ -33,6 +33,7 @@ class TicketAssign(BaseModel):
     tecnico_id: str
 
 class TicketTechnicianSuggestionResponse(BaseModel):
+    tecnico_id: str
     nome: str
     area_manutencao: str
     quantidade_chamados_ativos: int

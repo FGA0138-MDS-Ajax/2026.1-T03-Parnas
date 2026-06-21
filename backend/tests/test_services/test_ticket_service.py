@@ -121,13 +121,14 @@ async def test_assign_technician_invalid_technician(db_session: AsyncSession, te
     assert exc_info.value.detail == "O técnico informado não existe no sistema"
 
 @pytest.mark.asyncio
-async def test_assign_technician_rejects_incompatible_area(
+async def test_assign_technician_accepts_manual_technician_from_another_area(
     db_session: AsyncSession,
     test_solicitante: User,
+    test_gerente: User,
     create_test_user,
     create_test_ticket,
 ):
-    """Garante que gerente não atribua chamado a técnico de outra área."""
+    """Garante que gerente possa escolher manualmente outro técnico válido."""
     ticket = await create_test_ticket("Sala 1", "Elétrica", "Tomada", test_solicitante.matricula, status=TicketStatus.ABERTO)
     tecnico_hidraulica = await create_test_user(
         "777777778",
@@ -138,16 +139,15 @@ async def test_assign_technician_rejects_incompatible_area(
         area_manutencao="Hidráulica",
     )
 
-    with pytest.raises(HTTPException) as exc_info:
-        await TicketService.assign_technician(
-            db_session,
-            ticket.id,
-            tecnico_hidraulica.matricula,
-            "900000002",
-        )
+    updated = await TicketService.assign_technician(
+        db_session,
+        ticket.id,
+        tecnico_hidraulica.matricula,
+        test_gerente.matricula,
+    )
 
-    assert exc_info.value.status_code == status.HTTP_400_BAD_REQUEST
-    assert exc_info.value.detail == "A área do técnico não é compatível com o tipo de manutenção do chamado"
+    assert updated.tecnico_id == tecnico_hidraulica.matricula
+    assert updated.status == TicketStatus.ATRIBUIDO
 
 
 @pytest.mark.asyncio
