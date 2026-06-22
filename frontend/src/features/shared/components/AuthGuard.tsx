@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 import { getStoredToken } from '../services/apiClient';
 import { authService, getDefaultRouteForRole, saveAuthUser } from '../services/authService';
@@ -14,6 +14,7 @@ interface AuthGuardProps {
 
 export default function AuthGuard({ allowedRoles, children }: AuthGuardProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const [isAllowed, setIsAllowed] = useState(false);
   const [loading, setLoading] = useState(true);
   const allowedRolesKey = allowedRoles.join('|');
@@ -41,6 +42,27 @@ export default function AuthGuard({ allowedRoles, children }: AuthGuardProps) {
             router.replace(getDefaultRouteForRole(user.role));
           }
           return;
+        }
+
+        // Validação adicional de PIN para administradores
+        if (user.role === 'ADMIN') {
+          const isPinVerified = sessionStorage.getItem('keepunb_admin_pin_verified') === 'true';
+          if (pathname !== '/admin/pin') {
+            if (!isPinVerified) {
+              if (active) {
+                router.replace('/admin/pin');
+              }
+              return;
+            }
+          } else {
+            // Se o PIN já estiver verificado e o admin tentar acessar a página de PIN, redireciona para a página inicial
+            if (isPinVerified) {
+              if (active) {
+                router.replace('/admin/usuarios');
+              }
+              return;
+            }
+          }
         }
 
         if (active) {
@@ -77,7 +99,7 @@ export default function AuthGuard({ allowedRoles, children }: AuthGuardProps) {
     return () => {
       active = false;
     };
-  }, [allowedRolesKey, router]);
+  }, [allowedRolesKey, router, pathname]);
 
   if (loading) {
     return (
