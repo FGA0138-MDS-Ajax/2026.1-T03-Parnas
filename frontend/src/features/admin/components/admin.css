@@ -1,0 +1,785 @@
+/* ==========================================
+   ADMINISTRATOR STYLING SYSTEM — KeepUnB
+   ========================================== */
+
+:root {
+  --navy-dark: #071A3E;
+  --navy: #0D2B5E;
+  --navy-mid: #1A3F7A;
+  --navy-light: #2557A7;
+  --green: #1B7A3A;
+  --green-mid: #2AA34E;
+  --green-light: #3DC966;
+  --green-pale: #D4F0DC;
+  --white: #FFFFFF;
+  --off-white: #F4F7FB;
+  --gray-text: #6B7A99;
+  --border: rgba(255, 255, 255, 0.12);
+}
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--off-white);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ==========================================
+   1. SIDEBAR (MENU LATERAL)
+   ========================================== */
+.admin-sidebar {
+  width: 280px;
+  background: var(--navy-dark);
+  color: var(--white);
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 3rem;
+  padding-left: 0.5rem;
+}
+
+.sidebar-logo span {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--white);
+}
+
+.sidebar-logo span em {
+  font-style: normal;
+  color: var(--green-light);
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.menu-item-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0.9rem 1.25rem;
+  color: #94A3B8;
+  text-decoration: none;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.menu-item-link:hover {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.menu-item-link.active {
+  color: var(--white);
+  background: linear-gradient(135deg, rgba(27, 122, 58, 0.15) 0%, rgba(61, 201, 102, 0.05) 100%);
+  border: 1px solid rgba(61, 201, 102, 0.15);
+}
+
+.menu-item-link svg {
+  transition: transform 0.2s ease;
+}
+
+.menu-item-link:hover svg {
+  transform: translateX(2px);
+}
+
+/* USER INFO SECTION AT BOTTOM */
+.sidebar-user {
+  margin-top: auto;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--navy-mid);
+  color: var(--green-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border: 2px solid rgba(61, 201, 102, 0.3);
+}
+
+.user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--white);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-role {
+  font-size: 0.72rem;
+  color: #94A3B8;
+  display: block;
+}
+
+.btn-logout {
+  background: transparent;
+  border: none;
+  color: #F87171;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-logout:hover {
+  background: rgba(239, 68, 68, 0.1);
+  transform: scale(1.05);
+}
+
+/* ==========================================
+   2. CONTENT CONTAINER
+   ========================================== */
+.admin-content {
+  flex: 1;
+  padding: 2.5rem;
+  overflow-y: auto;
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ==========================================
+   3. HEADER & TITLE SECTION
+   ========================================== */
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.content-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--navy-dark);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.content-subtitle {
+  font-size: 0.95rem;
+  color: var(--gray-text);
+  margin-top: 0.35rem;
+}
+
+/* PRIMARY CTA BUTTONS */
+.btn-primary-admin {
+  background: var(--green);
+  color: var(--white);
+  border: none;
+  border-radius: 12px;
+  padding: 0.85rem 1.6rem;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary-admin:hover:not(:disabled) {
+  background: var(--green-mid);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(27, 122, 58, 0.25);
+}
+
+.btn-primary-admin:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   4. KPI INDICATOR CARDS
+   ========================================== */
+.admin-layout .kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.admin-layout .kpi-card {
+  background: var(--white);
+  border: 1px solid rgba(13, 43, 94, 0.08);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(13, 43, 94, 0.03);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.admin-layout .kpi-card:hover {
+  transform: translateY(-2px);
+}
+
+.admin-layout .kpi-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--gray-text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+}
+
+.admin-layout .kpi-value {
+  font-family: 'Sora', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--navy-dark);
+  margin-top: 0.5rem;
+  display: block;
+}
+
+.admin-layout .kpi-icon {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  opacity: 0.15;
+  color: var(--navy);
+}
+
+/* ==========================================
+   5. SEARCH BAR & FILTERS
+   ========================================== */
+.admin-layout .filter-bar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.admin-layout .search-input-wrap {
+  flex: 1;
+  min-width: 280px;
+  position: relative;
+}
+
+.admin-layout .search-input {
+  width: 100%;
+  padding: 0.85rem 1rem 0.85rem 2.75rem;
+  border-radius: 12px;
+  border: 1px solid rgba(13, 43, 94, 0.12);
+  background: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  color: var(--navy-dark);
+  transition: all 0.2s;
+}
+
+.admin-layout .search-input:focus {
+  outline: none;
+  border-color: var(--navy-light);
+  box-shadow: 0 0 0 3px rgba(37, 87, 167, 0.1);
+}
+
+.admin-layout .search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray-text);
+  pointer-events: none;
+}
+
+/* ==========================================
+   6. PREMIUM TABLES
+   ========================================== */
+.admin-layout .premium-table-container {
+  background: var(--white);
+  border: 1px solid rgba(13, 43, 94, 0.08);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(13, 43, 94, 0.02);
+  margin-bottom: 2.5rem;
+}
+
+.admin-layout .premium-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-layout .premium-table th {
+  background: rgba(13, 43, 94, 0.02);
+  padding: 1rem 1.5rem;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--navy);
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(13, 43, 94, 0.06);
+}
+
+.premium-table td {
+  padding: 1.1rem 1.5rem;
+  font-size: 0.9rem;
+  color: #4A5568;
+  border-bottom: 1px solid rgba(13, 43, 94, 0.04);
+  vertical-align: middle;
+}
+
+.premium-table tr:last-child td {
+  border-bottom: none;
+}
+
+.premium-table tr:hover td {
+  background: rgba(13, 43, 94, 0.01);
+}
+
+/* USER CELL */
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-cell-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(13, 43, 94, 0.05);
+  color: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border: 1px solid rgba(13, 43, 94, 0.1);
+}
+
+.user-cell-name {
+  font-weight: 600;
+  color: var(--navy-dark);
+  display: block;
+}
+
+.user-cell-matricula {
+  font-size: 0.75rem;
+  color: var(--gray-text);
+}
+
+/* BADGES & PILLS */
+.admin-layout .status-badge {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: 100px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid transparent;
+}
+
+.status-badge.admin {
+  background: rgba(239, 68, 68, 0.1);
+  color: #EF4444;
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.status-badge.gerente {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10B981;
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.status-badge.tecnico {
+  background: rgba(168, 85, 247, 0.1);
+  color: #A855F7;
+  border-color: rgba(168, 85, 247, 0.2);
+}
+
+.status-badge.solicitante {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3B82F6;
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.status-badge.active {
+  background: rgba(16, 185, 129, 0.08);
+  color: #10B981;
+}
+
+.status-badge.inactive {
+  background: rgba(243, 244, 246, 1);
+  color: #6B7280;
+  border-color: #E5E7EB;
+}
+
+.status-badge.aprovado {
+  background: rgba(16, 185, 129, 0.08);
+  color: #10B981;
+}
+
+.status-badge.pendente {
+  background: rgba(245, 158, 11, 0.08);
+  color: #F59E0B;
+}
+
+.status-badge.rejeitado {
+  background: rgba(239, 68, 68, 0.08);
+  color: #EF4444;
+}
+
+/* ACTIONS */
+.admin-layout .action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-layout .btn-icon-action {
+  background: transparent;
+  border: 1px solid rgba(13, 43, 94, 0.1);
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-icon-action:hover {
+  background: rgba(13, 43, 94, 0.04);
+  border-color: rgba(13, 43, 94, 0.2);
+}
+
+.btn-icon-action.edit:hover {
+  color: var(--navy-light);
+  border-color: var(--navy-light);
+}
+
+.btn-icon-action.deactivate:hover {
+  color: #F59E0B;
+  border-color: #F59E0B;
+}
+
+.btn-icon-action.delete {
+  color: #EF4444;
+  border-color: rgba(239, 68, 68, 0.15);
+}
+
+.btn-icon-action.delete:hover {
+  background: rgba(239, 68, 68, 0.05);
+  border-color: #EF4444;
+}
+
+/* ==========================================
+   7. MODAIS (OVERLAY & CONTENT)
+   ========================================== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 12, 30, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 150;
+  animation: fadeIn 0.25s ease both;
+}
+
+.modal-content {
+  background: var(--white);
+  border: 1px solid rgba(13, 43, 94, 0.12);
+  border-radius: 24px;
+  width: 500px;
+  max-width: 90%;
+  padding: 2rem;
+  box-shadow: 0 20px 50px rgba(13, 43, 94, 0.15);
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  color: var(--navy-dark);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.btn-modal-close {
+  background: transparent;
+  border: none;
+  color: var(--gray-text);
+  cursor: pointer;
+  font-size: 1.5rem;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.btn-modal-close:hover {
+  color: var(--navy-dark);
+}
+
+.modal-form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group-label {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--navy-dark);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.form-input,
+.form-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(13, 43, 94, 0.12);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  background: var(--white);
+  transition: all 0.2s;
+}
+
+.form-input:focus,
+.form-select:focus {
+  outline: none;
+  border-color: var(--navy-light);
+  box-shadow: 0 0 0 3px rgba(37, 87, 167, 0.08);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.btn-modal-cancel {
+  background: transparent;
+  color: var(--navy-dark);
+  border: 1px solid rgba(13, 43, 94, 0.2);
+  border-radius: 10px;
+  padding: 0.75rem 1.5rem;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-modal-cancel:hover {
+  background: rgba(13, 43, 94, 0.04);
+}
+
+/* ERROR MESSAGE IN FORM */
+.form-error-msg {
+  color: #EF4444;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* ==========================================
+   8. NOTIFICATION TOAST & ANIMAÇÕES
+   ========================================== */
+.admin-toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 200;
+  background: var(--navy-dark);
+  border: 1px solid var(--green-light);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  color: var(--white);
+  font-size: 0.88rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.admin-toast.error {
+  border-color: #EF4444;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ==========================================
+   9. MOBILE RESPONSIVENESS
+   ========================================== */
+/* Mobile elements hidden on desktop */
+.hamburger-menu {
+  display: none;
+}
+.sidebar-header-mobile {
+  display: contents;
+}
+
+@media (max-width: 1024px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  .hamburger-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--white);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+  }
+
+  .hamburger-menu:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .sidebar-header-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .sidebar-logo {
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+  }
+
+  .admin-sidebar {
+    width: 100% !important;
+    height: 70px !important;
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    padding: 0 1.5rem !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: 100;
+    overflow: hidden;
+  }
+
+  .admin-sidebar.open {
+    height: 100vh !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    padding: 1.5rem !important;
+    overflow-y: auto;
+  }
+
+  .admin-sidebar.open .sidebar-header-mobile {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .sidebar-nav,
+  .sidebar-user {
+    display: none !important;
+  }
+
+  .admin-sidebar.open .sidebar-nav {
+    display: block !important;
+    animation: fadeIn 0.3s ease forwards;
+  }
+
+  .admin-sidebar.open .sidebar-user {
+    display: flex !important;
+    margin-top: 2rem !important;
+    animation: fadeIn 0.3s ease 0.1s forwards;
+  }
+
+  .sidebar-menu {
+    gap: 0.75rem !important;
+  }
+
+  .menu-item-link {
+    padding: 0.85rem 1.25rem !important;
+  }
+
+  .admin-content {
+    margin-top: 70px;
+    padding: 1.5rem !important;
+  }
+}
