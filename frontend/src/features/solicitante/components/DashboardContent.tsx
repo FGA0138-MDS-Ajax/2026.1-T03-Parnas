@@ -19,6 +19,7 @@ export default function DashboardContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'nao_iniciados' | 'em_andamento' | 'concluidos'>('nao_iniciados');
   const [isLoading, setIsLoading] = useState(true);
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
 
@@ -97,6 +98,10 @@ export default function DashboardContent() {
       window.removeEventListener('openOutrasSolicitacoes', handleCustomOpen);
     };
   }, []);
+
+  useEffect(() => {
+    setImageErrors({});
+  }, [selectedTicket]);
 
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
@@ -484,22 +489,52 @@ export default function DashboardContent() {
                 </p>
               </div>
 
-              {selectedTicket.photo_paths && selectedTicket.photo_paths.length > 0 ? (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
-                  {selectedTicket.photo_paths.map((path, index) => (
-                    <img
-                      key={path}
-                      src={`${SERVERBASEURL}${path}`}
-                      alt={`Foto da ocorrência ${index + 1}`}
-                      style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '12px', border: '1px solid rgba(13,43,94,0.12)' }}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <p style={{ color: 'var(--gray-text)', fontSize: '0.85rem', marginTop: '1rem' }}>
-                  Nenhuma imagem anexada a este chamado.
-                </p>
-              )}
+              {(() => {
+                const validPhotoPaths = selectedTicket.photo_paths?.filter(
+                  path => path && path !== 'null' && path.trim() !== ''
+                ) || [];
+
+                if (validPhotoPaths.length > 0) {
+                  return (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+                      {validPhotoPaths.map((path, index) => {
+                        if (imageErrors[path]) {
+                          return (
+                            <div key={path} style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              height: '150px',
+                              backgroundColor: 'var(--off-white, #F4F7FB)',
+                              borderRadius: '12px',
+                              border: '1px dashed rgba(13,43,94,0.2)',
+                              color: 'var(--gray-text)',
+                              fontSize: '0.85rem'
+                            }}>
+                              imagem indisponível
+                            </div>
+                          );
+                        }
+                        return (
+                          <img
+                            key={path}
+                            src={`${SERVERBASEURL}${path}`}
+                            alt={`Foto da ocorrência ${index + 1}`}
+                            onError={() => setImageErrors(prev => ({ ...prev, [path]: true }))}
+                            style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '12px', border: '1px solid rgba(13,43,94,0.12)' }}
+                          />
+                        );
+                      })}
+                    </div>
+                  );
+                }
+
+                return (
+                  <p style={{ color: 'var(--gray-text)', fontSize: '0.85rem', marginTop: '1rem' }}>
+                    imagem indisponível
+                  </p>
+                );
+              })()}
             </div>
           </div>
         </div>
