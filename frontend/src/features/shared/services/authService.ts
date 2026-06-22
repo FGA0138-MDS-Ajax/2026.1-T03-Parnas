@@ -19,6 +19,7 @@ export const clearAuthSession = () => {
   sessionStorage.removeItem('keepunb_email');
   sessionStorage.removeItem('keepunb_matricula');
   sessionStorage.removeItem('keepunb_nome');
+  sessionStorage.removeItem('keepunb_admin_pin_verified');
 };
 
 export const saveAuthUser = (user: AuthUser) => {

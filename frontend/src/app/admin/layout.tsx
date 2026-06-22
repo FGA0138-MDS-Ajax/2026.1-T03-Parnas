@@ -1,6 +1,7 @@
 // layout.tsx — Layout do Administrador. TODO: Implementar.
 'use client';
 
+import { usePathname } from 'next/navigation';
 import AuthGuard from '../../features/shared/components/AuthGuard';
 
 export default function AdminLayout({
@@ -8,6 +9,17 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const isPinPage = pathname === '/admin/pin';
+
+  if (isPinPage) {
+    return (
+      <AuthGuard allowedRoles={['ADMIN']}>
+        {children}
+      </AuthGuard>
+    );
+  }
+
   return (
     <AuthGuard allowedRoles={['ADMIN']}>
     <div style={{ display: 'flex' }}>
