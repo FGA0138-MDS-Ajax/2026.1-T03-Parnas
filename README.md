@@ -1,6 +1,10 @@
 # KeepUnB - Sistema de Gestão de solicitações de manutenção da UnB-FCTE
 
-O **KeepUnB** é uma plataforma centralizada e inteligente desenvolvida para otimizar, automatizar e rastrear as solicitações de manutenção corretiva e preventiva na Universidade de Brasília (UnB). 
+<p align="center">
+  <img src="frontend/public/Keep-unb-logo.png" alt="Logo KeepUnB" width="420">
+</p>
+
+O **KeepUnB** é uma plataforma centralizada e inteligente desenvolvida para otimizar, automatizar e rastrear as solicitações de manutenção corretiva e preventiva na Universidade de Brasília (UnB).
 
 O sistema permite que os solicitantes relatem problemas de infraestrutura, enquanto fornece ferramentas robustas para administradores, gerentes de equipe e técnicos gerenciarem o ciclo de vida de cada chamado.
 
@@ -8,7 +12,7 @@ O sistema permite que os solicitantes relatem problemas de infraestrutura, enqua
 
 ## Principais Funcionalidades
 
-- **Abertura de Chamados** 
+- **Abertura de Chamados**
 - **Painéis Customizados por Perfil**:
   - **Solicitante**: Acompanha seus chamados e cria novos relatos de manutenção.
   - **Técnico**: Acessa a fila de tarefas designadas e atualiza o andamento das ordens de serviço.
@@ -24,20 +28,36 @@ O sistema permite que os solicitantes relatem problemas de infraestrutura, enqua
 A arquitetura do KeepUnB é dividida em serviços independentes utilizando tecnologias modernas e de alta performance:
 
 ### Frontend
-- **Framework**: [Next.js 14](https://nextjs.org/) (App Router) & [React 18](https://react.dev/)
-- **Linguagem**: [TypeScript](https://www.typescriptlang.org/)
-- **Estilização**: Vanilla CSS (CSS Variables & Design Tokens customizados)
-- **Ambiente de Execução (Runtime)**: [Node.js 20+](https://nodejs.org/)
+
+<p align="left">
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" width="58" alt="Next.js" title="Next.js" />
+  &nbsp;&nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" width="58" alt="React" title="React" />
+  &nbsp;&nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" width="58" alt="TypeScript" title="TypeScript" />
+  &nbsp;&nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" width="58" alt="CSS3" title="CSS3" />
+  &nbsp;&nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" width="58" alt="Node.js" title="Node.js" />
+</p>
 
 ### Backend
-- **Framework**: [FastAPI](https://fastapi.tiangolo.com/) (Python 3.12+)
-- **ORM**: [SQLAlchemy 2.0](https://www.sqlalchemy.org/) (Assíncrono)
-- **Migrações**: [Alembic](https://alembic.sqlalchemy.org/)
-- **Banco de Dados**: [PostgreSQL 16](https://www.postgresql.org/) (com driver assíncrono [asyncpg](https://github.com/MagicStack/asyncpg))
-- **Validação de Dados**: [Pydantic v2](https://docs.pydantic.dev/)
+
+<p align="left">
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-original.svg" width="58" alt="FastAPI" title="FastAPI" />
+  &nbsp;&nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" width="58" alt="Python" title="Python" />
+  &nbsp;&nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlalchemy/sqlalchemy-original.svg" width="58" alt="SQLAlchemy" title="SQLAlchemy" />
+  &nbsp;&nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" width="58" alt="PostgreSQL" title="PostgreSQL" />
+</p>
 
 ### Infraestrutura & Devops
-- **Containers**: [Docker](https://www.docker.com/) & [Docker Compose](https://docs.docker.com/compose/)
+
+<p align="left">
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" width="58" alt="Docker" title="Docker" />
+</p>
 
 ---
 
@@ -47,10 +67,15 @@ A arquitetura do KeepUnB é dividida em serviços independentes utilizando tecno
 
 Antes de iniciar, certifique-se de ter instalado em sua máquina:
 
-1. **Git** (para controle de versão)
-2. **Docker & Docker Compose** (para rodar a aplicação localmente)
-3. **Python 3.12+** (para rodar ferramentas de qualidade locais)
-4. **Node.js 20+** (para o frontend)
+<p align="left">
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" width="54" alt="Git" title="Git" />
+  &nbsp;&nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" width="54" alt="Docker" title="Docker" />
+  &nbsp;&nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" width="54" alt="Python" title="Python" />
+  &nbsp;&nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" width="54" alt="Node.js" title="Node.js" />
+</p>
 
 
 ### Passo a Passo de Inicialização
@@ -138,4 +163,97 @@ keep-unb/
 └── docker-compose.yml  # Configuração de containers de desenvolvimento
 ```
 
+## Contribuidores
 
+<div align="center">
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/carloshfgit">
+        <img src="https://github.com/carloshfgit.png?size=120" width="120px;" alt="carloshfgit"/>
+        <br />
+        <sub><b>carloshfgit</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/felipemso">
+        <img src="https://github.com/felipemso.png?size=120" width="120px;" alt="felipemso"/>
+        <br />
+        <sub><b>felipemso</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/arthur-mariani">
+        <img src="https://github.com/arthur-mariani.png?size=120" width="120px;" alt="arthur-mariani"/>
+        <br />
+        <sub><b>arthur-mariani</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/CharlesRuan-MAP">
+        <img src="https://github.com/CharlesRuan-MAP.png?size=120" width="120px;" alt="CharlesRuan-MAP"/>
+        <br />
+        <sub><b>CharlesRuan-MAP</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/vellloso">
+        <img src="https://github.com/vellloso.png?size=120" width="120px;" alt="vellloso"/>
+        <br />
+        <sub><b>vellloso</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/prietum">
+        <img src="https://github.com/prietum.png?size=120" width="120px;" alt="prietum"/>
+        <br />
+        <sub><b>prietum</b></sub>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/arthurrcoelho">
+        <img src="https://github.com/arthurrcoelho.png?size=120" width="120px;" alt="arthurrcoelho"/>
+        <br />
+        <sub><b>arthurrcoelho</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/Dandot1">
+        <img src="https://github.com/Dandot1.png?size=120" width="120px;" alt="Dandot1"/>
+        <br />
+        <sub><b>Dandot1</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/Guilhermesouza21">
+        <img src="https://github.com/Guilhermesouza21.png?size=120" width="120px;" alt="Guilhermesouza21"/>
+        <br />
+        <sub><b>Guilhermesouza21</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/Danielfelipe08">
+        <img src="https://github.com/Danielfelipe08.png?size=120" width="120px;" alt="Danielfelipe08"/>
+        <br />
+        <sub><b>Danielfelipe08</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/RodrigoCBarbosa">
+        <img src="https://github.com/RodrigoCBarbosa.png?size=120" width="120px;" alt="RodrigoCBarbosa"/>
+        <br />
+        <sub><b>RodrigoCBarbosa</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/caioNapoles">
+        <img src="https://github.com/caioNapoles.png?size=120" width="120px;" alt="caioNapoles"/>
+        <br />
+        <sub><b>caioNapoles</b></sub>
+      </a>
+    </td>
+  </tr>
+</table>
+</div>
