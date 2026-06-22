@@ -1313,6 +1313,9 @@
     padding: 0.85rem 1.25rem !important;
     font-size: 1rem !important;
     border-radius: 14px !important;
+    background: linear-gradient(135deg, rgba(27, 122, 58, 0.15) 0%, rgba(61, 201, 102, 0.05) 100%) !important;
+    border: 1px solid rgba(61, 201, 102, 0.15) !important;
+    color: var(--white) !important;
   }
 
   .sidebar-user {

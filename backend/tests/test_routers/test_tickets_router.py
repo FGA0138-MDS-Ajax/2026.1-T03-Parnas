@@ -33,23 +33,23 @@ async def test_create_ticket_router_success(
     assert json_data["local"] == "Sala de Aula Darcy Ribeiro - Prédio do SG"
     assert json_data["solicitante_id"] == test_solicitante.matricula
     assert json_data["status"] == TicketStatus.ABERTO.value
-    assert json_data["photo_path"] is None
+    assert json_data["photo_paths"] == []
 
 
 @pytest.mark.asyncio
-async def test_create_ticket_router_with_photo_path_success(
+async def test_create_ticket_router_with_photo_paths_success(
     client: AsyncClient,
     test_solicitante: User,
     solicitante_headers: dict[str, str]
 ):
-    """Garante que a criação de chamado via rota HTTP por um solicitante funciona quando photo_path é enviado."""
+    """Garante que a criação de chamado via rota HTTP por um solicitante funciona quando photo_paths é enviado."""
     response = await client.post(
         "/api/v1/tickets",
         json={
             "local": "Sala de Aula Darcy Ribeiro - Prédio do SG",
             "tipo_manutencao": "Instalações Elétricas",
             "descricao": "Luzes piscando na sala de aula.",
-            "photo_path": "uploads/images/luzes_sg.jpg"
+            "photo_paths": ["uploads/images/luzes_sg.jpg"]
         },
         headers=solicitante_headers
     )
@@ -60,7 +60,7 @@ async def test_create_ticket_router_with_photo_path_success(
     assert json_data["local"] == "Sala de Aula Darcy Ribeiro - Prédio do SG"
     assert json_data["solicitante_id"] == test_solicitante.matricula
     assert json_data["status"] == TicketStatus.ABERTO.value
-    assert json_data["photo_path"] == "uploads/images/luzes_sg.jpg"
+    assert json_data["photo_paths"] == ["uploads/images/luzes_sg.jpg"]
 
 
 @pytest.mark.asyncio
@@ -82,16 +82,17 @@ async def test_create_ticket_router_with_photo_upload_success(
             "tipo_manutencao": "Elétrica",
             "descricao": "Tomada com mau contato.",
         },
-        files={"photo": ("tomada.png", b"fake-png-content", "image/png")},
+        files=[("photos", ("tomada.png", b"fake-png-content", "image/png"))],
         headers=solicitante_headers,
     )
 
     assert response.status_code == status.HTTP_201_CREATED
     json_data = response.json()
     assert json_data["solicitante_id"] == test_solicitante.matricula
-    assert json_data["photo_path"].startswith("/uploads/tickets/")
-    assert json_data["photo_path"].endswith(".png")
-    saved_filename = json_data["photo_path"].split("/")[-1]
+    assert len(json_data["photo_paths"]) == 1
+    assert json_data["photo_paths"][0].startswith("/uploads/tickets/")
+    assert json_data["photo_paths"][0].endswith(".png")
+    saved_filename = json_data["photo_paths"][0].split("/")[-1]
     assert (upload_dir / saved_filename).read_bytes() == b"fake-png-content"
 
 
@@ -112,7 +113,7 @@ async def test_create_ticket_router_rejects_invalid_photo_extension(
             "tipo_manutencao": "Elétrica",
             "descricao": "Tomada com mau contato.",
         },
-        files={"photo": ("tomada.gif", b"fake-gif-content", "image/gif")},
+        files=[("photos", ("tomada.gif", b"fake-gif-content", "image/gif"))],
         headers=solicitante_headers,
     )
 
@@ -137,7 +138,7 @@ async def test_create_ticket_router_rejects_photo_larger_than_10mb(
             "tipo_manutencao": "Elétrica",
             "descricao": "Tomada com mau contato.",
         },
-        files={"photo": ("tomada.jpg", b"x" * (10 * 1024 * 1024 + 1), "image/jpeg")},
+        files=[("photos", ("tomada.jpg", b"x" * (10 * 1024 * 1024 + 1), "image/jpeg"))],
         headers=solicitante_headers,
     )
 

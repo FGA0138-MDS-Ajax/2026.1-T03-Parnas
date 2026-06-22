@@ -415,7 +415,7 @@ export default function UsuariosPage() {
               </div>
 
               <div className="modal-form-group">
-                <label className="form-group-label">Matrícula FCTE (Opcional)</label>
+                <label className="form-group-label">Matrícula (Opcional)</label>
                 <input
                   type="text"
                   name="matricula"

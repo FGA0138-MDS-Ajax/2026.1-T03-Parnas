@@ -16,8 +16,10 @@ export const solicitanteService = {
     formData.append('local', input.local);
     formData.append('tipo_manutencao', input.tipo_manutencao);
     formData.append('descricao', input.descricao);
-    if (input.photo) {
-      formData.append('photo', input.photo);
+    if (input.photos && input.photos.length > 0) {
+      input.photos.forEach((photo) => {
+        formData.append('photos', photo);
+      });
     }
 
     return await apiRequest<Ticket>('/tickets', {

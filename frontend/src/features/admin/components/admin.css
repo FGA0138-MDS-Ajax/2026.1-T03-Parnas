@@ -761,13 +761,19 @@
 
   .admin-sidebar.open .sidebar-nav {
     display: block !important;
+    margin-bottom: 0 !important;
+    flex: none !important;
     animation: fadeIn 0.3s ease forwards;
   }
 
   .admin-sidebar.open .sidebar-user {
     display: flex !important;
-    margin-top: 2rem !important;
+    margin-top: 1.25rem !important;
     animation: fadeIn 0.3s ease 0.1s forwards;
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    border-radius: 16px !important;
+    padding: 1.25rem 1rem !important;
   }
 
   .sidebar-menu {
@@ -776,6 +782,37 @@
 
   .menu-item-link {
     padding: 0.85rem 1.25rem !important;
+    font-size: 1rem !important;
+    border-radius: 14px !important;
+    background: linear-gradient(135deg, rgba(27, 122, 58, 0.15) 0%, rgba(61, 201, 102, 0.05) 100%) !important;
+    border: 1px solid rgba(61, 201, 102, 0.15) !important;
+    color: var(--white) !important;
+  }
+
+  /* Destaca o botão de sair no menu hambúrguer móvel */
+  .admin-sidebar.open .btn-logout {
+    background: rgba(239, 68, 68, 0.15) !important;
+    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+    color: #F87171 !important;
+    padding: 8px 14px !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .admin-sidebar.open .btn-logout:hover {
+    background: rgba(239, 68, 68, 0.25) !important;
+    color: #EF4444 !important;
+    transform: scale(1.02);
+  }
+
+  .admin-sidebar.open .btn-logout::after {
+    content: "Sair";
+    font-family: 'Sora', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
   }
 
   .admin-content {

@@ -13,7 +13,7 @@ class TicketRepository:
             status=TicketStatus.ABERTO,
             solicitante_id=solicitante_id,
             tecnico_id=None,
-            photo_path=ticket_in.photo_path
+            photo_paths=ticket_in.photo_paths
         )
         db.add(db_ticket)
         await db.commit()

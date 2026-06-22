@@ -19,6 +19,7 @@ export default function DashboardContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'nao_iniciados' | 'em_andamento' | 'concluidos'>('nao_iniciados');
   const [isLoading, setIsLoading] = useState(true);
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
 
@@ -97,6 +98,10 @@ export default function DashboardContent() {
       window.removeEventListener('openOutrasSolicitacoes', handleCustomOpen);
     };
   }, []);
+
+  useEffect(() => {
+    setImageErrors({});
+  }, [selectedTicket]);
 
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
@@ -470,19 +475,66 @@ export default function DashboardContent() {
               <p style={{ margin: '0.4rem 0' }}><strong>Local:</strong> {selectedTicket.local}</p>
               <p style={{ margin: '0.4rem 0' }}><strong>Categoria:</strong> {selectedTicket.tipo_manutencao}</p>
               <p style={{ margin: '0.4rem 0' }}><strong>Aberto em:</strong> {new Date(selectedTicket.created_at).toLocaleDateString('pt-BR')}</p>
-              <p style={{ margin: '0.75rem 0' }}>{selectedTicket.descricao}</p>
-
-              {selectedTicket.photo_path ? (
-                <img
-                  src={`${SERVERBASEURL}${selectedTicket.photo_path}`}
-                  alt="Foto da ocorrência"
-                  style={{ width: '100%', maxHeight: '350px', objectFit: 'contain', borderRadius: '12px', marginTop: '1rem', border: '1px solid rgba(13,43,94,0.12)' }}
-                />
-              ) : (
-                <p style={{ color: 'var(--gray-text)', fontSize: '0.85rem', marginTop: '1rem' }}>
-                  Nenhuma imagem anexada a este chamado.
+              <div style={{
+                marginTop: '1.2rem',
+                marginBottom: '1.2rem',
+                padding: '1rem',
+                backgroundColor: 'var(--off-white, #F4F7FB)',
+                borderRadius: '10px',
+                border: '1px solid rgba(13,43,94,0.08)'
+              }}>
+                <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem', color: 'var(--navy, #0D2B5E)' }}>Descrição</h4>
+                <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--navy-dark, #071A3E)', lineHeight: 1.5 }}>
+                  {selectedTicket.descricao}
                 </p>
-              )}
+              </div>
+
+              {(() => {
+                const validPhotoPaths = selectedTicket.photo_paths?.filter(
+                  path => path && path !== 'null' && path.trim() !== ''
+                ) || [];
+
+                if (validPhotoPaths.length > 0) {
+                  return (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+                      {validPhotoPaths.map((path, index) => {
+                        if (imageErrors[path]) {
+                          return (
+                            <div key={path} style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              height: '150px',
+                              backgroundColor: 'var(--off-white, #F4F7FB)',
+                              borderRadius: '12px',
+                              border: '1px dashed rgba(13,43,94,0.2)',
+                              color: 'var(--gray-text)',
+                              fontSize: '0.85rem'
+                            }}>
+                              imagem indisponível
+                            </div>
+                          );
+                        }
+                        return (
+                          <img
+                            key={path}
+                            src={`${SERVERBASEURL}${path}`}
+                            alt={`Foto da ocorrência ${index + 1}`}
+                            onError={() => setImageErrors(prev => ({ ...prev, [path]: true }))}
+                            style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '12px', border: '1px solid rgba(13,43,94,0.12)' }}
+                          />
+                        );
+                      })}
+                    </div>
+                  );
+                }
+
+                return (
+                  <p style={{ color: 'var(--gray-text)', fontSize: '0.85rem', marginTop: '1rem' }}>
+                    imagem indisponível
+                  </p>
+                );
+              })()}
             </div>
           </div>
         </div>
