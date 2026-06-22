@@ -470,7 +470,19 @@ export default function DashboardContent() {
               <p style={{ margin: '0.4rem 0' }}><strong>Local:</strong> {selectedTicket.local}</p>
               <p style={{ margin: '0.4rem 0' }}><strong>Categoria:</strong> {selectedTicket.tipo_manutencao}</p>
               <p style={{ margin: '0.4rem 0' }}><strong>Aberto em:</strong> {new Date(selectedTicket.created_at).toLocaleDateString('pt-BR')}</p>
-              <p style={{ margin: '0.75rem 0' }}>{selectedTicket.descricao}</p>
+              <div style={{
+                marginTop: '1.2rem',
+                marginBottom: '1.2rem',
+                padding: '1rem',
+                backgroundColor: 'var(--off-white, #F4F7FB)',
+                borderRadius: '10px',
+                border: '1px solid rgba(13,43,94,0.08)'
+              }}>
+                <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem', color: 'var(--navy, #0D2B5E)' }}>Descrição</h4>
+                <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--navy-dark, #071A3E)', lineHeight: 1.5 }}>
+                  {selectedTicket.descricao}
+                </p>
+              </div>
 
               {selectedTicket.photo_paths && selectedTicket.photo_paths.length > 0 ? (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
