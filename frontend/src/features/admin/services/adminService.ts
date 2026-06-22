@@ -59,4 +59,11 @@ export const adminService = {
       method: 'DELETE',
     });
   },
+
+  async verifyPin(pin: string): Promise<{ access_token: string; token_type: string }> {
+    return await apiRequest<{ access_token: string; token_type: string }>('/admin/verify-pin', {
+      method: 'POST',
+      body: JSON.stringify({ pin }),
+    });
+  },
 };
