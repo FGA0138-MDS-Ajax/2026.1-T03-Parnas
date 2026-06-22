@@ -472,12 +472,17 @@ export default function DashboardContent() {
               <p style={{ margin: '0.4rem 0' }}><strong>Aberto em:</strong> {new Date(selectedTicket.created_at).toLocaleDateString('pt-BR')}</p>
               <p style={{ margin: '0.75rem 0' }}>{selectedTicket.descricao}</p>
 
-              {selectedTicket.photo_path ? (
-                <img
-                  src={`${SERVERBASEURL}${selectedTicket.photo_path}`}
-                  alt="Foto da ocorrência"
-                  style={{ width: '100%', maxHeight: '350px', objectFit: 'contain', borderRadius: '12px', marginTop: '1rem', border: '1px solid rgba(13,43,94,0.12)' }}
-                />
+              {selectedTicket.photo_paths && selectedTicket.photo_paths.length > 0 ? (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+                  {selectedTicket.photo_paths.map((path, index) => (
+                    <img
+                      key={path}
+                      src={`${SERVERBASEURL}${path}`}
+                      alt={`Foto da ocorrência ${index + 1}`}
+                      style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '12px', border: '1px solid rgba(13,43,94,0.12)' }}
+                    />
+                  ))}
+                </div>
               ) : (
                 <p style={{ color: 'var(--gray-text)', fontSize: '0.85rem', marginTop: '1rem' }}>
                   Nenhuma imagem anexada a este chamado.
