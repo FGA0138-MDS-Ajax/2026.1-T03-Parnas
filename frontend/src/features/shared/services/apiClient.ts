@@ -1,6 +1,8 @@
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
 
+export const SERVERBASEURL = API_BASE_URL.replace(/\/api\/v1\/?$/, '');
+
 export class ApiError extends Error {
   status: number;
 
@@ -27,7 +29,7 @@ export async function apiRequest<T>(
     headers.set('Authorization', `Bearer ${token}`);
   }
 
-  if (options.body && !headers.has('Content-Type')) {
+  if (options.body && !headers.has('Content-Type') && !(options.body instanceof FormData)) {
     headers.set('Content-Type', 'application/json');
   }
 

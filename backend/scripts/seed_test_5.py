@@ -122,7 +122,7 @@ TEST_TICKETS = [
     {
         "local": "UED",
         "descricao": "Buraco na parede.",
-        "photo_path": "buracoparede.jpeg",
+        "photo_paths": ["/uploads/tickets/buracoparede.jpeg"],
         "tipo_manutencao": "Estrutural",
         "solicitante_id": "100000001",
         "historico": {}
@@ -130,7 +130,7 @@ TEST_TICKETS = [
     {
         "local": "UAC",
         "descricao": "Ninho de pássaro no teto.",
-        "photo_path": "semenergia.jpg",
+        "photo_paths": ["/uploads/tickets/semenergia.jpg"],
         "tipo_manutencao": "Estrutural",
         "solicitante_id": "100000002",
         "historico": {
@@ -146,7 +146,7 @@ TEST_TICKETS = [
     {
         "local": "LDTEA",
         "descricao": "Lâmpada queimada.",
-        "photo_path": "lampadaquebrada.webp",
+        "photo_paths": ["/uploads/tickets/lampadaquebrada.webp"],
         "tipo_manutencao": "Energia",
         "solicitante_id": "100000003",
         "historico": {
@@ -213,7 +213,7 @@ async def upsert_test_ticket(ticket_data: dict[str, object]) -> str:
             descricao=ticket_data['descricao'],
             tipo_manutencao=ticket_data['tipo_manutencao'],
             solicitante_id=ticket_data['solicitante_id'],
-            photo_path=ticket_data.get('photo_path')
+            photo_paths=ticket_data.get('photo_paths')
         )
 
         session.add(ticket)

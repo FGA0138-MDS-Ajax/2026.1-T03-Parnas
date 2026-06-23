@@ -24,11 +24,7 @@ export const solicitanteService = {
 
     return await apiRequest<Ticket>('/tickets', {
       method: 'POST',
-      body: JSON.stringify({
-        local: input.local,
-        tipo_manutencao: input.tipo_manutencao,
-        descricao: input.descricao,
-      }),
+      body: formData,
     });
   },
 
