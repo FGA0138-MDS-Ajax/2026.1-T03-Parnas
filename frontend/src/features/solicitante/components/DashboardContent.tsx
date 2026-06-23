@@ -6,14 +6,12 @@ import Link from 'next/link';
 import { solicitanteService } from '../services/solicitanteService';
 import { Ticket, SolicitanteDashboardStats } from '../types';
 import './solicitante.css';
-import { SERVERBASEURL } from '../../shared/services/apiClient';
 
 export default function DashboardContent() {
   const [userName, setUserName] = useState('Gabriel Sousa');
   const [userMatricula, setUserMatricula] = useState('211043210');
   const [stats, setStats] = useState<SolicitanteDashboardStats>({ total: 0, abertos: 0, emAndamento: 0, concluidos: 0 });
   const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [outrosChamados, setOutrosChamados] = useState<Ticket[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -216,22 +214,18 @@ export default function DashboardContent() {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}>
               {tickets.map((ticket) => (
-                <div
-                    key={ticket.id}
-                    onClick={() => setSelectedTicket(ticket)}
-                    style={{
-                      padding: '1.25rem',
-                      borderRadius: '12px',
-                      background: '#ffffff',
-                      border: '1px solid rgba(13, 43, 94, 0.12)',
-                      boxShadow: '0 2px 6px rgba(13, 43, 94, 0.03)',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      gap: '1rem',
-                      transition: 'all 0.2s ease',
-                      cursor: 'pointer',
-                    }}>
+                <div key={ticket.id} style={{
+                  padding: '1.25rem',
+                  borderRadius: '12px',
+                  background: '#ffffff',
+                  border: '1px solid rgba(13, 43, 94, 0.12)',
+                  boxShadow: '0 2px 6px rgba(13, 43, 94, 0.03)',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  gap: '1rem',
+                  transition: 'all 0.2s ease',
+                }}>
                   <div style={{ minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
                       <span style={{ fontFamily: 'Sora', fontSize: '0.92rem', fontWeight: 600, color: '#000000' }}>#{ticket.id} — {ticket.local}</span>
@@ -421,18 +415,13 @@ export default function DashboardContent() {
                   }
 
                   return filteredOutros.map(ticket => (
-                    <div
-                        key={ticket.id}
-                        onClick={() => setSelectedTicket(ticket)}
-                        style={{
-                          padding: '1.25rem',
-                          borderRadius: '12px',
-                          background: '#ffffff',
-                          border: '1px solid rgba(13, 43, 94, 0.12)',
-                          boxShadow: '0 2px 6px rgba(13, 43, 94, 0.03)',
-                          cursor: 'pointer',
-                        }}>
-
+                    <div key={ticket.id} style={{
+                      padding: '1.25rem',
+                      borderRadius: '12px',
+                      background: '#ffffff',
+                      border: '1px solid rgba(13, 43, 94, 0.12)',
+                      boxShadow: '0 2px 6px rgba(13, 43, 94, 0.03)',
+                    }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
                         <span style={{ fontFamily: 'Sora', fontSize: '0.92rem', fontWeight: 600, color: '#000000' }}>#{ticket.id} — {ticket.local}</span>
                         <span className={`badge-status ${getStatusBadgeClass(ticket.status)}`} style={{ transform: 'scale(0.85)', transformOrigin: 'left' }}>
