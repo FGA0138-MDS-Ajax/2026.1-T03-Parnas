@@ -47,9 +47,9 @@ export default function Dashboard() {
     loadData();
 
     if (typeof window !== 'undefined') {
-      const email = localStorage.getItem('keepunb_email') || 'gerente@gmail.com';
-      const nome = localStorage.getItem('keepunb_nome') || '';
-      const matricula = localStorage.getItem('keepunb_matricula') || '242012345';
+      const email = sessionStorage.getItem('keepunb_email') || 'gerente@gmail.com';
+      const nome = sessionStorage.getItem('keepunb_nome') || '';
+      const matricula = sessionStorage.getItem('keepunb_matricula') || '242012345';
       setUserMatricula(matricula);
       
       if (nome) {

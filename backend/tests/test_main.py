@@ -35,3 +35,5 @@ def test_openapi_documents_standard_error_payload():
     assert "400" in ticket_post_responses
     assert "422" not in ticket_post_responses
     assert "ErrorResponse" in str(ticket_post_responses["400"])
+
+    assert "/api/v1/tickets/{ticket_id}/suggest-technician" in response.json()["paths"]

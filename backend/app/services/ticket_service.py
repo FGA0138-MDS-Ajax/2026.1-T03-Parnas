@@ -1,11 +1,13 @@
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.models.ticket import Ticket, TicketStatus
-from app.models.user import User, UserRole
+from app.models.user import ApprovalStatus, User, UserRole
+from app.repositories.ticket_history_repository import TicketHistoryRepository
 from app.repositories.ticket_repository import TicketRepository
 from app.repositories.user_repository import UserRepository
-from app.repositories.ticket_history_repository import TicketHistoryRepository
 from app.schemas.ticket import TicketCreate
+
 
 class TicketService:
     @staticmethod
@@ -41,63 +43,93 @@ class TicketService:
         )
 
     @staticmethod
+    async def suggest_technician(db: AsyncSession, ticket_id: int) -> dict:
+        ticket = await TicketRepository.get_by_id(db, ticket_id)
+        if not ticket:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chamado não encontrado")
+
+        suggestion = await UserRepository.suggest_technician_by_area(db, ticket.tipo_manutencao)
+        if not suggestion:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Nenhum técnico disponível para a área do chamado",
+            )
+
+        technician, active_tickets_count = suggestion
+        return {
+            "tecnico_id": technician.matricula,
+            "nome": technician.nome,
+            "area_manutencao": technician.area_manutencao,
+            "quantidade_chamados_ativos": active_tickets_count,
+        }
+
+    @staticmethod
     async def assign_technician(db: AsyncSession, ticket_id: int, tecnico_id: str, manager_id: str) -> Ticket:
         ticket = await TicketRepository.get_by_id(db, ticket_id)
         if not ticket:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chamado não encontrado")
-        
+
         # Gerente não consegue atribuir técnico a chamado já concluído
         if ticket.status == TicketStatus.CONCLUIDO:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, 
-                detail="Não é possível atribuir técnico a um chamado já concluído"
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Não é possível atribuir técnico a um chamado já concluído",
             )
-        
+
         # Validação para garantir que o chamado atual esteja com o status ABERTO
         if ticket.status != TicketStatus.ABERTO:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, 
-                detail="O chamado precisa estar com o status ABERTO para receber uma atribuição"
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="O chamado precisa estar com o status ABERTO para receber uma atribuição",
             )
 
-        # 2. Busca o usuário técnico pela matrícula no repositório
+        # Busca o usuário técnico pela matrícula no repositório
         tecnico = await UserRepository.get_by_matricula(db, tecnico_id)
-        
+
         # Gerente não consegue atribuir técnico inexistente
         if not tecnico:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, 
-                detail="O técnico informado não existe no sistema"
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="O técnico informado não existe no sistema",
             )
-            
+
         # Gerente não consegue atribuir usuário que não seja técnico
         if tecnico.role != UserRole.TECNICO:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, 
-                detail="O usuário selecionado não possui o perfil de TÉCNICO"
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="O usuário selecionado não possui o perfil de TÉCNICO",
             )
-            
+
         # Validação de integridade para confirmar que o técnico está ativo
         if not tecnico.ativo:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, 
-                detail="O técnico selecionado está inativo no sistema"
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="O técnico selecionado está inativo no sistema",
             )
 
-        #Atualização automática dos campos e do status para ATRIBUIDO
+        if tecnico.approval_status != ApprovalStatus.APROVADO:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="O técnico selecionado não está aprovado no sistema",
+            )
+
+        # Atualização automática dos campos e do status para ATRIBUIDO
+        previous_status = ticket.status
         ticket.tecnico_id = tecnico.matricula
         ticket.status = TicketStatus.ATRIBUIDO
-        
+
         updated_ticket = await TicketRepository.update(db, ticket)
 
-        # Registro do evento de alteração de técnico atribuído e mudança de status
+        # Registro do evento de atribuição com o gerente responsável e o técnico escolhido
         await TicketHistoryRepository.create_entry(
-            db, ticket_id=ticket.id, user_id=manager_id, action=f"Técnico atribuído: {tecnico_id}"
+            db,
+            ticket_id=ticket.id,
+            user_id=manager_id,
+            action=f"Técnico atribuído: {tecnico_id}",
+            previous_status=previous_status,
+            new_status=TicketStatus.ATRIBUIDO,
         )
-        await TicketHistoryRepository.create_entry(
-            db, ticket_id=ticket.id, user_id=manager_id, action="Status alterado para: ATRIBUIDO"
-        )
-        
+
         return updated_ticket
 
     @staticmethod
@@ -109,7 +141,7 @@ class TicketService:
         ticket = await TicketRepository.get_by_id(db, ticket_id)
         if not ticket:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chamado não encontrado")
-        
+
         if ticket.tecnico_id != tecnico_id:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Chamado não está atribuído a você")
 
@@ -129,18 +161,20 @@ class TicketService:
         if not ticket:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="Chamado não encontrado.")
-        
-        # Bloqueia Técnicos 
+                detail="Chamado não encontrado.",
+            )
+
+        # Bloqueia Técnicos
         if user.role == UserRole.TECNICO and ticket.tecnico_id != user.matricula:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail="Usuário não possui permissão para acessar este recurso.")
-        
+                detail="Usuário não possui permissão para acessar este recurso.",
+            )
+
         history = await TicketHistoryRepository.get_by_ticket_id(db, ticket_id)
-        
+
         # Retorna os dados do chamado juntos com o seu histórico (linha do tempo)
         return {
             "ticket": ticket,
-            "history": history
+            "history": history,
         }

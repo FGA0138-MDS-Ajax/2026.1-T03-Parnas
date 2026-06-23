@@ -12,6 +12,16 @@ export const solicitanteService = {
   },
 
   async criarChamado(input: NovaSolicitacaoInput): Promise<Ticket> {
+    const formData = new FormData();
+    formData.append('local', input.local);
+    formData.append('tipo_manutencao', input.tipo_manutencao);
+    formData.append('descricao', input.descricao);
+    if (input.photos && input.photos.length > 0) {
+      input.photos.forEach((photo) => {
+        formData.append('photos', photo);
+      });
+    }
+
     return await apiRequest<Ticket>('/tickets', {
       method: 'POST',
       body: JSON.stringify({

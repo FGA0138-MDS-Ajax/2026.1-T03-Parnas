@@ -13,7 +13,7 @@ class TicketRepository:
             status=TicketStatus.ABERTO,
             solicitante_id=solicitante_id,
             tecnico_id=None,
-            photo_path=ticket_in.photo_path
+            photo_paths=ticket_in.photo_paths
         )
         db.add(db_ticket)
         await db.commit()
@@ -64,6 +64,17 @@ class TicketRepository:
     async def get_by_tecnico_id(db: AsyncSession, tecnico_id: str) -> list[Ticket]:
         result = await db.execute(select(Ticket).where(Ticket.tecnico_id == tecnico_id))
         return list(result.scalars().all())
+
+    @staticmethod
+    async def count_active_tickets_by_technician(db: AsyncSession, tecnico_id: str) -> int:
+        from sqlalchemy import func
+        result = await db.execute(
+            select(func.count(Ticket.id)).where(
+                Ticket.tecnico_id == tecnico_id,
+                Ticket.status.in_([TicketStatus.ATRIBUIDO, TicketStatus.EM_ANDAMENTO])
+            )
+        )
+        return result.scalar() or 0
 
     @staticmethod
     async def update(db: AsyncSession, db_ticket: Ticket) -> Ticket:

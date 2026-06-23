@@ -25,7 +25,16 @@ export interface Technician {
   nome: string;
   email: string;
   ativo: boolean;
+  approval_status: 'APROVADO' | 'REPROVADO' | 'PENDENTE';
+  area_manutencao: string | null;
   role: 'TECNICO' | 'SOLICITANTE' | 'GERENTE' | 'ADMIN';
+}
+
+export interface TechnicianSuggestion {
+  tecnico_id: string;
+  nome: string;
+  area_manutencao: string;
+  quantidade_chamados_ativos: number;
 }
 
 export interface DashboardStats {

@@ -31,6 +31,14 @@ from sqlalchemy import select, text, update
 
 TEST_USERS = [
     {
+        "matricula": "000000000",
+        "nome": "Usuário Excluído",
+        "email": "excluido@unb.br",
+        "role": UserRole.SOLICITANTE,
+        "ativo": False,
+        "approval_status": ApprovalStatus.APROVADO,
+    },
+    {
         "matricula": "100000001",
         "nome": "Solicitante Um",
         "email": "solicitante1@unb.br",
@@ -53,12 +61,14 @@ TEST_USERS = [
         "nome": "Tecnico Um",
         "email": "tecnico1@unb.br",
         "role": UserRole.TECNICO,
+        "area_manutencao": "Estrutural",
     },
     {
         "matricula": "200000002",
         "nome": "Tecnico Dois",
         "email": "tecnico2@unb.br",
         "role": UserRole.TECNICO,
+        "area_manutencao": "Hidráulico",
     },
     {
         "matricula": "300000001",
@@ -92,6 +102,7 @@ TEST_USERS = [
         "role": UserRole.TECNICO,
         "ativo": False,
         "approval_status": ApprovalStatus.PENDENTE,
+        "area_manutencao": "Energia",
     },
 
     {
@@ -101,6 +112,7 @@ TEST_USERS = [
         "role": UserRole.TECNICO,
         "ativo": False,
         "approval_status": ApprovalStatus.REPROVADO,
+        "area_manutencao": "Estrutural",
     },
 ]
 
@@ -230,16 +242,8 @@ async def upsert_test_ticket(ticket_data: dict[str, object]) -> str:
                     .filter(Ticket.id==ticket.id)
                     .values(tecnico_id=tecid)
                 )
-                
-                # aponta o local de manutencao do tecnico
-                stmt2 = (
-                    update(User)
-                    .filter(User.matricula==tecid)
-                    .values(area_manutencao=ticket_data['local'])
-                )
 
                 await session.execute(stmt)
-                await session.execute(stmt2)
                 await session.commit()
 
             # atribuir novo estado de ticket
@@ -273,6 +277,10 @@ async def upsert_test_user(user_data: dict[str, object]) -> str:
         user = result.scalars().first()
         password_hash = get_password_hash(TEST_PASSWORD)
 
+        admin_pin_hash = None
+        if user_data["role"] == UserRole.ADMIN:
+            admin_pin_hash = get_password_hash("1234")
+
         if user:
             user.nome = user_data["nome"]
             user.email = user_data["email"]
@@ -280,6 +288,8 @@ async def upsert_test_user(user_data: dict[str, object]) -> str:
             user.role = user_data["role"]
             user.ativo = user_data.get("ativo", True)
             user.approval_status = user_data.get("approval_status", ApprovalStatus.APROVADO)
+            user.area_manutencao = user_data.get("area_manutencao")
+            user.admin_pin_hash = admin_pin_hash
             action = "atualizado"
         else:
             user = User(
@@ -290,6 +300,8 @@ async def upsert_test_user(user_data: dict[str, object]) -> str:
                 role=user_data["role"],
                 ativo=user_data.get("ativo", True),
                 approval_status=user_data.get("approval_status", ApprovalStatus.APROVADO),
+                area_manutencao=user_data.get("area_manutencao"),
+                admin_pin_hash=admin_pin_hash,
             )
             session.add(user)
             action = "criado"

@@ -13,6 +13,7 @@ export interface Ticket {
   local: string;
   tipo_manutencao: string;
   descricao: string;
+  photo_paths: string[] | null;
   status: TicketStatus;
   solicitante_id: string;
   tecnico_id: string | null;
@@ -24,6 +25,7 @@ export interface NovaSolicitacaoInput {
   local: string;
   tipo_manutencao: string;
   descricao: string;
+  photos?: File[];
 }
 
 export interface SolicitanteDashboardStats {

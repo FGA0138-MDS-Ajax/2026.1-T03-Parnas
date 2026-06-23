@@ -28,17 +28,17 @@ async def test_create_ticket_success(db_session: AsyncSession, test_solicitante:
     assert ticket.status == TicketStatus.ABERTO
     assert ticket.solicitante_id == test_solicitante.matricula
     assert ticket.tecnico_id is None
-    assert ticket.photo_path is None
+    assert not ticket.photo_paths
 
 
 @pytest.mark.asyncio
-async def test_create_ticket_with_photo_path_success(db_session: AsyncSession, test_solicitante: User):
-    """Garante que um ticket pode ser criado com photo_path preenchido."""
+async def test_create_ticket_with_photo_paths_success(db_session: AsyncSession, test_solicitante: User):
+    """Garante que um ticket pode ser criado com photo_paths preenchido."""
     ticket_in = TicketCreate(
         local="Prédio da Computação - Sala A1",
         tipo_manutencao="Ar condicionado",
         descricao="Ar condicionado não está refrigerando a sala.",
-        photo_path="uploads/images/ar_condicionado.png"
+        photo_paths=["uploads/images/ar_condicionado.png"]
     )
 
     ticket = await TicketRepository.create(
@@ -48,7 +48,7 @@ async def test_create_ticket_with_photo_path_success(db_session: AsyncSession, t
     )
 
     assert ticket.id is not None
-    assert ticket.photo_path == "uploads/images/ar_condicionado.png"
+    assert ticket.photo_paths == ["uploads/images/ar_condicionado.png"]
 
 
 @pytest.mark.asyncio
@@ -178,5 +178,32 @@ async def test_update_ticket(
     in_db = await TicketRepository.get_by_id(db_session, ticket_id)
     assert in_db.status == TicketStatus.ATRIBUIDO
     assert in_db.tecnico_id == tecnico_matricula
+
+
+@pytest.mark.asyncio
+async def test_count_active_tickets_by_technician(
+    db_session: AsyncSession,
+    test_solicitante: User,
+    test_tecnico: User,
+    create_test_ticket
+):
+    """Garante que a contagem de chamados ativos por técnico considera apenas status corretos."""
+    # Chamado em status ABERTO sem técnico
+    await create_test_ticket("Sala 1", "Ar", "Quebrado", test_solicitante.matricula, status=TicketStatus.ABERTO)
+    
+    # Chamado atribuído (ativo)
+    await create_test_ticket("Sala 2", "Ar", "Quebrado", test_solicitante.matricula, tecnico_id=test_tecnico.matricula, status=TicketStatus.ATRIBUIDO)
+    
+    # Chamado em andamento (ativo)
+    await create_test_ticket("Sala 3", "Ar", "Quebrado", test_solicitante.matricula, tecnico_id=test_tecnico.matricula, status=TicketStatus.EM_ANDAMENTO)
+    
+    # Chamado concluído (inativo)
+    await create_test_ticket("Sala 4", "Ar", "Quebrado", test_solicitante.matricula, tecnico_id=test_tecnico.matricula, status=TicketStatus.CONCLUIDO)
+    
+    # Chamado cancelado (inativo)
+    await create_test_ticket("Sala 5", "Ar", "Quebrado", test_solicitante.matricula, tecnico_id=test_tecnico.matricula, status=TicketStatus.CANCELADO)
+
+    count = await TicketRepository.count_active_tickets_by_technician(db_session, test_tecnico.matricula)
+    assert count == 2
 
 

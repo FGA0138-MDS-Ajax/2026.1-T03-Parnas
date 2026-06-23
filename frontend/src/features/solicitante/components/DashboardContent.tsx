@@ -17,13 +17,14 @@ export default function DashboardContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'nao_iniciados' | 'em_andamento' | 'concluidos'>('nao_iniciados');
   const [isLoading, setIsLoading] = useState(true);
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
 
     if (typeof window !== 'undefined') {
-      const email = localStorage.getItem('keepunb_email') || 'solicitante@gmail.com';
-      const nome = localStorage.getItem('keepunb_nome') || '';
-      const matricula = localStorage.getItem('keepunb_matricula') || '211043210';
+      const email = sessionStorage.getItem('keepunb_email') || 'solicitante@gmail.com';
+      const nome = sessionStorage.getItem('keepunb_nome') || '';
+      const matricula = sessionStorage.getItem('keepunb_matricula') || '211043210';
       setUserMatricula(matricula);
       
       if (nome) {
@@ -95,6 +96,10 @@ export default function DashboardContent() {
       window.removeEventListener('openOutrasSolicitacoes', handleCustomOpen);
     };
   }, []);
+
+  useEffect(() => {
+    setImageErrors({});
+  }, [selectedTicket]);
 
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
@@ -433,6 +438,92 @@ export default function DashboardContent() {
                   ));
                 })()}
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {selectedTicket && (
+        <div className="modal-backdrop" onClick={() => setSelectedTicket(null)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3 style={{ margin: 0, fontFamily: 'Sora', color: 'var(--navy-dark)', fontSize: '1.3rem' }}>
+                Chamado #{selectedTicket.id}
+              </h3>
+              <button onClick={() => setSelectedTicket(null)} style={{ background: 'transparent', border: 'none', fontSize: '1.8rem', color: 'var(--gray-text)', cursor: 'pointer', padding: '0 0.5rem', lineHeight: 1 }}>
+                &times;
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
+                <span className={`badge-status ${getStatusBadgeClass(selectedTicket.status)}`}>
+                  {translateStatus(selectedTicket.status)}
+                </span>
+              </div>
+
+              <p style={{ margin: '0.4rem 0' }}><strong>Local:</strong> {selectedTicket.local}</p>
+              <p style={{ margin: '0.4rem 0' }}><strong>Categoria:</strong> {selectedTicket.tipo_manutencao}</p>
+              <p style={{ margin: '0.4rem 0' }}><strong>Aberto em:</strong> {new Date(selectedTicket.created_at).toLocaleDateString('pt-BR')}</p>
+              <div style={{
+                marginTop: '1.2rem',
+                marginBottom: '1.2rem',
+                padding: '1rem',
+                backgroundColor: 'var(--off-white, #F4F7FB)',
+                borderRadius: '10px',
+                border: '1px solid rgba(13,43,94,0.08)'
+              }}>
+                <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem', color: 'var(--navy, #0D2B5E)' }}>Descrição</h4>
+                <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--navy-dark, #071A3E)', lineHeight: 1.5 }}>
+                  {selectedTicket.descricao}
+                </p>
+              </div>
+
+              {(() => {
+                const validPhotoPaths = selectedTicket.photo_paths?.filter(
+                  path => path && path !== 'null' && path.trim() !== ''
+                ) || [];
+
+                if (validPhotoPaths.length > 0) {
+                  return (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+                      {validPhotoPaths.map((path, index) => {
+                        if (imageErrors[path]) {
+                          return (
+                            <div key={path} style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              height: '150px',
+                              backgroundColor: 'var(--off-white, #F4F7FB)',
+                              borderRadius: '12px',
+                              border: '1px dashed rgba(13,43,94,0.2)',
+                              color: 'var(--gray-text)',
+                              fontSize: '0.85rem'
+                            }}>
+                              imagem indisponível
+                            </div>
+                          );
+                        }
+                        return (
+                          <img
+                            key={path}
+                            src={`${SERVERBASEURL}${path}`}
+                            alt={`Foto da ocorrência ${index + 1}`}
+                            onError={() => setImageErrors(prev => ({ ...prev, [path]: true }))}
+                            style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '12px', border: '1px solid rgba(13,43,94,0.12)' }}
+                          />
+                        );
+                      })}
+                    </div>
+                  );
+                }
+
+                return (
+                  <p style={{ color: 'var(--gray-text)', fontSize: '0.85rem', marginTop: '1rem' }}>
+                    imagem indisponível
+                  </p>
+                );
+              })()}
             </div>
           </div>
         </div>

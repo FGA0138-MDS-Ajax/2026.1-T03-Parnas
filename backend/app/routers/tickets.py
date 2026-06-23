@@ -10,7 +10,14 @@ from app.core.database import get_db
 from app.core.dependencies import require_role, get_current_user
 from app.models.user import User, UserRole
 from app.schemas.error import error_response_docs
-from app.schemas.ticket import TicketCreate, TicketResponse, TicketAssign, TicketUpdateStatus, TicketPublicResponse
+from app.schemas.ticket import (
+    TicketAssign,
+    TicketCreate,
+    TicketPublicResponse,
+    TicketResponse,
+    TicketTechnicianSuggestionResponse,
+    TicketUpdateStatus,
+)
 from app.services.ticket_service import TicketService
 
 router = APIRouter(
@@ -46,24 +53,34 @@ async def _parse_ticket_create_request(request: Request) -> TicketCreate:
 
     if content_type.startswith("multipart/form-data"):
         form = await request.form()
-        photo = form.get("photo")
+        photos = form.getlist("photos")
 
-        if _is_uploaded_file(photo) and photo.filename:
-            ticket_in = _build_ticket_create(
-                {
-                    "local": form.get("local"),
-                    "tipo_manutencao": form.get("tipo_manutencao"),
-                    "descricao": form.get("descricao"),
-                }
+        valid_photos = [p for p in photos if _is_uploaded_file(p) and getattr(p, "filename", "")]
+        
+        if len(valid_photos) > 3:
+            from fastapi import HTTPException, status
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Você pode anexar no máximo 3 fotos por chamado.",
             )
-            photo_path = await _save_ticket_photo(photo)
-            return ticket_in.model_copy(update={"photo_path": photo_path})
 
-        payload = {
-            "local": form.get("local"),
-            "tipo_manutencao": form.get("tipo_manutencao"),
-            "descricao": form.get("descricao"),
-        }
+        ticket_in = _build_ticket_create(
+            {
+                "local": form.get("local"),
+                "tipo_manutencao": form.get("tipo_manutencao"),
+                "descricao": form.get("descricao"),
+            }
+        )
+        
+        if valid_photos:
+            photo_paths = []
+            for p in valid_photos:
+                photo_paths.append(await _save_ticket_photo(p))
+            return ticket_in.model_copy(update={"photo_paths": photo_paths})
+
+        return ticket_in
+
+
     else:
         payload = await request.json()
 
@@ -182,6 +199,20 @@ async def get_assigned_tickets(
     db: AsyncSession = Depends(get_db),
 ):
     return await TicketService.get_tickets_by_technician(db, current_user.matricula)
+
+
+@router.get(
+    "/{ticket_id}/suggest-technician",
+    response_model=TicketTechnicianSuggestionResponse,
+    summary="Sugerir técnico para um chamado",
+)
+async def suggest_technician(
+    ticket_id: int,
+    current_user: User = Depends(require_role([UserRole.GERENTE])),
+    db: AsyncSession = Depends(get_db),
+):
+    """Sugere o técnico aprovado, ativo e compatível com menor carga de chamados ativos."""
+    return await TicketService.suggest_technician(db, ticket_id)
 
 
 @router.patch("/{ticket_id}/assign", response_model=TicketResponse)

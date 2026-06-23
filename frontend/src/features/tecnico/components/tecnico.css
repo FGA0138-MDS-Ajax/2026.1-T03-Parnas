@@ -818,122 +818,160 @@
   box-shadow: 0 0 0 3px rgba(37, 87, 167, 0.15);
 }
 
+/* Botão de hambúrguer e cabeçalho mobile por padrão ocultos no desktop */
+.hamburger-menu {
+  display: none;
+}
+.sidebar-header-mobile {
+  display: contents;
+}
+
 @media (max-width: 992px) {
   .tecnico-layout {
     flex-direction: column;
   }
   
-  .tecnico-sidebar {
-    width: 100%;
-    padding: 0.75rem 1.5rem !important;
-    border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    height: 64px !important;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: space-between !important;
+  /* Exibe o hambúrguer no mobile */
+  .hamburger-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--white);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background-color 0.2s, transform 0.2s;
   }
-  
+  .hamburger-menu:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+  .hamburger-menu:active {
+    transform: scale(0.95);
+  }
+
+  .sidebar-header-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
   .sidebar-logo {
     margin-bottom: 0 !important;
     padding: 0 !important;
-    font-size: 1.25rem !important;
-  }
-
-  .sidebar-logo svg {
-    display: none !important;
   }
   
-  .tecnico-sidebar nav {
+  /* A sidebar vira o cabeçalho superior fixo */
+  .tecnico-sidebar {
+    width: 100% !important;
+    height: 70px !important;
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    padding: 0 1.5rem !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--navy-dark);
+    z-index: 100;
+    overflow: hidden;
+    transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease !important;
+  }
+  
+  /* Quando a sidebar está aberta, vira overlay em tela cheia */
+  .tecnico-sidebar.open {
+    height: 100vh !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    padding: 1.5rem !important;
+    overflow-y: auto;
+  }
+  
+  .tecnico-sidebar.open .sidebar-header-mobile {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Oculta navegação e perfil por padrão */
+  .tecnico-sidebar nav,
+  .sidebar-user {
+    display: none !important;
+  }
+
+  /* Exibe na sidebar aberta com animação */
+  .tecnico-sidebar.open nav {
+    display: block !important;
+    margin-bottom: 0 !important;
     flex: none !important;
-    margin-left: auto !important;
+    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .tecnico-sidebar.open .sidebar-user {
+    display: flex !important;
+    margin-top: 1.25rem !important;
+    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
   }
   
   .sidebar-menu {
-    flex-direction: row !important;
-    gap: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+    margin-bottom: 0 !important;
   }
 
-  /* Por padrão no mobile, esconde o Início e exibe a Nova Solicitação */
-  .menu-li-dashboard {
-    display: none !important;
-  }
-  .menu-li-nova {
+  /* Força a exibição de todas as opções de menu (removeu regra de esconder início) */
+  .menu-li-dashboard, .menu-li-nova {
     display: block !important;
   }
-  .menu-li-outras {
-    display: none !important;
-  }
-  
-  /* Se o link da Nova Solicitação estiver ativo (estamos na página nova-solicitacao), inverte: exibe o Início e esconde a Nova Solicitação */
-  .sidebar-menu:has(.menu-li-nova .menu-item-link.active) .menu-li-dashboard {
-    display: block !important;
-  }
-  .sidebar-menu:has(.menu-li-nova .menu-item-link.active) .menu-li-nova {
-    display: none !important;
-  }
 
-  .sidebar-menu .menu-item-link {
-    padding: 0.35rem 0.85rem !important;
-    border-radius: 20px !important;
-    background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%) !important;
-    border: none !important;
+  .menu-item-link {
+    padding: 0.85rem 1.25rem !important;
+    font-size: 1rem !important;
+    border-radius: 14px !important;
+    background: linear-gradient(135deg, rgba(27, 122, 58, 0.15) 0%, rgba(61, 201, 102, 0.05) 100%) !important;
+    border: 1px solid rgba(61, 201, 102, 0.15) !important;
     color: var(--white) !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 6px !important;
-    font-size: 0.8rem !important;
-    text-decoration: none !important;
-    box-shadow: 0 2px 8px rgba(27, 122, 58, 0.2) !important;
+    justify-content: flex-start !important;
   }
 
-  .sidebar-menu .menu-item-link svg {
-    width: 12px !important;
-    height: 12px !important;
-    stroke: var(--white) !important;
-    stroke-width: 3px !important;
-  }
-
-  .sidebar-menu .menu-item-link span {
-    display: inline-block !important; /* Mostra o texto "Nova Solicitação" */
-    font-weight: 600 !important;
-    color: var(--white) !important;
-  }
-  
   .sidebar-user {
-    margin: 0 0 0 1rem !important;
-    padding: 0 !important;
-    background: transparent !important;
-    border: none !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  }
+
+  /* Destaca o botão de sair no menu hambúrguer móvel */
+  .tecnico-sidebar.open .btn-logout {
+    background: rgba(239, 68, 68, 0.15) !important;
+    border: 1px solid rgba(239, 68, 68, 0.3) !important;
+    color: #F87171 !important;
+    padding: 8px 14px !important;
+    border-radius: 10px !important;
     display: flex !important;
-    align-items: center !important;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
   }
 
-  .sidebar-user .user-avatar,
-  .sidebar-user .user-info {
-    display: none !important; /* Esconde info do usuário */
+  .tecnico-sidebar.open .btn-logout:hover {
+    background: rgba(239, 68, 68, 0.25) !important;
+    color: #EF4444 !important;
+    transform: scale(1.02);
   }
 
-  .sidebar-user .btn-logout {
-    padding: 6px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    color: rgba(255, 255, 255, 0.7) !important;
-  }
-
-  .sidebar-user .btn-logout:hover {
-    color: #ff4a4a !important;
+  .tecnico-sidebar.open .btn-logout::after {
+    content: "Sair";
+    font-family: 'Sora', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
   }
   
   .tecnico-content {
+    margin-top: 70px;
     padding: 1.5rem !important;
   }
   

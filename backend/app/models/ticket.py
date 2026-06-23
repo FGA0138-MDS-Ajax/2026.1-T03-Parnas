@@ -1,5 +1,5 @@
 import enum
-from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, Enum
+from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, Enum, JSON
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
 
@@ -37,11 +37,11 @@ class Ticket(Base):
     )
 
     tecnico_id: Mapped[str | None] = mapped_column(
-        String(9), ForeignKey("users.matricula"), nullable=True
+        String(9), ForeignKey("users.matricula", ondelete="SET NULL"), nullable=True
     )
 
-    photo_path: Mapped[str | None] = mapped_column(
-        String(500), nullable=True
+    photo_paths: Mapped[list[str] | None] = mapped_column(
+        JSON, nullable=True
     )
 
     created_at: Mapped[DateTime] = mapped_column(

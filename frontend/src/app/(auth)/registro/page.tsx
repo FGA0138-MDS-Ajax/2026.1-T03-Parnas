@@ -33,6 +33,15 @@ interface ApiResponse {
   detail?: string;
 }
 
+const AREAS_MANUTENCAO = [
+  'Elétrica',
+  'Hidráulica',
+  'Infraestrutura',
+  'Refrigeração',
+  'Equipamentos',
+  'Outros',
+];
+
 // Função para registrar usuário via API
 const registerUser = async (userData: RegisterRequest): Promise<ApiResponse> => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'}/auth/register`, {
@@ -72,6 +81,7 @@ export default function RegistroPage() {
     setFormData({
       ...formData,
       [name]: value,
+      ...(name === 'tipoUsuario' && value === 'SOLICITANTE' && { areaManutencao: '' }),
     });
 
     // Clear error when user starts typing
@@ -142,7 +152,7 @@ export default function RegistroPage() {
         
         // Salvar token se for retornado (para solicitante aprovado imediatamente)
         if (response.access_token) {
-          localStorage.setItem('keepunb_token', response.access_token);
+          sessionStorage.setItem('keepunb_token', response.access_token);
         }
         
         // Redirecionar para login após 2 segundos
@@ -312,16 +322,21 @@ export default function RegistroPage() {
                   <line x1="12" y1="16" x2="12.01" y2="16"></line>
                 </svg>
               </div>
-              <input
+              <select
                 id="area-manutencao"
                 name="areaManutencao"
-                type="text"
                 value={formData.areaManutencao}
                 onChange={handleChange}
                 required
                 className="login-input"
-                placeholder="Área de Manutenção"
-              />
+              >
+                <option value="">Selecione a área de manutenção</option>
+                {AREAS_MANUTENCAO.map((area) => (
+                  <option key={area} value={area}>
+                    {area}
+                  </option>
+                ))}
+              </select>
             </div>
           )}
 

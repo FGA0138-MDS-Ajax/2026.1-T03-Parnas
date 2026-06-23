@@ -11,10 +11,56 @@ export default function NovaSolicitacaoForm() {
   const [local, setLocal] = useState('');
   const [tipoManutencao, setTipoManutencao] = useState('Elétrica');
   const [descricao, setDescricao] = useState('');
+  const [photos, setPhotos] = useState<File[]>([]);
+  const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [createdTicketId, setCreatedTicketId] = useState<number | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    if (photos.length + files.length > 3) {
+      setErrorMsg('Você pode adicionar no máximo 3 fotos por chamado.');
+      e.target.value = '';
+      return;
+    }
+
+    const validFiles: File[] = [];
+    const validPreviews: string[] = [];
+    const tiposValidos = ['image/jpeg', 'image/png'];
+
+    for (const file of files) {
+      if (!tiposValidos.includes(file.type)) {
+        setErrorMsg('Formato de imagem inválido. Use JPG ou PNG.');
+        e.target.value = '';
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        setErrorMsg('A imagem deve ter no máximo 10MB.');
+        e.target.value = '';
+        return;
+      }
+      validFiles.push(file);
+      validPreviews.push(URL.createObjectURL(file));
+    }
+
+    setErrorMsg('');
+    setPhotos(prev => [...prev, ...validFiles]);
+    setPhotoPreviews(prev => [...prev, ...validPreviews]);
+    e.target.value = '';
+  };
+
+  const handleRemovePhoto = (index: number) => {
+    setPhotos(prev => prev.filter((_, i) => i !== index));
+    setPhotoPreviews(prev => {
+      const newPreviews = prev.filter((_, i) => i !== index);
+      URL.revokeObjectURL(prev[index]);
+      return newPreviews;
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +80,8 @@ export default function NovaSolicitacaoForm() {
       const ticket = await solicitanteService.criarChamado({
         local: local.trim(),
         tipo_manutencao: tipoManutencao,
-        descricao: descricao.trim()
+        descricao: descricao.trim(),
+        photos,
       });
 
       setCreatedTicketId(ticket.id);
@@ -43,6 +90,8 @@ export default function NovaSolicitacaoForm() {
       // Limpa os campos
       setLocal('');
       setDescricao('');
+      setPhotos([]);
+      setPhotoPreviews([]);
     } catch (e: any) {
       setErrorMsg(e.message || 'Falha ao registrar chamado. Tente novamente.');
     } finally {
@@ -114,6 +163,63 @@ export default function NovaSolicitacaoForm() {
               placeholder="Por favor, forneça o máximo de detalhes possível sobre a falha (ex: ruídos, perigos, peças quebradas) para facilitar o trabalho de triagem e execução da equipe técnica."
               rows={6}
             />
+          </div>
+
+          {/* Foto */}
+          <div className="form-group">
+            <label htmlFor="photo" className="form-label">
+              Fotos da Ocorrência (opcional, máx. 3)
+            </label>
+            <input
+              id="photo"
+              type="file"
+              accept="image/png, image/jpeg"
+              multiple
+              onChange={handlePhotoChange}
+              className="form-input"
+              disabled={photos.length >= 3}
+            />
+            {photoPreviews.length > 0 && (
+              <div style={{ marginTop: '0.75rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                {photoPreviews.map((preview, index) => (
+                  <div key={preview} style={{ position: 'relative' }}>
+                    <img
+                      src={preview}
+                      alt={`Pré-visualização ${index + 1}`}
+                      style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '10px', border: '1px solid rgba(13,43,94,0.15)' }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemovePhoto(index)}
+                      style={{
+                        position: 'absolute',
+                        top: '-8px',
+                        right: '-8px',
+                        background: '#ff4a4a',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '50%',
+                        width: '24px',
+                        height: '24px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                      }}
+                      title="Remover foto"
+                    >
+                      X
+                    </button>
+                    <p style={{ fontSize: '0.7rem', color: 'var(--gray-text)', marginTop: '0.25rem', maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {photos[index]?.name}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Botões */}

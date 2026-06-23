@@ -1,5 +1,5 @@
 // gerenteService.ts - Serviços para funcionalidades do gerente
-import { Ticket, DashboardStats } from '../types';
+import { Ticket, DashboardStats, Technician, TechnicianSuggestion } from '../types';
 
 export interface TecnicoPendente {
   id: number;
@@ -15,7 +15,7 @@ class GerenteService {
   private API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
 
   private getAuthHeaders(): HeadersInit {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('keepunb_token') : null;
+    const token = typeof window !== 'undefined' ? sessionStorage.getItem('keepunb_token') : null;
     
     if (!token) {
       throw new Error('Usuário não autenticado');
@@ -67,6 +67,23 @@ class GerenteService {
     }
   }
 
+  async getTodosChamados(): Promise<Ticket[]> {
+    try {
+      const response = await fetch(`${this.API_BASE_URL}/tickets`, {
+        headers: this.getAuthHeaders(),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erro na requisição: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Erro ao obter todos os chamados:', error);
+      throw error;
+    }
+  }
+
   async getTecnicosPendentes(): Promise<TecnicoPendente[]> {
     try {
       const response = await fetch(`${this.API_BASE_URL}/technicians/pending`, {
@@ -102,7 +119,7 @@ class GerenteService {
     }
   }
 
-  async getTecnicosDisponiveis(): Promise<any[]> {
+  async getTecnicosDisponiveis(): Promise<Technician[]> {
     try {
       const response = await fetch(`${this.API_BASE_URL}/technicians/available`, {
         headers: this.getAuthHeaders(),
@@ -115,6 +132,28 @@ class GerenteService {
       return await response.json();
     } catch (error) {
       console.error('Erro ao obter técnicos disponíveis:', error);
+      throw error;
+    }
+  }
+
+  async sugerirTecnico(ticketId: number): Promise<TechnicianSuggestion> {
+    try {
+      const response = await fetch(`${this.API_BASE_URL}/tickets/${ticketId}/suggest-technician`, {
+        headers: this.getAuthHeaders(),
+      });
+
+      if (!response.ok) {
+        let errDetails = '';
+        try {
+          const err = await response.json();
+          errDetails = err.detail || '';
+        } catch (e) {}
+        throw new Error(errDetails || `Erro ao sugerir técnico: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Erro ao sugerir técnico:', error);
       throw error;
     }
   }

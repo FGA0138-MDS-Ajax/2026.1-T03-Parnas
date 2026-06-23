@@ -9,7 +9,7 @@ app.core.security.verify_password = lambda plain, hashed: hashed == f"mocked_has
 get_password_hash = app.core.security.get_password_hash
 
 import asyncio
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Optional
 import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy import text
@@ -68,6 +68,7 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
         
         # Executa os deletes em uma transação isolada para limpeza garantida
         async with session.begin():
+            await session.execute(text("DELETE FROM comments;"))
             await session.execute(text("DELETE FROM ticket_histories;"))
             await session.execute(text("DELETE FROM tickets;"))
             await session.execute(text("DELETE FROM users;"))
@@ -100,17 +101,24 @@ def create_test_user(db_session: AsyncSession):
         senha: str = "senha123",
         role: UserRole = UserRole.SOLICITANTE,
         ativo: bool = True,
-        approval_status: ApprovalStatus = ApprovalStatus.APROVADO
+        approval_status: ApprovalStatus = ApprovalStatus.APROVADO,
+        area_manutencao: Optional[str] = None, 
+        admin_pin_hash: Optional[str] = None
     ) -> User:
-        user = User(
-            matricula=matricula,
-            nome=nome,
-            email=email,
-            senha_hash=get_password_hash(senha),
-            role=role,
-            ativo=ativo,
-            approval_status=approval_status
-        )
+        user_data = {
+            "matricula": matricula,
+            "nome": nome,
+            "email": email,
+            "senha_hash": get_password_hash(senha),
+            "role": role,
+            "ativo": ativo,
+            "approval_status": approval_status,
+            "area_manutencao": area_manutencao,
+        }
+        if admin_pin_hash is not None:
+            user_data["admin_pin_hash"] = admin_pin_hash
+
+        user = User(**user_data)
         db_session.add(user)
         await db_session.commit()
         await db_session.refresh(user)
@@ -125,7 +133,7 @@ def create_test_ticket(db_session: AsyncSession):
         tipo_manutencao: str,
         descricao: str,
         solicitante_id: str,
-        tecnico_id: str | None = None,
+        tecnico_id: Optional[str] = None,
         status: TicketStatus = TicketStatus.ABERTO
     ) -> Ticket:
         ticket = Ticket(
@@ -163,7 +171,8 @@ async def test_tecnico(create_test_user) -> User:
         matricula="222222222",
         nome="Tecnico Teste",
         email="tecnico@teste.com",
-        role=UserRole.TECNICO
+        role=UserRole.TECNICO,
+        area_manutencao="Elétrica"
     )
 
 @pytest.fixture

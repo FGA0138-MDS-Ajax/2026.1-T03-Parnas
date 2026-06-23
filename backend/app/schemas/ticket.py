@@ -7,7 +7,7 @@ class TicketBase(BaseModel):
     local: str = Field(..., max_length=200)
     tipo_manutencao: str = Field(..., max_length=100)
     descricao: str
-    photo_path: Optional[str] = Field(None, max_length=500)
+    photo_paths: Optional[list[str]] = Field(default_factory=list)
 
     @field_validator("local", "tipo_manutencao", "descricao")
     @classmethod
@@ -31,6 +31,12 @@ class TicketResponse(TicketBase):
 
 class TicketAssign(BaseModel):
     tecnico_id: str
+
+class TicketTechnicianSuggestionResponse(BaseModel):
+    tecnico_id: str
+    nome: str
+    area_manutencao: str
+    quantidade_chamados_ativos: int
 
 class TicketUpdateStatus(BaseModel):
     status: TicketStatus
