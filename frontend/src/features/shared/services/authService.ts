@@ -58,4 +58,25 @@ export const authService = {
   logout() {
     clearAuthSession();
   },
+
+  async forgotPassword(email: string): Promise<void> {
+    await apiRequest('/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    });
+  },
+
+  async verifyCode(email: string, code: string): Promise<{ reset_token: string }> {
+    return await apiRequest<{ reset_token: string }>('/auth/verify-code', {
+      method: 'POST',
+      body: JSON.stringify({ email, code }),
+    });
+  },
+
+  async resetPassword(token: string, nova_senha: string): Promise<void> {
+    await apiRequest('/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify({ token, nova_senha }),
+    });
+  },
 };

@@ -48,3 +48,45 @@ Todas as rotas de administração e a validação do PIN administrativo foram im
   docker compose exec backend python scripts/seed_test_5.py
   # Resultado: Executado com sucesso!
   ```
+  
+
+# Implementação de Recuperação de Senha (Sprint 7 Melhorias: Task 9)
+
+O recurso de recuperação de senha com código por e-mail foi implementado com sucesso. A seguir, detalhamos as alterações realizadas no banco de dados, backend e frontend.
+
+## Alterações Realizadas
+
+### 1. Banco de Dados e Modelos
+- Criado o modelo `PasswordResetCode` (`backend/app/models/password_reset_code.py`) para armazenar os códigos de recuperação temporários.
+- A tabela `password_reset_codes` foi configurada com colunas para `email`, `code` (6 dígitos), `expires_at` (15 minutos de validade) e `is_used` (flag).
+- Criada e aplicada a migração Alembic para refletir a nova tabela no banco de dados PostgreSQL.
+
+### 2. Backend (FastAPI)
+- **Configurações SMTP**: Adicionadas as variáveis de ambiente SMTP no `backend/.env` e no modelo Pydantic `backend/app/core/config.py` (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM`).
+- **Serviço de E-mail**: Implementado `EmailService` (`backend/app/services/email_service.py`) utilizando a biblioteca nativa `smtplib` para envio de e-mails em HTML.
+- **Repositório**: Criado o `PasswordResetRepository` para isolar a persistência e busca de códigos no banco de dados.
+- **Autenticação Segura**: 
+  - Adicionado o fluxo em `backend/app/services/auth_service.py` (métodos `forgot_password`, `verify_code` e `reset_password`).
+  - O e-mail de recuperação é disparado em background (`fastapi.BackgroundTasks`) para não bloquear a resposta ao usuário.
+  - O `/verify-code` emite um JWT temporário contendo um _claim_ especial de `"type": "reset"`, que expira em 5 minutos.
+  - O `/reset-password` só aceita a troca de senha caso esse JWT temporário seja válido.
+- **Endpoints**: Registradas as 3 novas rotas em `backend/app/routers/auth.py`.
+
+### 3. Frontend (Next.js)
+- **Integração API**: Adicionados os métodos HTTP assíncronos no `authService.ts`.
+- **Interface Gráfica**: 
+  - Atualizado o link "Esqueci minha senha" na página de login (`/login`).
+  - Criada a nova tela `/esqueci-senha`, com arquivo CSS próprio.
+  - A tela interativa orienta o usuário em três etapas seguras: (1) Inserção do e-mail, (2) Inserção do código numérico de 6 dígitos e (3) Inserção e validação de uma nova senha forte.
+  - O design mantém a estética visual coesa e responsiva (Navy blue e temas da FCTE/UnB).
+
+## Verificação Realizada
+
+> [!TIP]
+> Todos os testes automatizados foram criados e passaram com sucesso no pipeline local (ver `test_auth_password_reset.py`).
+
+### Testes Automatizados (Backend)
+- `test_forgot_password`: Verifica o aceite da requisição e envio 202 (mesmo com e-mails inválidos, mantendo a privacidade de dados).
+- `test_verify_code`: Valida que o código correto gera um _reset token_ JWT.
+- `test_reset_password`: Verifica a atualização bem-sucedida do hash da senha e garante que login com a senha antiga passa a falhar e com a nova senha obtém sucesso.
+
