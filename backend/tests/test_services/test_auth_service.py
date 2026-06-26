@@ -231,3 +231,36 @@ async def test_register_user_matricula_duplicated(db_session: AsyncSession, crea
     assert exc_info.value.status_code == status.HTTP_400_BAD_REQUEST
     assert "matrícula já existe" in exc_info.value.detail.lower()
 
+
+@pytest.mark.asyncio
+async def test_authenticate_user_remember_me(db_session: AsyncSession, create_test_user):
+    """Garante que o login com lembrar_me=True gera um token com expiração estendida de 7 dias."""
+    from jose import jwt
+    from app.core.config import settings
+
+    await create_test_user(
+        matricula="123456789",
+        nome="João da Silva",
+        email="joao@teste.com",
+        senha="senha_valida_123",
+        role=UserRole.SOLICITANTE,
+        ativo=True
+    )
+
+    # 1. Login sem Lembrar-me (padrão de 30 minutos)
+    login_normal = LoginRequest(email="joao@teste.com", senha="senha_valida_123", lembrar_me=False)
+    resp_normal = await AuthService.authenticate_user(db_session, login_normal)
+    payload_normal = jwt.decode(resp_normal.access_token, settings.SECRET_KEY, algorithms=["HS256"])
+    exp_normal = payload_normal["exp"]
+
+    # 2. Login com Lembrar-me (estendido para 7 dias)
+    login_remember = LoginRequest(email="joao@teste.com", senha="senha_valida_123", lembrar_me=True)
+    resp_remember = await AuthService.authenticate_user(db_session, login_remember)
+    payload_remember = jwt.decode(resp_remember.access_token, settings.SECRET_KEY, algorithms=["HS256"])
+    exp_remember = payload_remember["exp"]
+
+    # A diferença de expiração deve ser de aproximadamente 7 dias (menos os 30 minutos padrão)
+    diff = exp_remember - exp_normal
+    assert 602000 < diff < 604000
+
+

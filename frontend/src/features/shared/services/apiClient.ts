@@ -15,7 +15,27 @@ export class ApiError extends Error {
 
 export const getStoredToken = () => {
   if (typeof window === 'undefined') return null;
-  return sessionStorage.getItem('keepunb_token');
+  let token = sessionStorage.getItem('keepunb_token');
+  if (!token) {
+    token = localStorage.getItem('keepunb_token');
+    if (token) {
+      const keys = [
+        'keepunb_token',
+        'keepunb_role',
+        'keepunb_email',
+        'keepunb_matricula',
+        'keepunb_nome',
+        'keepunb_admin_pin_verified',
+      ];
+      keys.forEach(key => {
+        const val = localStorage.getItem(key);
+        if (val !== null) {
+          sessionStorage.setItem(key, val);
+        }
+      });
+    }
+  }
+  return token;
 };
 
 export async function apiRequest<T>(

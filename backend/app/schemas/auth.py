@@ -8,6 +8,7 @@ from app.models.user import UserRole
 class LoginRequest(BaseModel):
     email: EmailStr
     senha: str
+    lembrar_me: Optional[bool] = False
 
 
 class RegisterRequest(BaseModel):

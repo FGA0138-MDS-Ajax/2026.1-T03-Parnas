@@ -43,3 +43,37 @@ Finalizing page optimization ...
 
 ### 2. Fluxo Funcional das Chaves
 - Quando o usuário digita o PIN correto, a API responde com o token com `pin_verified=True` no payload, o que libera o acesso à API do backend nas rotas restritas a `/admin/*`.
+
+---
+
+# Resumo - Melhoria de Cadastro, Lembrar-me e Ajustes de Usabilidade (Sprint 7 Melhorias: Tasks 4 e 11)
+
+Agora, ao completar o cadastro, o usuário solicitante é redirecionado automaticamente para o dashboard de solicitantes. Além disso, foi implementada a funcionalidade de "Lembrar-me" no login, botões de visualização de senha (olho) na tela de cadastro e botões para voltar à landing page tanto no login quanto no cadastro.
+
+## Alterações Realizadas
+
+### Backend
+1. **[auth.py]:**
+   * Adição da propriedade opcional `lembrar_me` (tipo boolean com padrão `False`) no schema `LoginRequest` do Pydantic.
+2. **[auth_service.py]:**
+   * Configuração de expiração de token estendida de 7 dias se `login_data.lembrar_me` for verdadeiro na autenticação do usuário.
+
+### Frontend
+1. **[apiClient.ts]:**
+   * Modificação da função `getStoredToken` para que consulte e restaure as credenciais salvas no `localStorage` de volta ao `sessionStorage` na inicialização do cliente, caso estejam disponíveis.
+2. **[authService.ts]:**
+   * Atualização das funções `saveAuthUser` e `clearAuthSession` para manipular dados no `localStorage` de maneira correspondente ao estado de persistência ("Lembrar-me").
+   * Ajuste do método `login` para submeter a opção `lembrar_me` ao backend e salvar o token de acesso no `localStorage`.
+3. **[page.tsx (login)]:**
+   * Integração do estado local `lembrarMe` (proveniente da caixa de seleção na interface gráfica) com a chamada do método de login do serviço de autenticação.
+   * Inclusão do botão de voltar para a landing page no topo do contêiner.
+4. **[page.tsx (registro)]:**
+   * Alteração do fluxo após o registro de usuários com papel de `SOLICITANTE`: o frontend agora salva o token, busca os dados da conta recém-criada através do endpoint `/users/me` e realiza o redirecionamento automático para `/solicitante/dashboard`, eliminando a necessidade de login manual imediatamente após o cadastro.
+   * Adição de botões de olho (visualização de senha) independentes para os campos de senha e confirmação de senha, controlados por estados locais dedicados.
+5. **[login.css] e [registro.css]:**
+   * Criação da classe `.back-to-landing` com estilização responsiva e efeitos visuais para o botão de retornar à página inicial.
+
+## Resultados dos Testes
+
+### Testes Automatizados (Backend)
+* A verificação dos testes automatizados do backend garante que os fluxos de autenticação, geração de tokens e registro permaneçam em conformidade técnica.
