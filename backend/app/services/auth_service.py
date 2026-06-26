@@ -1,10 +1,26 @@
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+import secrets
+from datetime import datetime, timedelta, timezone
+from jose import jwt
+from fastapi import BackgroundTasks
+from app.core.config import settings
+from app.models.password_reset_code import PasswordResetCode
+from app.repositories.password_reset_repository import PasswordResetRepository
+from app.services.email_service import EmailService
 from app.core.security import verify_password, create_access_token, get_password_hash
 from app.models.user import User, ApprovalStatus, UserRole
 from app.repositories.user_repository import UserRepository
-from app.schemas.auth import LoginRequest, RegisterRequest, TokenResponse
+from app.schemas.auth import (
+    LoginRequest,
+    RegisterRequest,
+    TokenResponse,
+    ForgotPasswordRequest,
+    VerifyCodeRequest,
+    ResetPasswordRequest,
+    ResetTokenResponse,
+)
 
 class AuthService:
     @staticmethod
@@ -116,3 +132,64 @@ class AuthService:
 
         access_token = create_access_token(subject=created_user.matricula)
         return TokenResponse(access_token=access_token, token_type="bearer")
+
+    @staticmethod
+    async def forgot_password(
+        db: AsyncSession, request: ForgotPasswordRequest, background_tasks: BackgroundTasks
+    ) -> None:
+        user = await UserRepository.get_by_email(db, email=request.email)
+        if not user or not user.ativo:
+            return
+
+        code = "".join(str(secrets.randbelow(10)) for _ in range(6))
+        expires_at = datetime.now(timezone.utc) + timedelta(minutes=15)
+
+        reset_code = PasswordResetCode(
+            email=user.email,
+            code=code,
+            expires_at=expires_at
+        )
+        await PasswordResetRepository.create(db, reset_code)
+
+        background_tasks.add_task(
+            EmailService.send_recovery_email, user.email, code
+        )
+
+    @staticmethod
+    async def verify_code(
+        db: AsyncSession, request: VerifyCodeRequest
+    ) -> ResetTokenResponse:
+        active_code = await PasswordResetRepository.get_active_code(db, email=request.email)
+        if not active_code or active_code.code != request.code:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Código inválido ou expirado."
+            )
+
+        await PasswordResetRepository.mark_as_used(db, active_code)
+
+        expire = datetime.now(timezone.utc) + timedelta(minutes=5)
+        to_encode = {"exp": expire, "sub": request.email, "type": "reset"}
+        encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm="HS256")
+
+        return ResetTokenResponse(reset_token=encoded_jwt)
+
+    @staticmethod
+    async def reset_password(
+        db: AsyncSession, request: ResetPasswordRequest
+    ) -> None:
+        try:
+            payload = jwt.decode(request.token, settings.SECRET_KEY, algorithms=["HS256"])
+            email: str = payload.get("sub")
+            token_type: str = payload.get("type")
+            if token_type != "reset" or not email:
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido.")
+        except jwt.JWTError:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido ou expirado.")
+
+        user = await UserRepository.get_by_email(db, email=email)
+        if not user:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuário não encontrado.")
+
+        user.senha_hash = get_password_hash(request.nova_senha)
+        await UserRepository.update(db, user)

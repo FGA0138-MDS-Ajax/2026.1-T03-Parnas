@@ -107,7 +107,7 @@ export default function LoginPage() {
               />
               Lembrar-me
             </label>
-            <a href="#forgot" className="forgot-password">Esqueci minha senha</a>
+            <Link href="/esqueci-senha" className="forgot-password">Esqueci minha senha</Link>
           </div>
 
           <button type="submit" className="btn-login-submit" disabled={isLoading}>

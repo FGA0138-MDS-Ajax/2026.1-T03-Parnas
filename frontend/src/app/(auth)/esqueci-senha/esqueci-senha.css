@@ -1,0 +1,204 @@
+.esqueci-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #071A3E;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: center;
+  padding: 1.5rem;
+}
+
+.esqueci-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
+  padding: 3rem 2.5rem;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.esqueci-logo {
+  height: 60px;
+  width: auto;
+  margin-bottom: 1.75rem;
+  display: block;
+}
+
+.esqueci-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #0d2b5e;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+
+.esqueci-subtitle {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  color: #6b7a99;
+  text-align: center;
+  margin-bottom: 2rem;
+  line-height: 1.4;
+}
+
+.esqueci-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.esqueci-error {
+  background: #fdf2f2;
+  border: 1px solid #f8b4b4;
+  border-radius: 8px;
+  color: #9b1c1c;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  text-align: center;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.esqueci-success {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  color: #166534;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  text-align: center;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.input-group {
+  position: relative;
+  width: 100%;
+}
+
+.input-icon-left {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a0abc0;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.input-icon-right {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a0abc0;
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+  transition: color 0.2s;
+}
+
+.input-icon-right:hover {
+  color: #0d2b5e;
+}
+
+.esqueci-input {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.9rem 1rem 0.9rem 3rem;
+  font-size: 0.95rem;
+  color: #071a3e;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.esqueci-input-password {
+  padding-right: 3rem;
+}
+
+.esqueci-input-code {
+  padding-left: 1rem;
+  text-align: center;
+  font-size: 1.5rem;
+  letter-spacing: 0.5rem;
+  font-family: monospace;
+}
+
+.esqueci-input::placeholder {
+  color: #a0abc0;
+  letter-spacing: normal;
+  font-size: 0.95rem;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.esqueci-input:focus {
+  border-color: #0d2b5e;
+  box-shadow: 0 0 0 3px rgba(13, 43, 94, 0.1);
+}
+
+.btn-submit {
+  width: 100%;
+  background: #1b7a3a;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.9rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  font-family: 'Sora', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: #2aa34e;
+  transform: translateY(-1px);
+}
+
+.btn-submit:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.btn-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.back-link {
+  color: #6b7a99;
+  font-size: 0.9rem;
+  text-decoration: none;
+  font-family: 'DM Sans', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: #0d2b5e;
+}
