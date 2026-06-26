@@ -114,3 +114,10 @@ body {
   line-height: 1;
   margin-bottom: 1rem;
 }
+
+/* Prevenção global de overflow para strings longas sem espaçamento */
+p, span, h1, h2, h3, h4, h5, h6, td, th, li, a {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
