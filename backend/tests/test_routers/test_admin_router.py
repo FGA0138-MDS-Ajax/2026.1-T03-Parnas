@@ -59,7 +59,7 @@ async def test_verify_pin_wrong_pin(client: AsyncClient, test_admin: User, admin
         headers=admin_headers
     )
     assert response.status_code == 400
-    assert response.json()["detail"] == "PIN incorreto."
+    assert "PIN incorreto" in response.json()["detail"]
 
 
 @pytest.mark.asyncio
@@ -101,7 +101,7 @@ async def test_change_pin_wrong_current(client: AsyncClient, admin_pin_headers: 
         headers=admin_pin_headers
     )
     assert response.status_code == 400
-    assert response.json()["detail"] == "PIN atual incorreto."
+    assert "PIN atual incorreto" in response.json()["detail"]
 
 
 @pytest.mark.asyncio

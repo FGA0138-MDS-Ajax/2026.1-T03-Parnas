@@ -1,5 +1,6 @@
 from enum import unique
 import enum
+from datetime import datetime
 from sqlalchemy import Boolean, CheckConstraint, DateTime, String, Enum, Integer, Identity
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
@@ -57,6 +58,11 @@ class User(Base):
     area_manutencao: Mapped[str] = mapped_column(String(100), nullable=True)
 
     admin_pin_hash: Mapped[str | None] = mapped_column(String(255), nullable=True)
+
+    failed_login_attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    login_blocked_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    failed_pin_attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    pin_blocked_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     created_at: Mapped[DateTime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
