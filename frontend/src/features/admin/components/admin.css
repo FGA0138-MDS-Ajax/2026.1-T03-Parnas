@@ -20,7 +20,7 @@
 .admin-layout {
   display: flex;
   min-height: 100vh;
-  background: var(--off-white);
+  background: var(--white);
   font-family: 'DM Sans', sans-serif;
 }
 
@@ -76,24 +76,31 @@
   align-items: center;
   gap: 12px;
   padding: 0.9rem 1.25rem;
-  color: #94A3B8;
+  color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
   font-family: 'Sora', sans-serif;
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 500;
   border-radius: 12px;
   transition: all 0.2s ease;
+  border: 1px solid transparent;
 }
 
 .menu-item-link:hover {
   color: var(--white);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateX(4px);
 }
 
 .menu-item-link.active {
-  color: var(--white);
-  background: linear-gradient(135deg, rgba(27, 122, 58, 0.15) 0%, rgba(61, 201, 102, 0.05) 100%);
-  border: 1px solid rgba(61, 201, 102, 0.15);
+  color: var(--green-light);
+  background: rgba(27, 122, 58, 0.15);
+  border: 1px solid rgba(61, 201, 102, 0.3);
+  font-weight: 600;
+}
+
+.menu-item-link.active svg {
+  stroke: var(--green-light);
 }
 
 .menu-item-link svg {
@@ -101,7 +108,7 @@
 }
 
 .menu-item-link:hover svg {
-  transform: translateX(2px);
+  transform: scale(1.1);
 }
 
 /* USER INFO SECTION AT BOTTOM */
@@ -117,18 +124,18 @@
 }
 
 .user-avatar {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background: var(--navy-mid);
-  color: var(--green-light);
+  color: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'Sora', sans-serif;
   font-weight: 700;
-  font-size: 0.9rem;
-  border: 2px solid rgba(61, 201, 102, 0.3);
+  font-size: 0.95rem;
+  border: 2px solid var(--green-light);
 }
 
 .user-info {
@@ -181,6 +188,7 @@
   max-width: 1600px;
   margin: 0 auto;
   width: 100%;
+  background: var(--white);
 }
 
 /* ==========================================
@@ -197,45 +205,49 @@
 
 .content-title {
   font-family: 'Sora', sans-serif;
-  font-size: 1.75rem;
+  font-size: 2.2rem;
   font-weight: 800;
   color: var(--navy-dark);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   margin: 0;
 }
 
 .content-subtitle {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: var(--gray-text);
   margin-top: 0.35rem;
 }
 
 /* PRIMARY CTA BUTTONS */
 .btn-primary-admin {
-  background: var(--green);
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
   color: var(--white);
   border: none;
-  border-radius: 12px;
-  padding: 0.85rem 1.6rem;
+  border-radius: 10px;
+  padding: 0.95rem 1.8rem;
   font-family: 'Sora', sans-serif;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
+  box-shadow: 0 4px 15px rgba(27, 122, 58, 0.3);
 }
 
 .btn-primary-admin:hover:not(:disabled) {
-  background: var(--green-mid);
+  background: linear-gradient(135deg, var(--green-mid) 0%, var(--green-light) 100%);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(27, 122, 58, 0.25);
+  box-shadow: 0 6px 20px rgba(27, 122, 58, 0.4);
 }
 
 .btn-primary-admin:disabled {
-  opacity: 0.6;
+  background: var(--gray-text);
+  opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 /* ==========================================
@@ -250,21 +262,31 @@
 
 .admin-layout .kpi-card {
   background: var(--white);
-  border: 1px solid rgba(13, 43, 94, 0.08);
+  border: 1px solid rgba(13, 43, 94, 0.06);
+  border-top: 4px solid var(--gray-text);
   border-radius: 20px;
   padding: 1.5rem;
   box-shadow: 0 4px 20px rgba(13, 43, 94, 0.03);
   position: relative;
   overflow: hidden;
-  transition: transform 0.2s;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 150px;
 }
 
 .admin-layout .kpi-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
 }
 
+.admin-layout .kpi-card:nth-child(1) { border-top-color: var(--navy-light); }
+.admin-layout .kpi-card:nth-child(2) { border-top-color: var(--green-light); }
+.admin-layout .kpi-card:nth-child(3) { border-top-color: #ffb03a; }
+.admin-layout .kpi-card:nth-child(4) { border-top-color: #3ab0ff; }
+
 .admin-layout .kpi-label {
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   font-weight: 600;
   color: var(--gray-text);
   text-transform: uppercase;
@@ -274,10 +296,11 @@
 
 .admin-layout .kpi-value {
   font-family: 'Sora', sans-serif;
-  font-size: 2rem;
+  font-size: 2.4rem;
   font-weight: 800;
   color: var(--navy-dark);
   margin-top: 0.5rem;
+  line-height: 1.1;
   display: block;
 }
 
@@ -308,19 +331,20 @@
 .admin-layout .search-input {
   width: 100%;
   padding: 0.85rem 1rem 0.85rem 2.75rem;
-  border-radius: 12px;
-  border: 1px solid rgba(13, 43, 94, 0.12);
-  background: var(--white);
+  border-radius: 10px;
+  border: 1px solid rgba(13, 43, 94, 0.1);
+  background: rgba(13, 43, 94, 0.03);
   font-family: 'DM Sans', sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: var(--navy-dark);
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
 .admin-layout .search-input:focus {
   outline: none;
-  border-color: var(--navy-light);
-  box-shadow: 0 0 0 3px rgba(37, 87, 167, 0.1);
+  border-color: var(--green);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(27, 122, 58, 0.15);
 }
 
 .admin-layout .search-icon {
