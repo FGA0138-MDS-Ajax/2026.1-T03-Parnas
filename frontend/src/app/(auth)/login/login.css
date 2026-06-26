@@ -188,3 +188,34 @@
 .btn-login-submit:active {
   transform: translateY(0);
 }
+
+/* Botão Voltar para a Landing Page */
+.back-to-landing {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.back-to-landing:hover {
+  color: #ffffff;
+  transform: translateX(-4px);
+}
+
+@media (max-width: 768px) {
+  .back-to-landing {
+    top: 1rem;
+    left: 1rem;
+    font-size: 0.85rem;
+  }
+}
+

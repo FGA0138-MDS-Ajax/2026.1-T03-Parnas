@@ -161,3 +161,31 @@ async def test_register_invalid_role_router(client: AsyncClient):
     assert json_data["detail"] == "Falha na validação dos dados enviados."
     assert any("Perfil de usuário inválido" in err["message"] for err in json_data["errors"])
 
+
+@pytest.mark.asyncio
+async def test_login_remember_me_router_success(client: AsyncClient, create_test_user):
+    """Garante que a rota de login aceita o campo lembrar_me e retorna um token válido."""
+    await create_test_user(
+        matricula="123456789",
+        nome="João Aluno",
+        email="joao@unb.br",
+        senha="minhasenhateste",
+        role=UserRole.SOLICITANTE,
+        ativo=True
+    )
+
+    response = await client.post(
+        "/api/v1/auth/login",
+        json={
+            "email": "joao@unb.br",
+            "senha": "minhasenhateste",
+            "lembrar_me": True
+        }
+    )
+    
+    assert response.status_code == status.HTTP_200_OK
+    json_data = response.json()
+    assert json_data["token_type"] == "bearer"
+    assert "access_token" in json_data
+
+
