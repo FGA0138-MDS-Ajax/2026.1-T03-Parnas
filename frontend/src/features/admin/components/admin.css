@@ -519,7 +519,91 @@
 }
 
 /* ==========================================
-   7. MODAIS (OVERLAY & CONTENT)
+   7. PAGINATION CONTROLS
+   ========================================== */
+.admin-layout .pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  background: var(--white);
+  border-top: 1px solid rgba(13, 43, 94, 0.06);
+}
+
+.admin-layout .pagination-info {
+  font-size: 0.85rem;
+  color: var(--gray-text);
+  font-weight: 500;
+}
+
+.admin-layout .pagination-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-layout .btn-pagination {
+  background: var(--white);
+  border: 1px solid rgba(13, 43, 94, 0.12);
+  color: var(--navy-dark);
+  border-radius: 8px;
+  padding: 0.5rem 0.85rem;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-layout .btn-pagination:hover:not(:disabled) {
+  background: var(--off-white);
+  border-color: var(--navy-light);
+  color: var(--navy-light);
+}
+
+.admin-layout .btn-pagination:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.admin-layout .pagination-numbers {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.admin-layout .page-number {
+  background: transparent;
+  border: none;
+  color: var(--gray-text);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.admin-layout .page-number:hover {
+  background: rgba(13, 43, 94, 0.04);
+  color: var(--navy-dark);
+}
+
+.admin-layout .page-number.active {
+  background: var(--navy-light);
+  color: var(--white);
+}
+
+/* ==========================================
+   8. MODAIS (OVERLAY & CONTENT)
    ========================================== */
 .modal-backdrop {
   position: fixed;
