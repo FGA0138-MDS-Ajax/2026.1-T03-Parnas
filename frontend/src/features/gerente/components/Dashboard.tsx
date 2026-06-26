@@ -21,6 +21,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filterCategory, setFilterCategory] = useState('TODAS');
+  const [pendingTechniciansRefresh, setPendingTechniciansRefresh] = useState(0);
   
   // Controle do Modal de Atribuição
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
@@ -41,6 +42,11 @@ export default function Dashboard() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleRefreshData = async () => {
+    setPendingTechniciansRefresh(prev => prev + 1);
+    await loadData();
   };
 
   useEffect(() => {
@@ -132,7 +138,7 @@ export default function Dashboard() {
           <h1 className="content-title">Painel de Controle</h1>
           <p className="content-subtitle">Fila geral de triagem e distribuição de chamados técnicos do campus FCTE.</p>
         </div>
-        <button className="btn-header-action" onClick={loadData}>
+        <button className="btn-header-action" onClick={handleRefreshData}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="23 4 23 10 17 10"></polyline>
             <polyline points="1 20 1 14 7 14"></polyline>
@@ -368,7 +374,7 @@ export default function Dashboard() {
       </section>
 
       {/* COMPONENTE DE APROVAÇÃO DE TÉCNICOS */}
-      <AprovarTecnicos />
+      <AprovarTecnicos refreshTrigger={pendingTechniciansRefresh} />
 
       {/* MODAL DE ATRIBUIÇÃO */}
       {isModalOpen && selectedTicket && (
