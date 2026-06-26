@@ -13,6 +13,9 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "changeme-secret-key"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
+    MAX_LOGIN_ATTEMPTS: int = 3
+    LOGIN_LOCKOUT_MINUTES: int = 15
+    
     SMTP_HOST: str = "smtp.gmail.com"
     SMTP_PORT: int = 587
     SMTP_USER: str = "contato.udrive@gmail.com"

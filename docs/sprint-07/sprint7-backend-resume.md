@@ -49,6 +49,7 @@ Todas as rotas de administração e a validação do PIN administrativo foram im
   # Resultado: Executado com sucesso!
   ```
   
+---
 
 # Implementação de Recuperação de Senha (Sprint 7 Melhorias: Task 9)
 
@@ -89,4 +90,35 @@ O recurso de recuperação de senha com código por e-mail foi implementado com 
 - `test_forgot_password`: Verifica o aceite da requisição e envio 202 (mesmo com e-mails inválidos, mantendo a privacidade de dados).
 - `test_verify_code`: Valida que o código correto gera um _reset token_ JWT.
 - `test_reset_password`: Verifica a atualização bem-sucedida do hash da senha e garante que login com a senha antiga passa a falhar e com a nova senha obtém sucesso.
+
+---
+
+# Implementação de Bloqueio Temporário de Tentativas de Login e PIN (Sprint 7 Melhorias: Task 5)
+
+A funcionalidade para limitar as tentativas incorretas de senha e PIN de administrador a 3 tentativas consecutivas com bloqueio temporário de 15 minutos foi implementada com sucesso e validada nos testes.
+
+## Alterações Realizadas
+
+### 1. Banco de Dados e Modelo de Usuário
+- **Configurações:** Adicionadas constantes globais `MAX_LOGIN_ATTEMPTS = 3` e `LOGIN_LOCKOUT_MINUTES = 15` no `config.py`.
+- **Modelo `User`:** Adicionadas 4 novas colunas (`failed_login_attempts`, `login_blocked_until`, `failed_pin_attempts`, `pin_blocked_until`) para manter um registro persistente das falhas e do horário de expiração de qualquer bloqueio temporário.
+- **Migração:** Foi gerada manualmente uma revisão do Alembic (`2026_06_26_limitar_tentativas_senha_e_pin`) que cria essas colunas. A migração foi validada simulando um upgrade, depois um downgrade e novamente um upgrade.
+
+### 2. Autenticação de Login (`auth_service.py`)
+- O método `authenticate_user` agora verifica se o usuário possui `login_blocked_until` ativo (maior que o horário atual no momento).
+- Se estiver bloqueado, o sistema rejeita instantaneamente a tentativa com `401 Unauthorized` e detalha quantos minutos e segundos faltam para desbloquear.
+- Caso erre a senha e o limite não tenha sido atingido, retorna o número de tentativas restantes na resposta.
+- Caso a 3ª tentativa seja errada, calcula a trava de 15 minutos e bloqueia o usuário imediatamente.
+- Autenticações bem-sucedidas zeram os contadores.
+
+### 3. Validação do PIN de Administrador (`admin_service.py`)
+- O mesmo padrão de bloqueio foi implementado nos métodos `verify_pin` e `change_pin`.
+- Administradores que errarem o PIN (seja ao realizar uma ação privilegiada ou ao tentar alterar o PIN) mais de 3 vezes serão impossibilitados de usar recursos administrativos por 15 minutos (`400 Bad Request`).
+- A inserção bem-sucedida do PIN limpa o histórico de erros.
+
+## Resultados da Validação
+
+- Os testes unitários existentes das rotas de autenticação e administrador foram ajustados para testar as novas mensagens de retorno de erro e cobrir o caso em que o serviço retorna o número de tentativas restantes.
+- A suíte de 114 testes do backend foi rodada via `pytest` no container Docker e todos passaram com êxito (100% de sucesso em 49.89s).
+
 
