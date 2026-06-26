@@ -14,6 +14,7 @@ export interface Ticket {
   status: TicketStatus;
   solicitante_id: string;
   tecnico_id: string | null;
+  photo_paths: string[] | null;
   created_at: string;
   updated_at: string;
 }

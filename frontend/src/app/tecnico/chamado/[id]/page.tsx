@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 
 import { tecnicoService } from '../../../../features/tecnico/services/tecnicoService';
 import type { TechnicianUpdateStatus, Ticket } from '../../../../features/tecnico/types';
+import { SERVERBASEURL } from '../../../../features/shared/services/apiClient';
 
 const statusLabels: Record<Ticket['status'], string> = {
   ABERTO: 'Aberto',
@@ -33,6 +34,7 @@ export default function DetalheChamadoTecnicoPage() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState('');
   const [notFoundMessage, setNotFoundMessage] = useState('');
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const loadChamado = async () => {
@@ -177,6 +179,52 @@ export default function DetalheChamadoTecnicoPage() {
           <div className="chamado-description">
             <span>Descricao do problema</span>
             <p>{chamado.descricao}</p>
+
+            {(() => {
+              const validPhotoPaths = chamado.photo_paths?.filter(
+                path => path && path !== 'null' && path.trim() !== ''
+              ) || [];
+
+              if (validPhotoPaths.length > 0) {
+                return (
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', marginTop: '1.5rem' }}>
+                    {validPhotoPaths.map((path, index) => {
+                      if (imageErrors[path]) {
+                        return (
+                          <div key={path} style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: '150px',
+                            backgroundColor: 'var(--off-white, #F4F7FB)',
+                            borderRadius: '12px',
+                            border: '1px dashed rgba(13,43,94,0.2)',
+                            color: 'var(--gray-text)',
+                            fontSize: '0.85rem'
+                          }}>
+                            imagem indisponível
+                          </div>
+                        );
+                      }
+                      return (
+                        <img
+                          key={path}
+                          src={`${SERVERBASEURL}${path}`}
+                          alt={`Foto da ocorrência ${index + 1}`}
+                          onError={() => setImageErrors(prev => ({ ...prev, [path]: true }))}
+                          style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '12px', border: '1px solid rgba(13,43,94,0.12)' }}
+                        />
+                      );
+                    })}
+                  </div>
+                );
+              }
+              return (
+                <p style={{ color: 'var(--gray-text)', fontSize: '0.85rem', marginTop: '1.5rem' }}>
+                  imagem indisponível
+                </p>
+              );
+            })()}
           </div>
         </article>
 
