@@ -163,7 +163,7 @@
 .btn-logout {
   background: transparent;
   border: none;
-  color: #F87171;
+  color: var(--gray-text);
   cursor: pointer;
   padding: 4px;
   border-radius: 6px;
@@ -175,6 +175,7 @@
 
 .btn-logout:hover {
   background: rgba(239, 68, 68, 0.1);
+  color: #F87171;
   transform: scale(1.05);
 }
 
