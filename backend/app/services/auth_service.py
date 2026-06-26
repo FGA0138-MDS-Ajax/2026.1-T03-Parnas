@@ -92,7 +92,8 @@ class AuthService:
                 detail="Usuário inativo.",
             )
             
-        access_token = create_access_token(subject=user.matricula)
+        expires_delta = timedelta(days=7) if login_data.lembrar_me else None
+        access_token = create_access_token(subject=user.matricula, expires_delta=expires_delta)
         return TokenResponse(access_token=access_token, token_type="bearer")
 
     @staticmethod

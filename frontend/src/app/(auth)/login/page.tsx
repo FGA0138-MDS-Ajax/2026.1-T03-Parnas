@@ -22,7 +22,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const user = await authService.login({ email, senha });
+      const user = await authService.login({ email, senha }, lembrarMe);
       router.push(getDefaultRouteForRole(user.role));
     } catch (error) {
       if (error instanceof ApiError) {

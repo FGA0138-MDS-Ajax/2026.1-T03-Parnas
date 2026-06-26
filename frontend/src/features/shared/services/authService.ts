@@ -14,36 +14,51 @@ export const getDefaultRouteForRole = (role: UserRole) => {
 
 export const clearAuthSession = () => {
   if (typeof window === 'undefined') return;
-  sessionStorage.removeItem('keepunb_token');
-  sessionStorage.removeItem('keepunb_role');
-  sessionStorage.removeItem('keepunb_email');
-  sessionStorage.removeItem('keepunb_matricula');
-  sessionStorage.removeItem('keepunb_nome');
-  sessionStorage.removeItem('keepunb_admin_pin_verified');
+  const keys = [
+    'keepunb_token',
+    'keepunb_role',
+    'keepunb_email',
+    'keepunb_matricula',
+    'keepunb_nome',
+    'keepunb_admin_pin_verified',
+  ];
+  keys.forEach(key => {
+    sessionStorage.removeItem(key);
+    localStorage.removeItem(key);
+  });
 };
 
-export const saveAuthUser = (user: AuthUser) => {
+export const saveAuthUser = (user: AuthUser, rememberMe?: boolean) => {
   if (typeof window === 'undefined') return;
-  sessionStorage.setItem('keepunb_role', user.role);
-  sessionStorage.setItem('keepunb_email', user.email);
-  sessionStorage.setItem('keepunb_matricula', user.matricula);
-  sessionStorage.setItem('keepunb_nome', user.nome);
+  const isRemembered = rememberMe !== undefined ? rememberMe : !!localStorage.getItem('keepunb_token');
+  const storage = isRemembered ? localStorage : sessionStorage;
+  
+  storage.setItem('keepunb_role', user.role);
+  storage.setItem('keepunb_email', user.email);
+  storage.setItem('keepunb_matricula', user.matricula);
+  storage.setItem('keepunb_nome', user.nome);
 };
 
 export const authService = {
-  async login(credentials: LoginCredentials): Promise<AuthUser> {
+  async login(credentials: LoginCredentials, rememberMe?: boolean): Promise<AuthUser> {
     clearAuthSession();
 
     const token = await apiRequest<TokenResponse>('/auth/login', {
       method: 'POST',
-      body: JSON.stringify(credentials),
+      body: JSON.stringify({
+        ...credentials,
+        lembrar_me: rememberMe,
+      }),
     });
 
+    if (rememberMe) {
+      localStorage.setItem('keepunb_token', token.access_token);
+    }
     sessionStorage.setItem('keepunb_token', token.access_token);
 
     try {
       const user = await this.getCurrentUser();
-      saveAuthUser(user);
+      saveAuthUser(user, rememberMe);
       return user;
     } catch (error) {
       clearAuthSession();

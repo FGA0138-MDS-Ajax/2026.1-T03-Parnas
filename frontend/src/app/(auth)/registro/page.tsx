@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import './registro.css';
+import { authService, saveAuthUser, getDefaultRouteForRole } from '../../../features/shared/services/authService';
 
 interface RegistrationData {
   nome: string;
@@ -148,14 +149,30 @@ export default function RegistroPage() {
 
       // Mostrar mensagem de sucesso diferente conforme o tipo de usuário
       if (formData.tipoUsuario === 'SOLICITANTE') {
-        setSucesso('Cadastro realizado com sucesso. Você já pode fazer login.');
-        
-        // Salvar token se for retornado (para solicitante aprovado imediatamente)
         if (response.access_token) {
           sessionStorage.setItem('keepunb_token', response.access_token);
+          try {
+            // Obter as informações do solicitante registrado para configurar a sessão
+            const user = await authService.getCurrentUser();
+            saveAuthUser(user);
+            
+            setSucesso('Cadastro realizado com sucesso! Redirecionando...');
+            setTimeout(() => {
+              router.push(getDefaultRouteForRole(user.role));
+            }, 1500);
+            return;
+          } catch (error) {
+            console.error('Erro ao autenticar automaticamente após registro:', error);
+            setErro('Cadastro realizado com sucesso, mas não foi possível iniciar a sessão automaticamente. Redirecionando para a página de login...');
+            setTimeout(() => {
+              router.push('/login');
+            }, 3000);
+            return;
+          }
         }
         
-        // Redirecionar para login após 2 segundos
+        // Fallback caso não retorne token por alguma razão
+        setSucesso('Cadastro realizado com sucesso. Redirecionando para login...');
         setTimeout(() => {
           router.push('/login');
         }, 2000);
