@@ -503,6 +503,12 @@
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
+.badge-status.nao_iniciado {
+  background: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
 /* Tabela Interativa de Solicitações */
 .table-container {
   overflow-x: auto;

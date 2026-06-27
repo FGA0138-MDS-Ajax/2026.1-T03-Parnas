@@ -439,6 +439,12 @@
   border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
+.status-badge.nao_iniciado {
+  background: rgba(239, 68, 68, 0.15);
+  color: #EF4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
 .btn-table-action {
   background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
   color: var(--white);
