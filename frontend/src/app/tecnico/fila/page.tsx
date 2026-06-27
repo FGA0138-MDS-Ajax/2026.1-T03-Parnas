@@ -13,6 +13,7 @@ const getStatusBadgeClass = (status: string) => {
     case 'EM_ANDAMENTO': return 'em_andamento';
     case 'CONCLUIDO': return 'concluido';
     case 'CANCELADO': return 'cancelado';
+    case 'NAO_INICIADO': return 'nao_iniciado';
     default: return '';
   }
 };
@@ -197,7 +198,7 @@ export default function FilaChamadosPage() {
                       </span>
                     </div>
                     <span style={{ fontSize: '0.78rem', color: 'var(--gray-text)', display: 'block', marginBottom: '0.35rem' }}>
-                      Categoria: <strong>{ticket.tipo_manutencao}</strong> • Solicitante: {ticket.solicitante_id} • Atualizado em: {new Date(ticket.updated_at).toLocaleDateString('pt-BR')}
+                      Categoria: <strong>{ticket.tipo_manutencao}</strong> • Atualizado em: {new Date(ticket.updated_at).toLocaleDateString('pt-BR')}
                     </span>
                     <p style={{ fontSize: '0.88rem', color: '#4A5568', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                       {ticket.descricao}

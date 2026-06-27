@@ -469,19 +469,25 @@
 }
 
 .badge-status.em_andamento {
-  background: rgba(139, 92, 246, 0.15);
-  color: #7c3aed;
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  background: rgba(245, 158, 11, 0.15); /* amarelo */
+  color: #d97706;
+  border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 .badge-status.concluido {
-  background: rgba(16, 185, 129, 0.15);
+  background: rgba(16, 185, 129, 0.15); /* verde */
   color: #059669;
   border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .badge-status.cancelado {
   background: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.badge-status.nao_iniciado {
+  background: rgba(239, 68, 68, 0.15); /* vermelho */
   color: #dc2626;
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
