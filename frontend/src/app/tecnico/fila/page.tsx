@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 import { tecnicoService } from '../../../features/tecnico/services/tecnicoService';
 import type { Ticket } from '../../../features/tecnico/types';
+import { useUserName } from '../../../features/tecnico/hooks/useUserName';
 
 const getStatusBadgeClass = (status: string) => {
   switch (status) {
@@ -13,6 +14,7 @@ const getStatusBadgeClass = (status: string) => {
     case 'EM_ANDAMENTO': return 'em_andamento';
     case 'CONCLUIDO': return 'concluido';
     case 'CANCELADO': return 'cancelado';
+    case 'NAO_INICIADO': return 'nao_iniciado';
     default: return '';
   }
 };
@@ -33,31 +35,7 @@ export default function FilaChamadosPage() {
   const [chamados, setChamados] = useState<Ticket[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [userName, setUserName] = useState('Técnico');
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const nome = sessionStorage.getItem('keepunb_nome') || '';
-      const email = sessionStorage.getItem('keepunb_email') || '';
-
-      if (nome) {
-        const formattedName = nome
-          .replace(/\./g, ' ')
-          .split(' ')
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(' ');
-        setUserName(formattedName);
-      } else if (email) {
-        const parsedName = email.split('@')[0];
-        const formattedName = parsedName
-          .replace(/\./g, ' ')
-          .split(' ')
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(' ');
-        setUserName(formattedName);
-      }
-    }
-  }, []);
+  const userName = useUserName();
 
   // Carrega a lista de chamados que foram atribuídos a este técnico
   useEffect(() => {
@@ -197,7 +175,7 @@ export default function FilaChamadosPage() {
                       </span>
                     </div>
                     <span style={{ fontSize: '0.78rem', color: 'var(--gray-text)', display: 'block', marginBottom: '0.35rem' }}>
-                      Categoria: <strong>{ticket.tipo_manutencao}</strong> • Solicitante: {ticket.solicitante_id} • Atualizado em: {new Date(ticket.updated_at).toLocaleDateString('pt-BR')}
+                      Categoria: <strong>{ticket.tipo_manutencao}</strong> • Atualizado em: {new Date(ticket.updated_at).toLocaleDateString('pt-BR')}
                     </span>
                     <p style={{ fontSize: '0.88rem', color: '#4A5568', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                       {ticket.descricao}

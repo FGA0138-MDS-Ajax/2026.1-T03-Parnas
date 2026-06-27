@@ -110,6 +110,7 @@ export default function DashboardContent() {
       case 'EM_ANDAMENTO': return 'em_andamento';
       case 'CONCLUIDO': return 'concluido';
       case 'CANCELADO': return 'cancelado';
+      case 'NAO_INICIADO': return 'nao_iniciado';
       default: return '';
     }
   };
