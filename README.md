@@ -10,15 +10,27 @@ Esta branch (`docs`) é dedicada exclusivamente à organização, estruturação
 
 ---
 
-## Sobre esta Branch
+### Estrutura do Repositório
 
-Nesta branch, você encontrará todos os arquivos markdown (`.md`) e configurações necessárias para gerar o site de documentação do projeto.
+Aqui está a organização das pastas e arquivos principais de documentação, já contemplando as divisões por tópicos e relatórios de sprints:
 
-- **`/docs`**: Contém todos os documentos, atas de reuniões, sprints, diagramas e guias do projeto.
-- **`docs/stylesheets`**: Contém os arquivos CSS para customização e estilização personalizada do site de documentação.
-- **`mkdocs.yml`**: Arquivo de configuração que define o tema, paleta de cores, extensões e o menu de navegação do site.
-
----
+```markdown
+keep-unb-docs/
+├── docs/                      # Pasta raiz 
+│   ├── arquitetura/           # Documentos de arquitetura 
+│   ├── assets/                # Imagens estáticas globais 
+│   ├── banco-de-dados/        # Modelagem e diagrama do banco
+│   ├── como-executar/         # Guias de instalação e inicialização local
+│   ├── comunicacao/           # Guias de uso da API e esquemas de autenticação
+│   ├── equipe/                # Membros do projeto, papéis e responsabilidades
+│   ├── identidade_visual/     # Padrões de design
+│   ├── padronizacao/          # Políticas de commits, branches e issues
+│   ├── sprints/               # Agrupamento dos relatórios de planejamento de Sprints
+│   ├── stylesheets/           # customização visual (CSS)
+│   ├── visao/                 # Documento de visão 
+│   └── index.md               # Home da documentação no MkDocs
+└── mkdocs.yml                 # Arquivo de configuração de navegação e tema do MkDocs
+```
 
 ## Como Acessar a Documentação Online
 
