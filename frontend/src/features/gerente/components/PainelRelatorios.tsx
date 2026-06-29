@@ -60,12 +60,76 @@ export default function PainelRelatorios() {
   const strokeDashArray = `${taxaResolucaoExata} ${100 - taxaResolucaoExata}`;
   const strokeDashOffset = 25; // Começa no topo (-90deg)
 
-  const handleExportPDF = () => {
+  const handleExportPDF = async () => {
     setExporting(true);
-    setTimeout(() => {
+    
+    try {
+      // Carregar dinamicamente a biblioteca jsPDF
+      const jsPDF = (await import('jspdf')).default;
+      
+      // Criar documento PDF
+      const doc = new jsPDF();
+      
+      // Adicionar título
+      doc.setFontSize(20);
+      doc.text('Relatório Mensal de Manutenção', 20, 20);
+      
+      // Adicionar data
+      doc.setFontSize(12);
+      doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 20, 35);
+      
+      // Adicionar estatísticas principais
+      doc.setFontSize(16);
+      doc.text('Estatísticas Gerais', 20, 50);
+      
+      doc.setFontSize(12);
+      doc.text(`Total de Chamados: ${total}`, 20, 60);
+      doc.text(`Concluídos: ${concluidos}`, 20, 70);
+      doc.text(`Em Curso: ${emCurso}`, 20, 80);
+      doc.text(`Abertos: ${abertos}`, 20, 90);
+      doc.text(`Taxa de Resolução: ${taxaResolucao}%`, 20, 100);
+      
+      // Adicionar categorias
+      doc.setFontSize(16);
+      doc.text('Volumetria por Categoria', 20, 115);
+      
+      doc.setFontSize(12);
+      doc.text(`Hidráulica: ${catHidraulica}`, 20, 125);
+      doc.text(`Elétrica/Iluminação: ${catEletrica}`, 20, 135);
+      doc.text(`Refrigeração: ${catRefrigeracao}`, 20, 145);
+      doc.text(`Outros: ${catOutros}`, 20, 155);
+      
+      // Adicionar tabela de técnicos
+      doc.setFontSize(16);
+      doc.text('Desempenho por Técnico', 20, 170);
+      
+      let yPos = 180;
+      doc.setFontSize(12);
+      for (let i = 0; i < tecnicos.length && yPos < 250; i++) {
+        const tec = tecnicos[i];
+        const tecTickets = chamados.filter(c => c.tecnico_id === tec.matricula);
+        const tecConcluidos = tecTickets.filter(c => c.status === 'CONCLUIDO').length;
+        const totalTec = tecTickets.length;
+        const eficiencia = totalTec > 0 ? Math.round((tecConcluidos / totalTec) * 100) : 100;
+        
+        doc.text(`${tec.nome} (${tec.matricula}): ${eficiencia}% de eficiência`, 20, yPos);
+        yPos += 10;
+        
+        if (yPos >= 250) {
+          doc.addPage();
+          yPos = 20;
+        }
+      }
+      
+      // Salvar o PDF
+      doc.save('relatorio-manutencao.pdf');
+      alert('Relatório salvo com sucesso!');
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+      alert('Erro ao gerar relatório: Não foi possível criar o PDF.');
+    } finally {
       setExporting(false);
-      alert('Relatório Mensal de Manutenção compilado e salvo na pasta de downloads com sucesso (formato PDF)!');
-    }, 2000);
+    }
   };
 
   return (
