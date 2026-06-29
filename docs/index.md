@@ -141,7 +141,7 @@ monitorar indicadores operacionais.
 
     Consulte a organização técnica, componentes e decisões estruturais.
 
-    [Ver arquitetura](arq/arq.md)
+    [Ver arquitetura](arquitetura/arq.md)
 
 -   :material-database-outline: **Banco de Dados**
 

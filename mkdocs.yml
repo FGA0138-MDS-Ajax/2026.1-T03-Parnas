@@ -37,7 +37,7 @@ nav:
 
   - Documentação:
       - Documento de Visão: "visao/visao.md"
-      - Documento de Arquitetura: "arq/arq.md"
+      - Documento de Arquitetura: "arquitetura/arq.md"
       - Comunicação, API e autenticação: "comunicacao/api-e-autenticacao.md"
       - Identidade Visual: "identidade_visual/identidade_visual.md"
       - Padronização: "padronizacao/padronizacao.md"
@@ -45,13 +45,13 @@ nav:
 
 
   - Sprints:
-      - Sprint 0: "sprint0/sprint0.md"
-      - Sprint 1: "sprint1/sprint1.md"
-      - Sprint 2: "sprint2/sprint2.md"
-      - Sprint 3: "sprint3/sprint3.md"
-      - Sprint 4: "sprint4/sprint4.md"
-      - Sprint 5: "sprint5/sprint5.md"
-      - Sprint 6: "sprint6/sprint6.md"
+      - Sprint 0: "sprints/sprint0/sprint0.md"
+      - Sprint 1: "sprints/sprint1/sprint1.md"
+      - Sprint 2: "sprints/sprint2/sprint2.md"
+      - Sprint 3: "sprints/sprint3/sprint3.md"
+      - Sprint 4: "sprints/sprint4/sprint4.md"
+      - Sprint 5: "sprints/sprint5/sprint5.md"
+      - Sprint 6: "sprints/sprint6/sprint6.md"
 
   - Nossa equipe:
       - Membros: "equipe/membros.md"
