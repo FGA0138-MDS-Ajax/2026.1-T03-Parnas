@@ -106,9 +106,6 @@ export default function NovaSolicitacaoForm() {
     setIsLoading(true);
 
     try {
-      // Simula uma pequena latência de rede de 800ms para feedback visual premium
-      await new Promise(resolve => setTimeout(resolve, 800));
-
       const ticket = await solicitanteService.criarChamado({
         local: selectedLocation,
         tipo_manutencao: tipoManutencao,

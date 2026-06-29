@@ -44,7 +44,6 @@ export default function FilaChamadosPage() {
         setIsLoading(true);
         setError('');
 
-        await new Promise(resolve => setTimeout(resolve, 300));
         const data = await tecnicoService.getChamadosAtribuidos();
         setChamados(data);
       } catch (e) {
