@@ -8,7 +8,7 @@ Este documento estabelece as diretrizes de identidade visual e o sistema de desi
 
 O logotipo do **KeepUnB** foi projetado para representar a essência do projeto: a gestão de manutenção em ambiente universitário. Ele é composto por duas partes principais: o **Símbolo Gráfico** e a **Assinatura Tipográfica**.
 
-![Logotipo Oficial KeepUnB](Keep-unb-logo.png)
+![Logotipo Oficial KeepUnB](../assets/logokeepunb.png)
 
 ### Conceito e Elementos Visuais
 1. **O Operário (À Esquerda)**:

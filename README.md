@@ -27,7 +27,7 @@ O site da documentação gerado de forma estática pelo MkDocs é atualizado aut
 **[Site de Documentação do KeepUnB](https://fga0138-mds-ajax.github.io/2026.1-T03-Parnas)**
 
 ### Acesso Rápido a Documentos (PDF)
-- [Documento de Arquitetura](docs/arq/arq_parnas.pdf)
+- [Documento de Arquitetura](docs/arquitetura/arq_parnas.pdf)
 - [Documento de Visão](docs/visao/visao_parnas.pdf)
 
 
