@@ -1,14 +1,22 @@
-# KeepUnB - Branch de Documentação (`docs`)
+# KeepUnB - Documentação (`docs`)
 
-Esta branch (`docs`) é dedicada exclusivamente à organização, estruturação e publicação da documentação oficial do projeto **KeepUnB** utilizando o **MkDocs** com o tema **Material for MkDocs**.
+<p align="center">
+  <img src="https://raw.githubusercontent.com/FGA0138-MDS-Ajax/2026.1-T03-Parnas/main/frontend/public/Keep-unb-logo.png" alt="Logo KeepUnB" width="420">
+</p>
+
+O **KeepUnB** é uma plataforma centralizada e inteligente desenvolvida para otimizar, automatizar e rastrear as solicitações de manutenção corretiva e preventiva na Universidade de Brasília (UnB).
+
+Esta branch (`docs`) é dedicada exclusivamente à organização, estruturação e publicação da documentação oficial do projeto utilizando o **MkDocs**.
+
+---
 
 ## Sobre esta Branch
 
-Nesta branch, você encontrará todos os arquivos markdown (`.md`) e configurações necessárias para gerar o site de documentação do projeto. A estrutura de páginas é configurada por meio do arquivo [mkdocs.yml]
+Nesta branch, você encontrará todos os arquivos markdown (`.md`) e configurações necessárias para gerar o site de documentação do projeto.
 
-* **`/docs`**: Contém todos os documentos, atas de reuniões, sprints, diagramas e guias do projeto.
-* **`docs/stylesheets`**: Contém os arquivos CSS para customização e estilização personalizada do site de documentação.
-* **`mkdocs.yml`**: Arquivo de configuração que define o tema, paleta de cores, extensões e o menu de navegação do site de documentação.
+- **`/docs`**: Contém todos os documentos, atas de reuniões, sprints, diagramas e guias do projeto.
+- **`docs/stylesheets`**: Contém os arquivos CSS para customização e estilização personalizada do site de documentação.
+- **`mkdocs.yml`**: Arquivo de configuração que define o tema, paleta de cores, extensões e o menu de navegação do site.
 
 ---
 
@@ -18,8 +26,9 @@ O site da documentação gerado de forma estática pelo MkDocs é atualizado aut
 
 **[Site de Documentação do KeepUnB](https://fga0138-mds-ajax.github.io/2026.1-T03-Parnas)**
 
-Além disso, você também pode acessar diretamente os seguintes documentos em formato PDF:
+### Acesso Rápido a Documentos (PDF)
+- [Documento de Arquitetura](docs/arq/arq_parnas.pdf)
+- [Documento de Visão](docs/visao/visao_parnas.pdf)
 
-* [Documento de Arquitetura](docs/arq/Doc_arquitetura_parnas.pdf)
-* [Documento de Visão](docs/visao/visao_parnas.pdf)
+
 
