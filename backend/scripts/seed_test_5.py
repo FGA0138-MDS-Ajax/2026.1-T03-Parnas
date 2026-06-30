@@ -61,14 +61,14 @@ TEST_USERS = [
         "nome": "Tecnico Um",
         "email": "tecnico1@unb.br",
         "role": UserRole.TECNICO,
-        "area_manutencao": "Estrutural",
+        "area_manutencao": "Infraestrutura",
     },
     {
         "matricula": "200000002",
         "nome": "Tecnico Dois",
         "email": "tecnico2@unb.br",
         "role": UserRole.TECNICO,
-        "area_manutencao": "Hidráulico",
+        "area_manutencao": "Hidráulica",
     },
     {
         "matricula": "300000001",
@@ -102,7 +102,7 @@ TEST_USERS = [
         "role": UserRole.TECNICO,
         "ativo": False,
         "approval_status": ApprovalStatus.PENDENTE,
-        "area_manutencao": "Energia",
+        "area_manutencao": "Elétrica",
     },
 
     {
@@ -112,7 +112,7 @@ TEST_USERS = [
         "role": UserRole.TECNICO,
         "ativo": False,
         "approval_status": ApprovalStatus.REPROVADO,
-        "area_manutencao": "Estrutural",
+        "area_manutencao": "Infraestrutura",
     },
 ]
 
@@ -123,15 +123,15 @@ TEST_TICKETS = [
         "local": "UED",
         "descricao": "Buraco na parede.",
         "photo_paths": ["/uploads/tickets/buracoparede.jpeg"],
-        "tipo_manutencao": "Estrutural",
+        "tipo_manutencao": "Infraestrutura",
         "solicitante_id": "100000001",
         "historico": {}
     },
     {
         "local": "UAC",
         "descricao": "Ninho de pássaro no teto.",
-        "photo_paths": ["/uploads/tickets/semenergia.jpg"],
-        "tipo_manutencao": "Estrutural",
+        "photo_paths": ["/uploads/tickets/semenergia.jpeg"],
+        "tipo_manutencao": "Infraestrutura",
         "solicitante_id": "100000002",
         "historico": {
             "1":{
@@ -146,8 +146,8 @@ TEST_TICKETS = [
     {
         "local": "LDTEA",
         "descricao": "Lâmpada queimada.",
-        "photo_paths": ["/uploads/tickets/lampadaquebrada.webp"],
-        "tipo_manutencao": "Energia",
+        "photo_paths": ["/uploads/tickets/lampadaquebrada.jpeg"],
+        "tipo_manutencao": "Elétrica",
         "solicitante_id": "100000003",
         "historico": {
             "1":{
@@ -168,7 +168,7 @@ TEST_TICKETS = [
     {
         "local": "RU",
         "descricao": "Torneira sem pressão.",
-        "tipo_manutencao": "Hidráulico",
+        "tipo_manutencao": "Hidráulica",
         "solicitante_id": "100000003",
         "historico": {
             "1":{
