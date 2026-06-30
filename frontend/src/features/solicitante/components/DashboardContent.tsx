@@ -54,15 +54,12 @@ export default function DashboardContent() {
       try {
         setIsLoading(true);
 
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        const [tickets, dashboardStats, outros] = await Promise.all([
+        const [tickets, outros] = await Promise.all([
           solicitanteService.getChamados(),
-          solicitanteService.getEstatisticas(),
           solicitanteService.getOutrosChamados()
         ]);
 
-        setStats(dashboardStats);
+        setStats(solicitanteService.getEstatisticasFromChamados(tickets));
 
         setTickets(tickets);
         setOutrosChamados(outros);

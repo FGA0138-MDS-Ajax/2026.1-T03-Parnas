@@ -11,6 +11,14 @@ export interface TecnicoPendente {
   approval_status: string;
 }
 
+interface DashboardSummaryResponse {
+  chamados_abertos: number;
+  chamados_atribuidos: number;
+  chamados_em_andamento: number;
+  chamados_concluidos: number;
+  tecnicos_ativos: number;
+}
+
 class GerenteService {
   private API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
 
@@ -29,20 +37,22 @@ class GerenteService {
 
   async getDashboardStats(): Promise<DashboardStats> {
     try {
-      const [ticketsResponse, tecnicosResponse] = await Promise.all([
-        fetch(`${this.API_BASE_URL}/tickets`, { headers: this.getAuthHeaders() }),
-        fetch(`${this.API_BASE_URL}/technicians/available`, { headers: this.getAuthHeaders() })
-      ]);
+      const response = await fetch(`${this.API_BASE_URL}/dashboard/summary`, {
+        headers: this.getAuthHeaders(),
+      });
 
-      const allTickets = ticketsResponse.ok ? await ticketsResponse.json() : [];
-      const tecnicos = tecnicosResponse.ok ? await tecnicosResponse.json() : [];
+      if (!response.ok) {
+        throw new Error(`Erro na requisicao: ${response.status}`);
+      }
+
+      const summary: DashboardSummaryResponse = await response.json();
 
       return {
-        abertos: allTickets.filter((t: any) => t.status === 'ABERTO').length,
-        atribuidos: allTickets.filter((t: any) => t.status === 'ATRIBUIDO').length,
-        emAndamento: allTickets.filter((t: any) => t.status === 'EM_ANDAMENTO').length,
-        concluidos: allTickets.filter((t: any) => t.status === 'CONCLUIDO').length,
-        totalTecnicos: tecnicos.length,
+        abertos: summary.chamados_abertos,
+        atribuidos: summary.chamados_atribuidos,
+        emAndamento: summary.chamados_em_andamento,
+        concluidos: summary.chamados_concluidos,
+        totalTecnicos: summary.tecnicos_ativos,
       };
     } catch (error) {
       console.error('Erro ao obter estatísticas do dashboard:', error);
