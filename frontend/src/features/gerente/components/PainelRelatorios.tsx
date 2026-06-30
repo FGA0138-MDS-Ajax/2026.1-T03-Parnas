@@ -47,9 +47,12 @@ export default function PainelRelatorios() {
   const catHidraulica = getVolumetriaCategoria('hidráulica');
   const catEletrica = getVolumetriaCategoria('elétrica') + getVolumetriaCategoria('iluminação');
   const catRefrigeracao = getVolumetriaCategoria('refrigeração');
-  const catOutros = total - (catHidraulica + catEletrica + catRefrigeracao);
+  const catInfraestrutura = getVolumetriaCategoria('infraestrutura');
+  const catEquipamentos = getVolumetriaCategoria('equipamento');
+  
+  const catOutros = total - (catHidraulica + catEletrica + catRefrigeracao + catInfraestrutura + catEquipamentos);
 
-  const maxCatVal = Math.max(catHidraulica, catEletrica, catRefrigeracao, catOutros, 1);
+  const maxCatVal = Math.max(catHidraulica, catEletrica, catRefrigeracao, catInfraestrutura, catEquipamentos, catOutros, 1);
   const getWidthPercent = (val: number) => {
     return `${(val / maxCatVal) * 100}%`;
   };
@@ -208,6 +211,8 @@ export default function PainelRelatorios() {
         { nome: 'Hidráulica', qt: catHidraulica },
         { nome: 'Elétrica / Iluminação', qt: catEletrica },
         { nome: 'Refrigeração', qt: catRefrigeracao },
+        { nome: 'Infraestrutura', qt: catInfraestrutura },
+        { nome: 'Equipamentos', qt: catEquipamentos },
         { nome: 'Outros', qt: catOutros }
       ];
       
@@ -385,7 +390,7 @@ export default function PainelRelatorios() {
               
               <div className="bar-chart-container">
                 <div className="bar-chart-row">
-                  <span className="bar-label">💧 Hidráulica</span>
+                  <span className="bar-label">Hidráulica</span>
                   <div className="bar-track">
                     <div className="bar-fill hydraulic" style={{ width: getWidthPercent(catHidraulica) }}></div>
                   </div>
@@ -393,7 +398,7 @@ export default function PainelRelatorios() {
                 </div>
 
                 <div className="bar-chart-row">
-                  <span className="bar-label">⚡ Elétrica / Iluminação</span>
+                  <span className="bar-label">Elétrica / Iluminação</span>
                   <div className="bar-track">
                     <div className="bar-fill electric" style={{ width: getWidthPercent(catEletrica) }}></div>
                   </div>
@@ -401,7 +406,7 @@ export default function PainelRelatorios() {
                 </div>
 
                 <div className="bar-chart-row">
-                  <span className="bar-label">❄️ Refrigeração</span>
+                  <span className="bar-label">Refrigeração</span>
                   <div className="bar-track">
                     <div className="bar-fill refrigeration" style={{ width: getWidthPercent(catRefrigeracao) }}></div>
                   </div>
@@ -409,7 +414,23 @@ export default function PainelRelatorios() {
                 </div>
 
                 <div className="bar-chart-row">
-                  <span className="bar-label">🛠️ Outros Serviços</span>
+                  <span className="bar-label">Infraestrutura</span>
+                  <div className="bar-track">
+                    <div className="bar-fill infrastructure" style={{ width: getWidthPercent(catInfraestrutura), backgroundColor: '#10B981' }}></div>
+                  </div>
+                  <span className="bar-value">{catInfraestrutura}</span>
+                </div>
+
+                <div className="bar-chart-row">
+                  <span className="bar-label">Equipamentos</span>
+                  <div className="bar-track">
+                    <div className="bar-fill equipment" style={{ width: getWidthPercent(catEquipamentos), backgroundColor: '#6366F1' }}></div>
+                  </div>
+                  <span className="bar-value">{catEquipamentos}</span>
+                </div>
+
+                <div className="bar-chart-row">
+                  <span className="bar-label">Outros Serviços</span>
                   <div className="bar-track">
                     <div className="bar-fill other" style={{ width: getWidthPercent(catOutros) }}></div>
                   </div>
