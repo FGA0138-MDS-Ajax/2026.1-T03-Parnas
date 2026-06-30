@@ -1,3 +1,5 @@
+# Sprint 6
+
 ## 1. Contexto da Sprint
 
 A Sprint 6 do projeto KeepUnB tem como foco a consolidação das funcionalidades essenciais do sistema, preparando o MVP para sua fase final de estabilização e entrega. Após os refinamentos realizados na Sprint 5, esta etapa busca fortalecer aspectos relacionados à segurança, gerenciamento de usuários e eficiência operacional.
@@ -11,13 +13,13 @@ Além disso, será desenvolvida e padronizada a área administrativa do sistema,
 A Sprint 6 tem como objetivo concluir as funcionalidades centrais do KeepUnB, corrigindo problemas de sessão entre múltiplas abas e implementando a sugestão de técnicos com base em critérios como área de manutenção, aprovação, status ativo e carga de trabalho. Também busca desenvolver e padronizar a área administrativa do sistema, incluindo autenticação por login e PIN, além de funcionalidades para criação, edição, desativação e exclusão de contas. Complementarmente, a sprint visa consolidar indicadores básicos, permissões por perfil, padronização visual e documentação técnica, preparando o projeto para a Sprint 7, dedicada à estabilização e entrega final.
 
 
-# 3.Sessões Independentes em Múltiplas Abas
+## 3.Sessões Independentes em Múltiplas Abas
 
-## Objetivo
+### Objetivo
 
 Permitir que cada aba do navegador mantenha sua própria sessão de autenticação, possibilitando a utilização simultânea de usuários diferentes sem interferência entre as abas.
 
-## Armazenamento da Sessão
+### Armazenamento da Sessão
 
 As informações de autenticação devem ser armazenadas utilizando `sessionStorage`.
 
@@ -28,7 +30,7 @@ Cada aba mantém seus próprios dados de sessão, incluindo:
 * Identificador do usuário;
 * Nome do usuário.
 
-## Token por Aba
+### Token por Aba
 
 Cada aba possui uma sessão independente.
 
@@ -36,7 +38,7 @@ O token utilizado para autenticação pertence exclusivamente à aba em que o lo
 
 Dessa forma, diferentes abas podem permanecer autenticadas com usuários distintos.
 
-## Comportamento Após Refresh
+### Comportamento Após Refresh
 
 Ao atualizar uma página, a sessão da aba deve ser preservada.
 
@@ -44,13 +46,13 @@ O usuário continua autenticado desde que os dados da sessão permaneçam válid
 
 A atualização de uma aba não deve afetar as sessões das demais abas abertas.
 
-## Logout por Aba
+### Logout por Aba
 
 Ao realizar logout, apenas a sessão da aba atual deve ser encerrada.
 
 As demais abas permanecem autenticadas com seus respectivos usuários.
 
-## Proteção de Rotas
+### Proteção de Rotas
 
 Todas as rotas protegidas continuam exigindo autenticação válida.
 
@@ -59,7 +61,7 @@ Quando não existir uma sessão autenticada:
 * O acesso à rota protegida deve ser bloqueado;
 * O usuário deve ser redirecionado para a página de login.
 
-## Regras Gerais
+### Regras Gerais
 
 * Cada aba mantém sua própria sessão.
 * É permitido utilizar usuários diferentes em abas diferentes.
@@ -68,9 +70,9 @@ Quando não existir uma sessão autenticada:
 * A proteção de rotas permanece ativa para todas as sessões.
 
 
-# 4.Regra de Sugestão e Atribuição de Técnicos
+## 4.Regra de Sugestão e Atribuição de Técnicos
 
-## Objetivo
+### Objetivo
 
 Definir o processo de sugestão automática de técnicos e o fluxo de atribuição de chamados pelo gerente, garantindo que a escolha do técnico seja baseada em critérios objetivos e na disponibilidade da equipe.
 
@@ -151,7 +153,7 @@ PATCH /api/v1/tickets/{id}/assign
 
 
 
-# 5.Painel Administrativo
+## 5.Painel Administrativo
 
 ## Objetivo
 
@@ -159,7 +161,7 @@ Definir as regras de acesso e funcionalidades do painel administrativo do sistem
 
 ---
 
-## Acesso pelo Login
+### Acesso pelo Login
 
 O acesso ao painel administrativo é permitido apenas após autenticação no sistema.
 
@@ -233,7 +235,7 @@ O administrador possui acesso completo às funcionalidades de gestão do sistema
 - Usuários não-admin não possuem acesso às rotas administrativas;
 - A validação por PIN é obrigatória para ações sensíveis.
 
-# 6.Documentação de Endpoints da API
+## 6.Documentação de Endpoints da API
 
 A API do sistema KeepUnB segue o prefixo padrão:
 
@@ -329,9 +331,9 @@ Todos os endpoints abaixo representam o estado atual do backend.
 ## Ata de reunião
 
 **Data:** 15/06/2026  
-**Horário:** 19:30 - 20:00
-**Local:**  Discord
-**Participantes:**  @felipemso, @arthur-mariani, @carloshfgit, @vellloso, @caioNapoles, @Danielfelipe08, @prietum, @RodrigoCBarbosa, @arthurrcoelho, @Dandot1, @Guilhermesouza21, @CharlesRuan-MAP.
+**Horário:** 19:30 - 20:00  
+**Local:**  Discord  
+**Participantes:**  @felipemso, @arthur-mariani, @carloshfgit, @vellloso, @caioNapoles, @Danielfelipe08, @prietum, @RodrigoCBarbosa, @arthurrcoelho, @Dandot1, @Guilhermesouza21, @CharlesRuan-MAP.  
 
 **Objetivo:**  
 Discutir a definição da sprint 6 com base em funcionalidades não adicionadas ainda.

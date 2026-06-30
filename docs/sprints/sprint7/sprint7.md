@@ -60,9 +60,9 @@ Na documentação, foram feitos registros e atualizações para manter o projeto
 ## Ata de reunião
 
 **Data:** 22/06/2026  
-**Horário:**  19:30 - 19:45
-**Local:**  Discord
-**Participantes:**  @felipemso, @arthur-mariani, @carloshfgit, @vellloso, @caioNapoles, @Danielfelipe08, @prietum, @RodrigoCBarbosa, @arthurrcoelho, @Dandot1, @Guilhermesouza21, @CharlesRuan-MAP.
+**Horário:**  19:30 - 19:45  
+**Local:**  Discord  
+**Participantes:**  @felipemso, @arthur-mariani, @carloshfgit, @vellloso, @caioNapoles, @Danielfelipe08, @prietum, @RodrigoCBarbosa, @arthurrcoelho, @Dandot1, @Guilhermesouza21, @CharlesRuan-MAP.  
 
 **Objetivo:**  
 Discutir melhorias finais e correção de bugs identificados no projeto.
