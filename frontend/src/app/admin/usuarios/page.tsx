@@ -10,6 +10,10 @@ export default function UsuariosPage() {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  
   // Modals state
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -69,6 +73,17 @@ export default function UsuariosPage() {
       user.matricula.toLowerCase().includes(query)
     );
   });
+
+  // Pagination logic
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const paginatedUsers = filteredUsers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   // KPI Calculations
   const totalUsers = users.length;
@@ -312,7 +327,7 @@ export default function UsuariosPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.map((user) => (
+              {paginatedUsers.map((user) => (
                 <tr key={user.id}>
                   <td>
                     <div className="user-cell">
@@ -346,22 +361,71 @@ export default function UsuariosPage() {
                       <button className="btn-icon-action edit" onClick={() => openEditModal(user)} title="Editar dados">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                       </button>
-                      <button className={`btn-icon-action deactivate ${!user.ativo ? 'active' : ''}`} onClick={() => handleDeactivate(user)} title={user.ativo ? "Desativar conta" : "Ativar conta"}>
-                        {user.ativo ? (
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
-                        ) : (
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                        )}
-                      </button>
-                      <button className="btn-icon-action delete" onClick={() => handleDelete(user)} title="Excluir permanentemente">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-                      </button>
+                      {user.role !== 'ADMIN' && (
+                        <>
+                          <button className={`btn-icon-action deactivate ${!user.ativo ? 'active' : ''}`} onClick={() => handleDeactivate(user)} title={user.ativo ? "Desativar conta" : "Ativar conta"}>
+                            {user.ativo ? (
+                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+                            ) : (
+                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            )}
+                          </button>
+                          <button className="btn-icon-action delete" onClick={() => handleDelete(user)} title="Excluir permanentemente">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                          </button>
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          
+          {/* CONTROLES DE PAGINAÇÃO */}
+          {totalPages > 1 && (
+            <div className="pagination-container">
+              <span className="pagination-info">
+                Mostrando {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, filteredUsers.length)} de {filteredUsers.length} usuários
+              </span>
+              
+              <div className="pagination-actions">
+                <button 
+                  className="btn-pagination" 
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>
+                  Anterior
+                </button>
+                
+                <div className="pagination-numbers">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                    <button 
+                      key={page} 
+                      className={`page-number ${currentPage === page ? 'active' : ''}`}
+                      onClick={() => setCurrentPage(page)}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                </div>
+                
+                <button 
+                  className="btn-pagination" 
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                >
+                  Próximo
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

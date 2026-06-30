@@ -4,7 +4,11 @@
 import React, { useState, useEffect } from 'react';
 import { gerenteService, TecnicoPendente } from '../services/gerenteService';
 
-const AprovarTecnicos: React.FC = () => {
+interface AprovarTecnicosProps {
+  refreshTrigger?: number;
+}
+
+const AprovarTecnicos: React.FC<AprovarTecnicosProps> = ({ refreshTrigger = 0 }) => {
   const [tecnicos, setTecnicos] = useState<TecnicoPendente[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -12,7 +16,7 @@ const AprovarTecnicos: React.FC = () => {
 
   useEffect(() => {
     loadTecnicosPendentes();
-  }, []);
+  }, [refreshTrigger]);
 
   const loadTecnicosPendentes = async () => {
     try {

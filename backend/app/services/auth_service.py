@@ -1,10 +1,26 @@
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+import secrets
+from datetime import datetime, timedelta, timezone
+from jose import jwt
+from fastapi import BackgroundTasks
+from app.core.config import settings
+from app.models.password_reset_code import PasswordResetCode
+from app.repositories.password_reset_repository import PasswordResetRepository
+from app.services.email_service import EmailService
 from app.core.security import verify_password, create_access_token, get_password_hash
 from app.models.user import User, ApprovalStatus, UserRole
 from app.repositories.user_repository import UserRepository
-from app.schemas.auth import LoginRequest, RegisterRequest, TokenResponse
+from app.schemas.auth import (
+    LoginRequest,
+    RegisterRequest,
+    TokenResponse,
+    ForgotPasswordRequest,
+    VerifyCodeRequest,
+    ResetPasswordRequest,
+    ResetTokenResponse,
+)
 
 class AuthService:
     @staticmethod
@@ -19,12 +35,42 @@ class AuthService:
                 headers={"WWW-Authenticate": "Bearer"},
             )
             
-        if not verify_password(login_data.senha, user.senha_hash):
+        now_utc = datetime.now(timezone.utc)
+        
+        if user.login_blocked_until and user.login_blocked_until > now_utc:
+            remaining = user.login_blocked_until - now_utc
+            minutes = int(remaining.total_seconds() // 60)
+            seconds = int(remaining.total_seconds() % 60)
+            tempo_msg = f"{minutes} minutos e {seconds} segundos" if minutes > 0 else f"{seconds} segundos"
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Email ou senha incorretos.",
+                detail=f"Conta bloqueada temporariamente devido a excesso de tentativas. Tente novamente em {tempo_msg}.",
                 headers={"WWW-Authenticate": "Bearer"},
             )
+            
+        if not verify_password(login_data.senha, user.senha_hash):
+            user.failed_login_attempts += 1
+            if user.failed_login_attempts >= settings.MAX_LOGIN_ATTEMPTS:
+                user.login_blocked_until = now_utc + timedelta(minutes=settings.LOGIN_LOCKOUT_MINUTES)
+                await UserRepository.update(db, user)
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail=f"Email ou senha incorretos. Limite de tentativas atingido. Conta bloqueada por {settings.LOGIN_LOCKOUT_MINUTES} minutos.",
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
+            else:
+                restantes = settings.MAX_LOGIN_ATTEMPTS - user.failed_login_attempts
+                await UserRepository.update(db, user)
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail=f"Email ou senha incorretos. Você tem mais {restantes} tentativas.",
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
+                
+        if user.failed_login_attempts > 0 or user.login_blocked_until is not None:
+            user.failed_login_attempts = 0
+            user.login_blocked_until = None
+            await UserRepository.update(db, user)
             
         if user.approval_status == ApprovalStatus.PENDENTE:
             mensagem_erro = "O seu cadastro de Técnico está em análise. Aguarde a aprovação."
@@ -46,7 +92,8 @@ class AuthService:
                 detail="Usuário inativo.",
             )
             
-        access_token = create_access_token(subject=user.matricula)
+        expires_delta = timedelta(days=7) if login_data.lembrar_me else None
+        access_token = create_access_token(subject=user.matricula, expires_delta=expires_delta)
         return TokenResponse(access_token=access_token, token_type="bearer")
 
     @staticmethod
@@ -116,3 +163,64 @@ class AuthService:
 
         access_token = create_access_token(subject=created_user.matricula)
         return TokenResponse(access_token=access_token, token_type="bearer")
+
+    @staticmethod
+    async def forgot_password(
+        db: AsyncSession, request: ForgotPasswordRequest, background_tasks: BackgroundTasks
+    ) -> None:
+        user = await UserRepository.get_by_email(db, email=request.email)
+        if not user or not user.ativo:
+            return
+
+        code = "".join(str(secrets.randbelow(10)) for _ in range(6))
+        expires_at = datetime.now(timezone.utc) + timedelta(minutes=15)
+
+        reset_code = PasswordResetCode(
+            email=user.email,
+            code=code,
+            expires_at=expires_at
+        )
+        await PasswordResetRepository.create(db, reset_code)
+
+        background_tasks.add_task(
+            EmailService.send_recovery_email, user.email, code
+        )
+
+    @staticmethod
+    async def verify_code(
+        db: AsyncSession, request: VerifyCodeRequest
+    ) -> ResetTokenResponse:
+        active_code = await PasswordResetRepository.get_active_code(db, email=request.email)
+        if not active_code or active_code.code != request.code:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Código inválido ou expirado."
+            )
+
+        await PasswordResetRepository.mark_as_used(db, active_code)
+
+        expire = datetime.now(timezone.utc) + timedelta(minutes=5)
+        to_encode = {"exp": expire, "sub": request.email, "type": "reset"}
+        encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm="HS256")
+
+        return ResetTokenResponse(reset_token=encoded_jwt)
+
+    @staticmethod
+    async def reset_password(
+        db: AsyncSession, request: ResetPasswordRequest
+    ) -> None:
+        try:
+            payload = jwt.decode(request.token, settings.SECRET_KEY, algorithms=["HS256"])
+            email: str = payload.get("sub")
+            token_type: str = payload.get("type")
+            if token_type != "reset" or not email:
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido.")
+        except jwt.JWTError:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido ou expirado.")
+
+        user = await UserRepository.get_by_email(db, email=email)
+        if not user:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuário não encontrado.")
+
+        user.senha_hash = get_password_hash(request.nova_senha)
+        await UserRepository.update(db, user)

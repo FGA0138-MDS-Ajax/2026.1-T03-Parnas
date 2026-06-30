@@ -54,15 +54,12 @@ export default function DashboardContent() {
       try {
         setIsLoading(true);
 
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        const [tickets, dashboardStats, outros] = await Promise.all([
+        const [tickets, outros] = await Promise.all([
           solicitanteService.getChamados(),
-          solicitanteService.getEstatisticas(),
           solicitanteService.getOutrosChamados()
         ]);
 
-        setStats(dashboardStats);
+        setStats(solicitanteService.getEstatisticasFromChamados(tickets));
 
         setTickets(tickets);
         setOutrosChamados(outros);
@@ -110,6 +107,7 @@ export default function DashboardContent() {
       case 'EM_ANDAMENTO': return 'em_andamento';
       case 'CONCLUIDO': return 'concluido';
       case 'CANCELADO': return 'cancelado';
+      case 'NAO_INICIADO': return 'nao_iniciado';
       default: return '';
     }
   };

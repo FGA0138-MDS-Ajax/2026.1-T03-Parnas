@@ -301,6 +301,23 @@
   min-height: 120px;
 }
 
+.location-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.location-preview {
+  color: var(--gray-text);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0.25rem 0 0;
+}
+
+.location-preview strong {
+  color: var(--navy-dark);
+  font-weight: 600;
+}
+
 /* Botões Customizados */
 .btn-primary {
   font-family: 'Sora', sans-serif;
@@ -481,6 +498,12 @@
 }
 
 .badge-status.cancelado {
+  background: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.badge-status.nao_iniciado {
   background: rgba(239, 68, 68, 0.15);
   color: #dc2626;
   border: 1px solid rgba(239, 68, 68, 0.3);

@@ -6,7 +6,7 @@
 .gerente-layout {
   display: flex;
   min-height: 100vh;
-  background: var(--off-white);
+  background: var(--white);
   font-family: 'DM Sans', sans-serif;
   color: var(--navy-dark);
 }
@@ -139,7 +139,7 @@
   flex: 1;
   padding: 2.5rem 3rem;
   overflow-y: auto;
-  background: var(--off-white);
+  background: var(--white);
   color: var(--navy-dark);
 }
 
@@ -201,21 +201,20 @@
 }
 
 .kpi-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: var(--gray-text);
   font-size: 0.88rem;
   font-weight: 600;
+  color: var(--gray-text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
 }
 
 .kpi-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  opacity: 0.15;
+  color: var(--navy);
   transition: all 0.2s ease;
 }
 
@@ -223,18 +222,11 @@
   font-family: 'Sora', sans-serif;
   font-size: 2.4rem;
   font-weight: 800;
+  color: var(--navy-dark);
   line-height: 1.1;
   margin-top: 0.5rem;
   transition: all 0.2s ease;
-}
-
-.kpi-footer {
-  font-size: 0.75rem;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 4px;
-  font-weight: 500;
+  display: block;
 }
 
 /* 3.1 Estilos Temáticos dos Cards */
@@ -243,105 +235,20 @@
 .kpi-card.kpi-abertos {
   border-top-color: #EF4444;
 }
-.kpi-card.kpi-abertos .kpi-icon {
-  background: rgba(239, 68, 68, 0.08);
-  color: #EF4444;
-}
-.kpi-card.kpi-abertos .kpi-value {
-  color: #DC2626;
-}
-.kpi-card.kpi-abertos .kpi-footer {
-  color: #DC2626;
-}
-.kpi-card.kpi-abertos .kpi-footer.alert {
-  color: #DC2626; /* Alerta vermelho com fundo suave para urgência */
-  background: rgba(220, 38, 38, 0.06);
-  padding: 0.25rem 0.6rem;
-  border-radius: 6px;
-  border: 1px solid rgba(220, 38, 38, 0.12);
-  display: inline-flex;
-  width: fit-content;
-}
-.kpi-card.kpi-abertos:hover {
-  border-color: rgba(239, 68, 68, 0.3);
-  border-top-color: #DC2626;
-  box-shadow: 0 12px 24px rgba(239, 68, 68, 0.12);
-}
-.kpi-card.kpi-abertos:hover .kpi-icon {
-  background: rgba(239, 68, 68, 0.15);
-  transform: scale(1.05);
-}
 
 /* Delegados / Atribuídos (Âmbar/Laranja) */
 .kpi-card.kpi-atribuidos {
   border-top-color: #F59E0B;
-}
-.kpi-card.kpi-atribuidos .kpi-icon {
-  background: rgba(245, 158, 11, 0.08);
-  color: #F59E0B;
-}
-.kpi-card.kpi-atribuidos .kpi-value {
-  color: #D97706;
-}
-.kpi-card.kpi-atribuidos .kpi-footer {
-  color: #D97706;
-}
-.kpi-card.kpi-atribuidos:hover {
-  border-color: rgba(245, 158, 11, 0.3);
-  border-top-color: #D97706;
-  box-shadow: 0 12px 24px rgba(245, 158, 11, 0.12);
-}
-.kpi-card.kpi-atribuidos:hover .kpi-icon {
-  background: rgba(245, 158, 11, 0.15);
-  transform: scale(1.05);
 }
 
 /* Manutenções em Curso (Roxo) */
 .kpi-card.kpi-em-andamento {
   border-top-color: #8B5CF6;
 }
-.kpi-card.kpi-em-andamento .kpi-icon {
-  background: rgba(139, 92, 246, 0.08);
-  color: #8B5CF6;
-}
-.kpi-card.kpi-em-andamento .kpi-value {
-  color: #7C3AED;
-}
-.kpi-card.kpi-em-andamento .kpi-footer {
-  color: #7C3AED;
-}
-.kpi-card.kpi-em-andamento:hover {
-  border-color: rgba(139, 92, 246, 0.3);
-  border-top-color: #7C3AED;
-  box-shadow: 0 12px 24px rgba(139, 92, 246, 0.12);
-}
-.kpi-card.kpi-em-andamento:hover .kpi-icon {
-  background: rgba(139, 92, 246, 0.15);
-  transform: scale(1.05);
-}
 
 /* Equipe Técnica Ativa (Verde) */
 .kpi-card.kpi-tecnicos {
   border-top-color: #10B981;
-}
-.kpi-card.kpi-tecnicos .kpi-icon {
-  background: rgba(16, 185, 129, 0.08);
-  color: #10B981;
-}
-.kpi-card.kpi-tecnicos .kpi-value {
-  color: #059669;
-}
-.kpi-card.kpi-tecnicos .kpi-footer {
-  color: #059669;
-}
-.kpi-card.kpi-tecnicos:hover {
-  border-color: rgba(16, 185, 129, 0.3);
-  border-top-color: #059669;
-  box-shadow: 0 12px 24px rgba(16, 185, 129, 0.12);
-}
-.kpi-card.kpi-tecnicos:hover .kpi-icon {
-  background: rgba(16, 185, 129, 0.15);
-  transform: scale(1.05);
 }
 
 /* ==========================================
@@ -398,6 +305,7 @@
   outline: none;
   border-color: var(--green);
   background: var(--white);
+  box-shadow: 0 0 0 3px rgba(27, 122, 58, 0.15);
 }
 
 .search-icon-svg {
@@ -423,6 +331,12 @@
   font-size: 0.88rem;
   cursor: pointer;
   outline: none;
+  transition: all 0.2s ease;
+}
+.filter-select:focus {
+  border-color: var(--green);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(27, 122, 58, 0.15);
 }
 .filter-select option {
   background: var(--white);
@@ -525,8 +439,14 @@
   border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
+.status-badge.nao_iniciado {
+  background: rgba(239, 68, 68, 0.15);
+  color: #EF4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
 .btn-table-action {
-  background: var(--green);
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
   color: var(--white);
   border: none;
   border-radius: 8px;
@@ -539,11 +459,13 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  box-shadow: 0 4px 15px rgba(27, 122, 58, 0.3);
 }
 
 .btn-table-action:hover {
-  background: var(--green-mid);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, var(--green-mid) 0%, var(--green-light) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(27, 122, 58, 0.4);
 }
 
 .table-empty-state {
@@ -794,7 +716,7 @@
 }
 
 .btn-modal-confirm {
-  background: var(--green);
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
   color: var(--white);
   border: none;
   border-radius: 10px;
@@ -803,20 +725,25 @@
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   gap: 8px;
+  box-shadow: 0 4px 15px rgba(27, 122, 58, 0.3);
 }
 
 .btn-modal-confirm:hover:not(:disabled) {
-  background: var(--green-mid);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, var(--green-mid) 0%, var(--green-light) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(27, 122, 58, 0.4);
 }
 
 .btn-modal-confirm:disabled {
+  background: var(--gray-text);
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 /* ==========================================
@@ -1023,6 +950,14 @@
 
 .bar-fill.refrigeration {
   background: linear-gradient(90deg, #A855F7, #C084FC);
+}
+
+.bar-fill.equipments {
+  background: linear-gradient(90deg, #F97316, #FB923C);
+}
+
+.bar-fill.infrastructure {
+  background: linear-gradient(90deg, #10B981, #34D399);
 }
 
 .bar-fill.other {

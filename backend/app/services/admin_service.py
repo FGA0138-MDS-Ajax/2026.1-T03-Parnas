@@ -3,6 +3,9 @@ from fastapi import HTTPException, status
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from datetime import datetime, timedelta, timezone
+from app.core.config import settings
+
 from app.core.security import get_password_hash, verify_password, create_access_token
 from app.models.user import User, UserRole, ApprovalStatus
 from app.models.ticket import Ticket
@@ -96,6 +99,12 @@ class AdminService:
                 detail="Usuário não encontrado.",
             )
 
+        if user.role == UserRole.ADMIN:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Não é possível desativar outro administrador do sistema.",
+            )
+
         user.ativo = False
         return await UserRepository.update(db, user)
 
@@ -107,6 +116,12 @@ class AdminService:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Usuário não encontrado.",
+            )
+
+        if user.role == UserRole.ADMIN:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Não é possível excluir outro administrador do sistema.",
             )
 
         # Evitar exclusão do sentinela
@@ -165,11 +180,39 @@ class AdminService:
                 detail="PIN administrativo não configurado.",
             )
 
-        if not verify_password(pin, user.admin_pin_hash):
+        now_utc = datetime.now(timezone.utc)
+        
+        if user.pin_blocked_until and user.pin_blocked_until > now_utc:
+            remaining = user.pin_blocked_until - now_utc
+            minutes = int(remaining.total_seconds() // 60)
+            seconds = int(remaining.total_seconds() % 60)
+            tempo_msg = f"{minutes} minutos e {seconds} segundos" if minutes > 0 else f"{seconds} segundos"
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="PIN incorreto.",
+                detail=f"PIN administrativo bloqueado temporariamente devido a excesso de tentativas. Tente novamente em {tempo_msg}.",
             )
+
+        if not verify_password(pin, user.admin_pin_hash):
+            user.failed_pin_attempts += 1
+            if user.failed_pin_attempts >= settings.MAX_LOGIN_ATTEMPTS:
+                user.pin_blocked_until = now_utc + timedelta(minutes=settings.LOGIN_LOCKOUT_MINUTES)
+                await UserRepository.update(db, user)
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"PIN incorreto. Limite de tentativas atingido. Ações administrativas bloqueadas por {settings.LOGIN_LOCKOUT_MINUTES} minutos.",
+                )
+            else:
+                restantes = settings.MAX_LOGIN_ATTEMPTS - user.failed_pin_attempts
+                await UserRepository.update(db, user)
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"PIN incorreto. Você tem mais {restantes} tentativas.",
+                )
+                
+        if user.failed_pin_attempts > 0 or user.pin_blocked_until is not None:
+            user.failed_pin_attempts = 0
+            user.pin_blocked_until = None
+            await UserRepository.update(db, user)
 
         # Retorna o token com a claim pin_verified=True
         return create_access_token(
@@ -186,11 +229,38 @@ class AdminService:
                 detail="PIN administrativo não configurado.",
             )
 
-        if not verify_password(current_pin, user.admin_pin_hash):
+        now_utc = datetime.now(timezone.utc)
+        
+        if user.pin_blocked_until and user.pin_blocked_until > now_utc:
+            remaining = user.pin_blocked_until - now_utc
+            minutes = int(remaining.total_seconds() // 60)
+            seconds = int(remaining.total_seconds() % 60)
+            tempo_msg = f"{minutes} minutos e {seconds} segundos" if minutes > 0 else f"{seconds} segundos"
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="PIN atual incorreto.",
+                detail=f"PIN administrativo bloqueado temporariamente devido a excesso de tentativas. Tente novamente em {tempo_msg}.",
             )
 
+        if not verify_password(current_pin, user.admin_pin_hash):
+            user.failed_pin_attempts += 1
+            if user.failed_pin_attempts >= settings.MAX_LOGIN_ATTEMPTS:
+                user.pin_blocked_until = now_utc + timedelta(minutes=settings.LOGIN_LOCKOUT_MINUTES)
+                await UserRepository.update(db, user)
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"PIN atual incorreto. Limite de tentativas atingido. Ações administrativas bloqueadas por {settings.LOGIN_LOCKOUT_MINUTES} minutos.",
+                )
+            else:
+                restantes = settings.MAX_LOGIN_ATTEMPTS - user.failed_pin_attempts
+                await UserRepository.update(db, user)
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"PIN atual incorreto. Você tem mais {restantes} tentativas.",
+                )
+
+        if user.failed_pin_attempts > 0 or user.pin_blocked_until is not None:
+            user.failed_pin_attempts = 0
+            user.pin_blocked_until = None
+            
         user.admin_pin_hash = get_password_hash(new_pin)
         await UserRepository.update(db, user)

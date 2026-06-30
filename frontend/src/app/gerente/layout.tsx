@@ -49,10 +49,8 @@ export default function GerenteLayout({
 
   const handleLogout = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (confirm('Deseja realmente sair da plataforma KeepUnB?')) {
-      authService.logout();
-      router.push('/login');
-    }
+    authService.logout();
+    router.push('/login');
   };
 
   const isActive = (path: string) => {

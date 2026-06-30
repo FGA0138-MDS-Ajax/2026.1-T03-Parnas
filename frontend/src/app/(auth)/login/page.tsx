@@ -22,7 +22,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const user = await authService.login({ email, senha });
+      const user = await authService.login({ email, senha }, lembrarMe);
       router.push(getDefaultRouteForRole(user.role));
     } catch (error) {
       if (error instanceof ApiError) {
@@ -37,6 +37,13 @@ export default function LoginPage() {
 
   return (
     <div className="login-container">
+      <Link href="/" className="back-to-landing">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12" />
+          <polyline points="12 19 5 12 12 5" />
+        </svg>
+        Voltar ao início
+      </Link>
       <div className="login-card">
         <img src="/keep-unb-half.png" alt="KeepUnB Logo" className="login-logo" />
         <h1 className="login-title">Login</h1>
@@ -107,7 +114,7 @@ export default function LoginPage() {
               />
               Lembrar-me
             </label>
-            <a href="#forgot" className="forgot-password">Esqueci minha senha</a>
+            <Link href="/esqueci-senha" className="forgot-password">Esqueci minha senha</Link>
           </div>
 
           <button type="submit" className="btn-login-submit" disabled={isLoading}>

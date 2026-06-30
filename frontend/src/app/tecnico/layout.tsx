@@ -7,6 +7,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import '../../features/tecnico/components/tecnico.css';
 import AuthGuard from '../../features/shared/components/AuthGuard';
 import { authService } from '../../features/shared/services/authService';
+import { useUserName } from '../../features/tecnico/hooks/useUserName';
 
 export default function TecnicoLayout({
   children,
@@ -15,43 +16,17 @@ export default function TecnicoLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [userName, setUserName] = useState('Técnico');
+  const userName = useUserName();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     setIsSidebarOpen(false);
   }, [pathname]);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const nome = sessionStorage.getItem('keepunb_nome') || '';
-      const email = sessionStorage.getItem('keepunb_email') || '';
-
-      if (nome) {
-        const formattedName = nome
-          .replace(/\./g, ' ')
-          .split(' ')
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(' ');
-        setUserName(formattedName);
-      } else if (email) {
-        const parsedName = email.split('@')[0];
-        const formattedName = parsedName
-          .replace(/\./g, ' ')
-          .split(' ')
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(' ');
-        setUserName(formattedName);
-      }
-    }
-  }, []);
-
   const handleLogout = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (confirm('Deseja realmente sair da plataforma KeepUnB?')) {
-      authService.logout();
-      router.push('/login');
-    }
+    authService.logout();
+    router.push('/login');
   };
 
   const isActive = (path: string) => {

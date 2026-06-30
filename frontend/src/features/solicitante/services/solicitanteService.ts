@@ -28,9 +28,7 @@ export const solicitanteService = {
     });
   },
 
-  async getEstatisticas(): Promise<SolicitanteDashboardStats> {
-    const tickets = await this.getChamados();
-
+  getEstatisticasFromChamados(tickets: Ticket[]): SolicitanteDashboardStats {
     return {
       total: tickets.length,
       abertos: tickets.filter((ticket) => ticket.status === 'ABERTO').length,
@@ -39,5 +37,10 @@ export const solicitanteService = {
       ).length,
       concluidos: tickets.filter((ticket) => ticket.status === 'CONCLUIDO').length,
     };
+  },
+
+  async getEstatisticas(): Promise<SolicitanteDashboardStats> {
+    const tickets = await this.getChamados();
+    return this.getEstatisticasFromChamados(tickets);
   },
 };

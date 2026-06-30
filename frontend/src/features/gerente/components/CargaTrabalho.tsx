@@ -119,7 +119,7 @@ export default function CargaTrabalho() {
                         <div className="task-card-header">
                           <span className="task-card-id">#{ticket.id}</span>
                           <span className={`status-badge ${ticket.status.toLowerCase()}`}>
-                            {ticket.status === 'EM_ANDAMENTO' ? 'EM ANDAMENTO' : ticket.status}
+                            {ticket.status === 'EM_ANDAMENTO' ? 'EM ANDAMENTO' : ticket.status === 'NAO_INICIADO' ? 'NÃO INICIADO' : ticket.status}
                           </span>
                         </div>
 

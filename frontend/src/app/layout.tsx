@@ -3,8 +3,8 @@ import "../styles/globals.css";
 import ErrorBoundary from "@/features/shared/components/ErrorBoundary";
 
 export const metadata: Metadata = {
-  title: "KeepUnB — Sistema de Manutenção",
-  description: "Centralização e automação da gestão de solicitações de manutenção da UnB.",
+  title: "KeepUnB",
+  description: "Sistema de Manutenção de Infraestrutura da FCTE UnB",
   icons: {
     icon: "/favicon2.png",
     shortcut: "/favicon2.png",

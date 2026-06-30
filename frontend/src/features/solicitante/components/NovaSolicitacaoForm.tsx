@@ -4,11 +4,14 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { solicitanteService } from '../services/solicitanteService';
+import { CAMPUS_NAME, LOCATION_OPTIONS } from '../constants/locationOptions';
 import './solicitante.css';
 
 export default function NovaSolicitacaoForm() {
   const router = useRouter();
-  const [local, setLocal] = useState('');
+  const [selectedBuilding, setSelectedBuilding] = useState('');
+  const [selectedFloor, setSelectedFloor] = useState('');
+  const [selectedRoom, setSelectedRoom] = useState('');
   const [tipoManutencao, setTipoManutencao] = useState('Elétrica');
   const [descricao, setDescricao] = useState('');
   const [photos, setPhotos] = useState<File[]>([]);
@@ -17,6 +20,30 @@ export default function NovaSolicitacaoForm() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [createdTicketId, setCreatedTicketId] = useState<number | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
+
+  const buildingOption = LOCATION_OPTIONS.find((option) => option.name === selectedBuilding);
+  const floorOption = buildingOption?.floors?.find((floor) => floor.name === selectedFloor);
+  const roomOptions = floorOption?.rooms ?? buildingOption?.rooms ?? [];
+  const requiresFloor = !!buildingOption?.floors?.length;
+  const requiresRoom = roomOptions.length > 0;
+  const selectedLocation = [CAMPUS_NAME, selectedBuilding, selectedFloor, selectedRoom]
+    .filter(Boolean)
+    .join(' > ');
+  const isLocationComplete =
+    !!selectedBuilding &&
+    (!requiresFloor || !!selectedFloor) &&
+    (!requiresRoom || !!selectedRoom);
+
+  const handleBuildingChange = (building: string) => {
+    setSelectedBuilding(building);
+    setSelectedFloor('');
+    setSelectedRoom('');
+  };
+
+  const handleFloorChange = (floor: string) => {
+    setSelectedFloor(floor);
+    setSelectedRoom('');
+  };
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -66,6 +93,11 @@ export default function NovaSolicitacaoForm() {
     e.preventDefault();
     setErrorMsg('');
 
+    if (!isLocationComplete) {
+      setErrorMsg('Selecione o local completo do chamado.');
+      return;
+    }
+
     if (!descricao.trim()) {
       setErrorMsg('A descrição detalhada do problema é obrigatória.');
       return;
@@ -74,11 +106,8 @@ export default function NovaSolicitacaoForm() {
     setIsLoading(true);
 
     try {
-      // Simula uma pequena latência de rede de 800ms para feedback visual premium
-      await new Promise(resolve => setTimeout(resolve, 800));
-
       const ticket = await solicitanteService.criarChamado({
-        local: local.trim(),
+        local: selectedLocation,
         tipo_manutencao: tipoManutencao,
         descricao: descricao.trim(),
         photos,
@@ -88,7 +117,9 @@ export default function NovaSolicitacaoForm() {
       setShowSuccessModal(true);
 
       // Limpa os campos
-      setLocal('');
+      setSelectedBuilding('');
+      setSelectedFloor('');
+      setSelectedRoom('');
       setDescricao('');
       setPhotos([]);
       setPhotoPreviews([]);
@@ -118,15 +149,64 @@ export default function NovaSolicitacaoForm() {
             <label htmlFor="local" className="form-label">
               Local Exato do Problema
             </label>
-            <input
-              id="local"
-              type="text"
-              className="form-input"
-              value={local}
-              onChange={(e) => setLocal(e.target.value)}
-              required
-              placeholder="Ex: Bloco A - Sala A1-12, RU, Biblioteca (2º andar)"
-            />
+            <div className="location-grid">
+              <select id="local" className="form-select" disabled>
+                <option value={CAMPUS_NAME}>{CAMPUS_NAME}</option>
+              </select>
+
+              <select
+                className="form-select"
+                value={selectedBuilding}
+                onChange={(e) => handleBuildingChange(e.target.value)}
+                required
+              >
+                <option value="">Selecione o prédio/local</option>
+                {LOCATION_OPTIONS.map((option) => (
+                  <option key={option.name} value={option.name}>
+                    {option.name}
+                  </option>
+                ))}
+              </select>
+
+              {requiresFloor && (
+                <select
+                  className="form-select"
+                  value={selectedFloor}
+                  onChange={(e) => handleFloorChange(e.target.value)}
+                  required
+                >
+                  <option value="">Selecione o piso</option>
+                  {buildingOption?.floors?.map((floor) => (
+                    <option key={floor.name} value={floor.name}>
+                      {floor.name}
+                    </option>
+                  ))}
+                </select>
+              )}
+
+              {requiresRoom && (
+                <select
+                  className="form-select"
+                  value={selectedRoom}
+                  onChange={(e) => setSelectedRoom(e.target.value)}
+                  required
+                  disabled={requiresFloor && !selectedFloor}
+                >
+                  <option value="">Selecione a sala/ambiente</option>
+                  {roomOptions.map((room) => (
+                    <option key={room} value={room}>
+                      {room}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+
+            {selectedLocation && (
+              <p className="location-preview">
+                Local selecionado: <strong>{selectedLocation}</strong>
+              </p>
+            )}
           </div>
 
           {/* Campo de Tipo de Manutenção */}

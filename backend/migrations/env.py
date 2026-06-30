@@ -29,6 +29,7 @@ from app.core.database import Base
 from app.models.user import User
 from app.models.ticket import Ticket
 from app.models.ticket_history import TicketHistory
+from app.models.password_reset_code import PasswordResetCode
 
 target_metadata = Base.metadata
 

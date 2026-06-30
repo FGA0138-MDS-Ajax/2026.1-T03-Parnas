@@ -8,6 +8,7 @@ from app.models.user import UserRole
 class LoginRequest(BaseModel):
     email: EmailStr
     senha: str
+    lembrar_me: Optional[bool] = False
 
 
 class RegisterRequest(BaseModel):
@@ -34,4 +35,23 @@ class RegisterRequest(BaseModel):
 
 class TokenResponse(BaseModel):
     access_token: str
+    token_type: str = "bearer"
+
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+
+class VerifyCodeRequest(BaseModel):
+    email: EmailStr
+    code: str = Field(..., min_length=6, max_length=6)
+
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    nova_senha: str = Field(..., min_length=6)
+
+
+class ResetTokenResponse(BaseModel):
+    reset_token: str
     token_type: str = "bearer"
