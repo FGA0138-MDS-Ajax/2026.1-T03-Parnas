@@ -952,6 +952,14 @@
   background: linear-gradient(90deg, #A855F7, #C084FC);
 }
 
+.bar-fill.equipments {
+  background: linear-gradient(90deg, #F97316, #FB923C);
+}
+
+.bar-fill.infrastructure {
+  background: linear-gradient(90deg, #10B981, #34D399);
+}
+
 .bar-fill.other {
   background: linear-gradient(90deg, #F59E0B, #FBBF24);
 }

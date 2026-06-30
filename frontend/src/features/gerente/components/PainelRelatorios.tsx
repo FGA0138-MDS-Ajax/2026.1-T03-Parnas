@@ -39,7 +39,7 @@ export default function PainelRelatorios() {
   const taxaResolucaoExata = total > 0 ? (concluidos / total) * 100 : 0;
   const taxaResolucao = Math.round(taxaResolucaoExata);
 
-  // 2. Cálculos de Categoria (Hidráulica, Elétrica, Refrigeração, Outros)
+  // 2. Cálculos de Categoria (Hidráulica, Elétrica, Refrigeração, Equipamentos, Infraestrutura, Outros)
   const getVolumetriaCategoria = (cat: string) => {
     return chamados.filter(c => c.tipo_manutencao.toLowerCase().includes(cat.toLowerCase())).length;
   };
@@ -47,9 +47,11 @@ export default function PainelRelatorios() {
   const catHidraulica = getVolumetriaCategoria('hidráulica');
   const catEletrica = getVolumetriaCategoria('elétrica') + getVolumetriaCategoria('iluminação');
   const catRefrigeracao = getVolumetriaCategoria('refrigeração');
-  const catOutros = total - (catHidraulica + catEletrica + catRefrigeracao);
+  const catEquipamentos = getVolumetriaCategoria('equipamentos');
+  const catInfraestrutura = getVolumetriaCategoria('infraestrutura');
+  const catOutros = total - (catHidraulica + catEletrica + catRefrigeracao + catEquipamentos + catInfraestrutura);
 
-  const maxCatVal = Math.max(catHidraulica, catEletrica, catRefrigeracao, catOutros, 1);
+  const maxCatVal = Math.max(catHidraulica, catEletrica, catRefrigeracao, catEquipamentos, catInfraestrutura, catOutros, 1);
   const getWidthPercent = (val: number) => {
     return `${(val / maxCatVal) * 100}%`;
   };
@@ -207,6 +209,22 @@ export default function PainelRelatorios() {
                     <div className="bar-fill refrigeration" style={{ width: getWidthPercent(catRefrigeracao) }}></div>
                   </div>
                   <span className="bar-value">{catRefrigeracao}</span>
+                </div>
+
+                <div className="bar-chart-row">
+                  <span className="bar-label">📦 Equipamentos</span>
+                  <div className="bar-track">
+                    <div className="bar-fill equipments" style={{ width: getWidthPercent(catEquipamentos) }}></div>
+                  </div>
+                  <span className="bar-value">{catEquipamentos}</span>
+                </div>
+
+                <div className="bar-chart-row">
+                  <span className="bar-label">🏢 Infraestrutura</span>
+                  <div className="bar-track">
+                    <div className="bar-fill infrastructure" style={{ width: getWidthPercent(catInfraestrutura) }}></div>
+                  </div>
+                  <span className="bar-value">{catInfraestrutura}</span>
                 </div>
 
                 <div className="bar-chart-row">
