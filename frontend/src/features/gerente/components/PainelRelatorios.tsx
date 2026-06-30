@@ -39,7 +39,7 @@ export default function PainelRelatorios() {
   const taxaResolucaoExata = total > 0 ? (concluidos / total) * 100 : 0;
   const taxaResolucao = Math.round(taxaResolucaoExata);
 
-  // 2. Cálculos de Categoria (Hidráulica, Elétrica, Refrigeração, Outros)
+  // 2. Cálculos de Categoria (Hidráulica, Elétrica, Refrigeração, Equipamentos, Infraestrutura, Outros)
   const getVolumetriaCategoria = (cat: string) => {
     return chamados.filter(c => c.tipo_manutencao.toLowerCase().includes(cat.toLowerCase())).length;
   };
