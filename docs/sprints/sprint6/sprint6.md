@@ -344,3 +344,21 @@ Discutir a definição da sprint 6 com base em funcionalidades não adicionadas 
 -  Adicionar PIN de segurança extra para administradores.
 -  Padronizar páginas que não estão 100% iguais.+
 
+---
+
+## Métricas da Sprint
+
+Esta seção apresenta os resultados das métricas de processo, qualidade e testes coletados para a Sprint 6:
+
+| Métrica | Valor Obtido | Valor Esperado |
+| :--- | :---: | :---: |
+| **Taxa de Conclusão da Sprint (Velocity)** | 68.42% | 90% - 100% |
+| **Taxa de Resolução de Defeitos** | 0.00% | ≥ 80% (não críticos) |
+| **Cobertura de Código** | 84.60% | ≥ 80% |
+
+### Detalhes das Métricas:
+- **Issues Planejadas (38):** #103, #104, #106, #112, #113, #114, #115, #116, #117, #118, #119, #144, #145, #146, #147, #148, #150, #151, #159, #161, #171, #172, #173, #174, #175, #176, #177, #179, #180, #181, #182, #183, #184, #185, #186, #187, #188, #189
+- **Issues Concluídas (26):** #103, #104, #106, #112, #113, #114, #115, #116, #117, #118, #119, #144, #145, #146, #147, #148, #150, #151, #159, #161, #175, #176, #185, #186, #187, #189
+- **Bugs/Erros Reportados:** 3
+- **Bugs/Erros Corrigidos:** 0
+- **Cobertura de Testes (FastAPI backend):** 84.60% (Total de 92 testes automatizados)

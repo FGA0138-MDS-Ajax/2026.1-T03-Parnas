@@ -208,3 +208,22 @@ Discutir sobre a sprint 3, realizar análises em relação à sprint anterior e 
 - Houve mudanças na comunicação via Whatsapp, foi criada uma comunidade, dividida em frontend, backend e database, centralizada por um grupo geral.  
 - Foi apresentado o modelo de produção em equipe via GitHub.  
 - Foram definidas políticas de issues, branches e commits.
+
+---
+
+## Métricas da Sprint
+
+Esta seção apresenta os resultados das métricas de processo, qualidade e testes coletados para a Sprint 3:
+
+| Métrica | Valor Obtido | Valor Esperado |
+| :--- | :---: | :---: |
+| **Taxa de Conclusão da Sprint (Velocity)** | 84.21% | 90% - 100% |
+| **Taxa de Resolução de Defeitos** | 100.00% | ≥ 80% (não críticos) |
+| **Cobertura de Código** | N/A | ≥ 80% |
+
+### Detalhes das Métricas:
+- **Issues Planejadas (19):** #6, #8, #9, #10, #12, #16, #18, #19, #20, #21, #22, #27, #28, #29, #30, #38, #40, #41, #43
+- **Issues Concluídas (16):** #6, #8, #9, #10, #12, #18, #19, #20, #21, #22, #27, #28, #29, #30, #40, #41
+- **Bugs/Erros Reportados:** 0
+- **Bugs/Erros Corrigidos:** 0
+- **Cobertura de Testes (FastAPI backend):** N/A (Total de 0 testes automatizados)

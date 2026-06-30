@@ -208,4 +208,23 @@ Discutir a Sprint 5, alinhar as atividades da equipe, revisar o andamento do MVP
 - Foi decidido realizar ajustes na interface do sistema (UI), buscando melhorar a usabilidade e a experiência dos usuários.  
 - Foi discutido o planejamento da apresentação do projeto, incluindo a organização dos tópicos e a preparação da demonstração do sistema.  
 - Foi decidido revisar a documentação no MkDocs para garantir consistência com o estado atual do projeto.  
-- Houve alinhamento das responsabilidades e distribuição das atividades entre os integrantes da equipe.  
+- Houve alinhamento das responsabilidades e distribuição das atividades entre os integrantes da equipe.
+
+---
+
+## Métricas da Sprint
+
+Esta seção apresenta os resultados das métricas de processo, qualidade e testes coletados para a Sprint 5:
+
+| Métrica | Valor Obtido | Valor Esperado |
+| :--- | :---: | :---: |
+| **Taxa de Conclusão da Sprint (Velocity)** | 57.45% | 90% - 100% |
+| **Taxa de Resolução de Defeitos** | 100.00% | ≥ 80% (não críticos) |
+| **Cobertura de Código** | 82.10% | ≥ 80% |
+
+### Detalhes das Métricas:
+- **Issues Planejadas (47):** #57, #74, #81, #87, #88, #90, #91, #92, #93, #98, #103, #104, #105, #106, #107, #108, #109, #110, #111, #112, #113, #114, #115, #116, #117, #118, #119, #120, #121, #122, #123, #124, #125, #134, #135, #136, #138, #144, #145, #146, #147, #148, #149, #150, #151, #159, #161
+- **Issues Concluídas (27):** #57, #74, #81, #87, #88, #90, #91, #92, #93, #98, #105, #107, #108, #109, #110, #111, #120, #121, #122, #123, #124, #125, #134, #135, #136, #138, #149
+- **Bugs/Erros Reportados:** 1
+- **Bugs/Erros Corrigidos:** 1
+- **Cobertura de Testes (FastAPI backend):** 82.10% (Total de 68 testes automatizados)

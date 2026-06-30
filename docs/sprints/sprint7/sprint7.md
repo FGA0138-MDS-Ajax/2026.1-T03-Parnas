@@ -70,3 +70,21 @@ Discutir melhorias finais e correção de bugs identificados no projeto.
 **Discussões e Decisões:**  
 -  Foram citados diversos bugs que encontramos e proposição de melhorias simples de coisas que já existiam anteriormente no projeto. Todos os bugs encontrados foram corrigidos e citados acima.
 
+---
+
+## Métricas da Sprint
+
+Esta seção apresenta os resultados das métricas de processo, qualidade e testes coletados para a Sprint 7:
+
+| Métrica | Valor Obtido | Valor Esperado |
+| :--- | :---: | :---: |
+| **Taxa de Conclusão da Sprint (Velocity)** | 100.00% | 90% - 100% |
+| **Taxa de Resolução de Defeitos** | 100.00% | ≥ 80% (não críticos) |
+| **Cobertura de Código** | 88.30% | ≥ 80% |
+
+### Detalhes das Métricas:
+- **Issues Planejadas (35):** #171, #172, #173, #174, #177, #179, #180, #181, #182, #183, #184, #188, #203, #204, #205, #206, #207, #208, #209, #210, #211, #212, #213, #214, #215, #216, #217, #218, #221, #222, #223, #224, #227, #230, #240
+- **Issues Concluídas (35):** #171, #172, #173, #174, #177, #179, #180, #181, #182, #183, #184, #188, #203, #204, #205, #206, #207, #208, #209, #210, #211, #212, #213, #214, #215, #216, #217, #218, #221, #222, #223, #224, #227, #230, #240
+- **Bugs/Erros Reportados:** 9
+- **Bugs/Erros Corrigidos:** 9
+- **Cobertura de Testes (FastAPI backend):** 88.30% (Total de 114 testes automatizados)

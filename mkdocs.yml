@@ -42,7 +42,8 @@ nav:
       - Identidade Visual: "identidade_visual/identidade_visual.md"
       - Padronização: "padronizacao/padronizacao.md"
       - Sobre o banco de dados: "banco-de-dados/diagrama-relacionamento-inicial.md"
-
+      - Métricas: "METRICS.md"
+      - Testes: "analise_testes.md"
 
   - Sprints:
       - Sprint 0: "sprints/sprint0/sprint0.md"
