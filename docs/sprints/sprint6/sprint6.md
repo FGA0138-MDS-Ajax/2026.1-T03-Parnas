@@ -326,3 +326,19 @@ Todos os endpoints abaixo representam o estado atual do backend.
 - Alguns endpoints podem variar conforme evolução do sistema
 - Esta documentação deve ser mantida sincronizada com o Swagger (`/docs`)
 
+## Ata de reunião
+
+**Data:** 15/06/2026  
+**Horário:** 19:30 - 20:00
+**Local:**  Discord
+**Participantes:**  @felipemso, @arthur-mariani, @carloshfgit, @vellloso, @caioNapoles, @Danielfelipe08, @prietum, @RodrigoCBarbosa, @arthurrcoelho, @Dandot1, @Guilhermesouza21, @CharlesRuan-MAP.
+
+**Objetivo:**  
+Discutir a definição da sprint 6 com base em funcionalidades não adicionadas ainda.
+
+**Discussões e Decisões:**  
+-  Possibilitar que cada login possa ser feito em uma aba diferente.
+-  Adicionar sugestão de técnico para o gerente quando houverem muitos técnicos disponíveis
+-  Adicionar PIN de segurança extra para administradores.
+-  Padronizar páginas que não estão 100% iguais.+
+
