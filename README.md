@@ -19,14 +19,16 @@ keep-unb-docs/
 ├── docs/                      # Pasta raiz 
 │   ├── arquitetura/           # Documentos de arquitetura 
 │   ├── assets/                # Imagens estáticas globais 
-│   ├── banco-de-dados/        # Modelagem e diagrama do banco
-│   ├── como-executar/         # Guias de instalação e inicialização local
+│   ├── banco_de_dados/        # Modelagem e diagrama do banco
+│   ├── como_executar/         # Guias de instalação e inicialização local
 │   ├── comunicacao/           # Guias de uso da API e esquemas de autenticação
 │   ├── equipe/                # Membros do projeto, papéis e responsabilidades
 │   ├── identidade_visual/     # Padrões de design
+│   ├── metricas/              # Indicadores GQM e resultados consolidados
 │   ├── padronizacao/          # Políticas de commits, branches e issues
 │   ├── sprints/               # Agrupamento dos relatórios de planejamento de Sprints
-│   ├── stylesheets/           # customização visual (CSS)
+│   ├── stylesheets/           # Customização visual (CSS)
+│   ├── testes/                # Testes automatizados e relatórios de QA
 │   ├── visao/                 # Documento de visão 
 │   └── index.md               # Home da documentação no MkDocs
 └── mkdocs.yml                 # Arquivo de configuração de navegação e tema do MkDocs
@@ -41,6 +43,12 @@ O site da documentação gerado de forma estática pelo MkDocs é atualizado aut
 ### Acesso Rápido a Documentos (PDF)
 - [Documento de Arquitetura](docs/arquitetura/arq_parnas.pdf)
 - [Documento de Visão](docs/visao/visao_parnas.pdf)
+
+### Métricas e Testes de Qualidade (QA)
+- [Indicadores e Histórico de Métricas](https://fga0138-mds-ajax.github.io/2026.1-T03-Parnas/metricas/metricas/)
+- [Análise de Testes Automatizados](https://fga0138-mds-ajax.github.io/2026.1-T03-Parnas/testes/analise_testes/)
+- [Relatório de QA — Sprint 4](https://fga0138-mds-ajax.github.io/2026.1-T03-Parnas/testes/qa4/)
+- [Relatório de QA — Sprint 7](https://fga0138-mds-ajax.github.io/2026.1-T03-Parnas/testes/qa7/)
 
 
 
