@@ -1,0 +1,1961 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação oficial do projeto KeepUnB">
+      
+      
+        <meta name="author" content="Equipe KeepUnB">
+      
+      
+      
+        <link rel="prev" href="../../sprint1/sprint1/">
+      
+      
+        <link rel="next" href="../../sprint3/sprint3/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Sprint 2 - KeepUnB</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=DM+Sans:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"DM Sans";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sprint-2" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../../.." title="KeepUnB" class="md-header__button md-logo" aria-label="KeepUnB" data-md-component="logo">
+      
+  <img src="../../../assets/logokeepunb.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            KeepUnB
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Sprint 2
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../como_executar/tutorial/" class="md-tabs__link">
+          
+  
+  
+  Como executar
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../visao/visao/" class="md-tabs__link">
+          
+  
+  
+  Documentação
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../sprint0/sprint0/" class="md-tabs__link">
+          
+  
+  
+  Sprints
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../metricas/metricas/" class="md-tabs__link">
+          
+  
+  
+  Métricas e Testes
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../equipe/membros/" class="md-tabs__link">
+          
+  
+  
+  Nossa equipe
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="KeepUnB" class="md-nav__button md-logo" aria-label="KeepUnB" data-md-component="logo">
+      
+  <img src="../../../assets/logokeepunb.png" alt="logo">
+
+    </a>
+    KeepUnB
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Como executar
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Como executar
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../como_executar/tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Primeiros passos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentação
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Documentação
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../visao/visao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documento de Visão
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../arquitetura/arq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documento de Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../comunicacao/api-e-autenticacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comunicação, API e autenticação
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../identidade_visual/identidade_visual/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Identidade Visual
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../padronizacao/padronizacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Padronização
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../banco_de_dados/diagrama-relacionamento-inicial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sobre o banco de dados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../banco_de_dados/revisao_db/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Revisão Banco de Dados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprints
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Sprints
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sprint0/sprint0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sprint1/sprint1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 2
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-contexto-da-sprint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Contexto da Sprint
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-definicao-da-arquitetura-do-projeto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Definição da Arquitetura do Projeto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-documento-de-arquitetura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Documento de Arquitetura
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-ferramentas-e-tecnologias-utilizadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Ferramentas e Tecnologias Utilizadas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Ferramentas e Tecnologias Utilizadas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frontend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#banco-de-dados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Banco de Dados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ambiente-e-execucao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ambiente e Execução
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#versionamento-e-organizacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versionamento e Organização
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-organizacao-do-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Organização do Backend
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-visoes-arquiteturais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Visões Arquiteturais
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-resultados-da-sprint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Resultados da Sprint
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-conclusao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Conclusão
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-ata-de-reuniao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Ata de reunião
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sprint3/sprint3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sprint4/sprint4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sprint5/sprint5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 5
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sprint6/sprint6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 6
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sprint7/sprint7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprint 7
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Métricas e Testes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Métricas e Testes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../metricas/metricas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Métricas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../testes/analise_testes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Análise de Testes Automatizados
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../testes/qa4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    QA Sprint 4 (Testes de Sistema)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../testes/qa7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    QA Sprint 7 (Testes de Sistema)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nossa equipe
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Nossa equipe
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../equipe/membros/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Membros
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-contexto-da-sprint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Contexto da Sprint
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-definicao-da-arquitetura-do-projeto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Definição da Arquitetura do Projeto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-documento-de-arquitetura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Documento de Arquitetura
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-ferramentas-e-tecnologias-utilizadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Ferramentas e Tecnologias Utilizadas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Ferramentas e Tecnologias Utilizadas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frontend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#banco-de-dados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Banco de Dados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ambiente-e-execucao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ambiente e Execução
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#versionamento-e-organizacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versionamento e Organização
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-organizacao-do-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Organização do Backend
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-visoes-arquiteturais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Visões Arquiteturais
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-resultados-da-sprint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Resultados da Sprint
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-conclusao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Conclusão
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-ata-de-reuniao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Ata de reunião
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="sprint-2">Sprint 2<a class="headerlink" href="#sprint-2" title="Permanent link">&para;</a></h1>
+<h2 id="1-contexto-da-sprint">1. Contexto da Sprint<a class="headerlink" href="#1-contexto-da-sprint" title="Permanent link">&para;</a></h2>
+<p>A <strong>Sprint 2</strong> do projeto <strong>KeepUnB</strong> teve como foco principal definir a arquitetura do sistema e as ferramentas que seriam utilizadas para tornar o produto funcional.</p>
+<p>Após a definição do produto e a elaboração do Documento de Visão na Sprint 1, a equipe avançou para uma etapa mais técnica, buscando entender como o sistema seria estruturado, quais tecnologias seriam utilizadas e como os principais componentes da aplicação se comunicariam.</p>
+<p>Nessa sprint, o objetivo foi organizar a base arquitetural do projeto, garantindo que o desenvolvimento pudesse seguir um padrão claro, compreensível e adequado às necessidades do sistema.</p>
+<hr />
+<h2 id="2-definicao-da-arquitetura-do-projeto">2. Definição da Arquitetura do Projeto<a class="headerlink" href="#2-definicao-da-arquitetura-do-projeto" title="Permanent link">&para;</a></h2>
+<p>Durante a Sprint 2, foi elaborado o <strong>Documento de Arquitetura</strong> do KeepUnB.</p>
+<p>Esse documento foi criado para registrar as principais decisões técnicas do projeto, explicando como o sistema seria organizado e quais padrões seriam adotados no desenvolvimento.</p>
+<p>A arquitetura definida separa o sistema em camadas e responsabilidades, permitindo melhor organização do código e facilitando a manutenção futura da aplicação.</p>
+<p>O KeepUnB foi pensado como uma aplicação web composta por:</p>
+<ul>
+<li><strong>Frontend:</strong> responsável pela interface visual e pela interação com os usuários;</li>
+<li><strong>Backend:</strong> responsável pelas regras de negócio, autenticação, rotas e comunicação com o banco de dados;</li>
+<li><strong>Banco de Dados:</strong> responsável pelo armazenamento das informações do sistema;</li>
+<li><strong>Documentação:</strong> responsável por registrar decisões, guias e informações importantes do projeto.</li>
+</ul>
+<p>Essa organização permite que cada parte do sistema tenha uma função bem definida e que a equipe consiga trabalhar de forma mais organizada.</p>
+<hr />
+<h2 id="3-documento-de-arquitetura">3. Documento de Arquitetura<a class="headerlink" href="#3-documento-de-arquitetura" title="Permanent link">&para;</a></h2>
+<p>A elaboração do <strong>Documento de Arquitetura</strong> foi uma das principais entregas da Sprint 2.</p>
+<p>Nesse documento, foram definidos pontos importantes como:</p>
+<ul>
+<li>A estrutura geral do sistema;</li>
+<li>As camadas da aplicação;</li>
+<li>A comunicação entre frontend, backend e banco de dados;</li>
+<li>As tecnologias escolhidas;</li>
+<li>A organização do backend;</li>
+<li>A forma de implantação local do projeto;</li>
+<li>As responsabilidades de cada parte da aplicação;</li>
+<li>As decisões arquiteturais iniciais.</li>
+</ul>
+<p>O documento serviu como uma referência técnica para a equipe, ajudando a manter o desenvolvimento alinhado e evitando decisões isoladas ou despadronizadas.</p>
+<hr />
+<h2 id="4-ferramentas-e-tecnologias-utilizadas">4. Ferramentas e Tecnologias Utilizadas<a class="headerlink" href="#4-ferramentas-e-tecnologias-utilizadas" title="Permanent link">&para;</a></h2>
+<p>Na Sprint 2, também foram definidas as principais ferramentas e tecnologias utilizadas no projeto.</p>
+<h3 id="backend">Backend<a class="headerlink" href="#backend" title="Permanent link">&para;</a></h3>
+<p>Para o backend, foi definido o uso de <strong>Python</strong> com <strong>FastAPI</strong>.</p>
+<p>O FastAPI foi escolhido por permitir a criação de APIs de forma rápida, organizada e com suporte automático à documentação das rotas por meio do Swagger.</p>
+<p>Também foram consideradas ferramentas e bibliotecas relacionadas à organização do backend, como:</p>
+<ul>
+<li><strong>Python 3.12+</strong>;</li>
+<li><strong>FastAPI</strong>;</li>
+<li><strong>Uvicorn</strong>;</li>
+<li><strong>SQLAlchemy</strong>;</li>
+<li><strong>Pydantic</strong>;</li>
+<li><strong>Swagger</strong>, para visualização e teste das rotas da API.</li>
+</ul>
+<h3 id="frontend">Frontend<a class="headerlink" href="#frontend" title="Permanent link">&para;</a></h3>
+<p>Para o frontend, foi definida uma estrutura baseada em tecnologias modernas para desenvolvimento web.</p>
+<p>O objetivo é permitir a criação de telas organizadas, responsivas e adequadas para os diferentes perfis de usuário do sistema.</p>
+<p>As principais ferramentas utilizadas foram:</p>
+<ul>
+<li><strong>Node.js 20+</strong>;</li>
+<li><strong>React</strong>;</li>
+<li><strong>Next.js</strong>;</li>
+<li><strong>TypeScript</strong>;</li>
+<li><strong>CSS/Tailwind</strong>, para estilização da interface.</li>
+</ul>
+<h3 id="banco-de-dados">Banco de Dados<a class="headerlink" href="#banco-de-dados" title="Permanent link">&para;</a></h3>
+<p>O banco de dados foi pensado para armazenar as principais informações do sistema, como usuários, chamados, técnicos, locais, tipos de manutenção e status das solicitações.</p>
+<p>A estrutura do banco deve se relacionar com os models definidos no backend, garantindo consistência entre o código e os dados armazenados.</p>
+<p>Ferramentas relacionadas:</p>
+<ul>
+<li><strong>Banco de dados relacional</strong>;</li>
+<li><strong>SQLAlchemy</strong>, para mapeamento entre classes Python e tabelas;</li>
+<li><strong>Migrations</strong>, para controle das alterações na estrutura do banco.</li>
+</ul>
+<h3 id="ambiente-e-execucao">Ambiente e Execução<a class="headerlink" href="#ambiente-e-execucao" title="Permanent link">&para;</a></h3>
+<p>Para padronizar o ambiente de desenvolvimento, foi definido o uso de <strong>Docker</strong> e <strong>Docker Compose</strong>.</p>
+<p>Essas ferramentas ajudam a evitar problemas de configuração entre diferentes computadores da equipe, permitindo que o projeto seja executado de forma mais previsível.</p>
+<p>Ferramentas utilizadas:</p>
+<ul>
+<li><strong>Docker</strong>;</li>
+<li><strong>Docker Compose</strong>;</li>
+<li>Arquivos de ambiente <code>.env</code>;</li>
+<li>Configuração separada para frontend, backend e banco de dados.</li>
+</ul>
+<h3 id="documentacao">Documentação<a class="headerlink" href="#documentacao" title="Permanent link">&para;</a></h3>
+<p>A documentação do projeto foi pensada como parte essencial da organização da equipe.</p>
+<p>Foi utilizado o <strong>MkDocs Material</strong> para estruturar a documentação do KeepUnB, incluindo guias, decisões técnicas, documentos da sprint e informações importantes do projeto.</p>
+<p>Ferramentas utilizadas:</p>
+<ul>
+<li><strong>MkDocs</strong>;</li>
+<li><strong>MkDocs Material</strong>;</li>
+<li>Markdown;</li>
+<li>GitHub Pages, para publicação da documentação.</li>
+</ul>
+<h3 id="versionamento-e-organizacao">Versionamento e Organização<a class="headerlink" href="#versionamento-e-organizacao" title="Permanent link">&para;</a></h3>
+<p>Para o controle de versão e colaboração da equipe, foram utilizadas ferramentas de versionamento e organização do fluxo de trabalho.</p>
+<p>Ferramentas utilizadas:</p>
+<ul>
+<li><strong>Git</strong>;</li>
+<li><strong>GitHub</strong>;</li>
+<li>Branches de desenvolvimento;</li>
+<li>Pull Requests;</li>
+<li>Issues;</li>
+<li>Organização por sprints.</li>
+</ul>
+<hr />
+<h2 id="5-organizacao-do-backend">5. Organização do Backend<a class="headerlink" href="#5-organizacao-do-backend" title="Permanent link">&para;</a></h2>
+<p>Na Sprint 2, também foi definida a estrutura inicial do backend, separando responsabilidades em pastas específicas.</p>
+<p>A organização pensada foi:</p>
+<div class="highlight"><pre><span></span><code>app/
+├── core/
+├── models/
+├── repositories/
+├── routers/
+├── schemas/
+├── services/
+└── utils/
+</code></pre></div>
+<p>Cada pasta possui uma responsabilidade dentro do sistema:</p>
+<ul>
+<li><strong>core:</strong> configurações principais do projeto;</li>
+<li><strong>models:</strong> representação das entidades do banco de dados;</li>
+<li><strong>repositories:</strong> acesso e manipulação dos dados;</li>
+<li><strong>routers:</strong> definição das rotas da API;</li>
+<li><strong>schemas:</strong> validação e estrutura dos dados de entrada e saída;</li>
+<li><strong>services:</strong> regras de negócio da aplicação;</li>
+<li><strong>utils:</strong> funções auxiliares reutilizáveis.</li>
+</ul>
+<p>Essa divisão ajuda a manter o código mais organizado, facilitando a manutenção e a evolução do sistema.</p>
+<hr />
+<h2 id="6-visoes-arquiteturais">6. Visões Arquiteturais<a class="headerlink" href="#6-visoes-arquiteturais" title="Permanent link">&para;</a></h2>
+<p>O Documento de Arquitetura também organizou o projeto por meio de visões, facilitando a compreensão do sistema por diferentes perspectivas.</p>
+<p>As principais visões consideradas foram:</p>
+<ul>
+<li><strong>Visão de uso:</strong> apresenta o escopo do sistema e como os usuários interagem com ele;</li>
+<li><strong>Visão lógica:</strong> mostra a organização em camadas e responsabilidades;</li>
+<li><strong>Visão estrutural:</strong> apresenta os componentes principais do sistema e suas relações;</li>
+<li><strong>Visão de implantação:</strong> descreve o ambiente em que o sistema será executado.</li>
+</ul>
+<p>Essas visões ajudaram a equipe a compreender melhor o funcionamento geral do KeepUnB e a comunicar a arquitetura de forma mais clara.</p>
+<hr />
+<h2 id="7-resultados-da-sprint">7. Resultados da Sprint<a class="headerlink" href="#7-resultados-da-sprint" title="Permanent link">&para;</a></h2>
+<p>Ao final da Sprint 2, a equipe conseguiu consolidar as principais decisões técnicas do projeto.</p>
+<p>Os principais resultados foram:</p>
+<ul>
+<li>Elaboração do Documento de Arquitetura;</li>
+<li>Definição da estrutura geral do sistema;</li>
+<li>Escolha das tecnologias principais do projeto;</li>
+<li>Organização das camadas da aplicação;</li>
+<li>Definição da estrutura inicial do backend;</li>
+<li>Planejamento da comunicação entre frontend, backend e banco de dados;</li>
+<li>Padronização inicial do ambiente com Docker;</li>
+<li>Definição das ferramentas de documentação e versionamento.</li>
+</ul>
+<p>Essas decisões deram mais segurança para o início da implementação prática do sistema nas próximas sprints.</p>
+<hr />
+<h2 id="8-conclusao">8. Conclusão<a class="headerlink" href="#8-conclusao" title="Permanent link">&para;</a></h2>
+<p>A Sprint 2 foi essencial para transformar a visão do produto em uma estrutura técnica organizada.</p>
+<p>Nessa etapa, a equipe definiu como o KeepUnB seria construído, quais ferramentas seriam utilizadas e como as partes do sistema se conectariam.</p>
+<p>A elaboração do Documento de Arquitetura foi fundamental para registrar essas decisões e orientar o desenvolvimento do projeto, garantindo maior padronização, clareza e organização para a equipe.</p>
+<p>Dessa forma, a Sprint 2 consolidou a base técnica necessária para que o KeepUnB pudesse avançar para a implementação de suas funcionalidades principais.</p>
+<h2 id="9-ata-de-reuniao">9. Ata de reunião<a class="headerlink" href="#9-ata-de-reuniao" title="Permanent link">&para;</a></h2>
+<p><strong>Data:</strong> 05/05/2026  <br />
+<strong>Horário:</strong> 14:00 - 16:00<br />
+<strong>Local:</strong> FCTE - S10 <br />
+<strong>Participantes:</strong> @felipemso, @arthur-mariani, @carloshfgit, @vellloso, @caioNapoles, @Danielfelipe08, @prietum, @RodrigoCBarbosa. </p>
+<p><strong>Objetivo:</strong> <br />
+Realizar a delegação de tarefas para a produção do documento de arquitetura, estipular stack/ferramentas a serem utilizadas e realizar estudo de métodos e estruturas de software.</p>
+<p><strong>Discussões e Decisões:</strong>     <br />
+- Foram decididas as responsabilidades em relação à produção do documento de arquitetura.<br />
+- Foram definidos conceitos-base do sistema e visões de uso.<br />
+- Optou-se por seguir inicialmente uma arquitetura <em>Clean-Arc</em> para o backend e <em>Feature-Based</em> para o frontend.  </p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Rodapé" >
+        
+          
+          <a href="../../sprint1/sprint1/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Sprint 1">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Sprint 1
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../sprint3/sprint3/" class="md-footer__link md-footer__link--next" aria-label="Próximo: Sprint 3">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Próximo
+              </span>
+              <div class="md-ellipsis">
+                Sprint 3
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "search.highlight", "search.suggest", "content.code.copy", "content.tabs.link", "toc.follow"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
