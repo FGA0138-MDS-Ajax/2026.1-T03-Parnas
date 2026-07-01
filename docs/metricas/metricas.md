@@ -15,8 +15,8 @@ A equipe elaborou o GQM para guiar o acompanhamento do projeto, do débito técn
 | **Métrica Associada** | **Taxa de Conclusao da Sprint** |
 | **Objetivo da Medição** | Avaliar a estabilidade e a presença de defeitos no software gerado. |
 | **Questão a ser respondida** | A equipe está conseguindo entregar o escopo planejado na Sprint dentro do prazo estabelecido? |
-| **Definição da Métrica** | Mede a quantidade de esforço (em *Issues*) entregue com sucesso ao final de uma iteração. |
-| **Forma de Cálculo** | *Taxa de Conclusão* = ( *Somatório das Issues concluídas* / *Somatório das Issues planejadas na Sprint* ) x 100 |
+| **Definição da Métrica** | Mede a quantidade de esforço (em *Issues*) entregue dentro do prazo final da iteração (Sprint). |
+| **Forma de Cálculo** | *Taxa de Conclusão* = ( *Somatório das Issues concluídas no prazo* / *Somatório das Issues planejadas na Sprint* ) x 100 |
 | **Escala de Unidade** | Porcentagem (%) |
 | **Valores Esperados** | Entre 90% e 100% dos pontos planejados concluídos a cada Sprint. |
 | **Forma de Análise** | Se o valor for sistematicamente inferior a 90%, a equipe deverá analisar no replanejamento se há sobrecarga de tarefas ou impedimentos não resolvidos. |
@@ -60,6 +60,8 @@ A tabela abaixo consolida os resultados reais de todas as sprints do KeepUnB des
 | **Sprint 5** | 70.27% | 100.00% | 82.10% (com 68 testes) |
 | **Sprint 6** | 88.89% | 100.00% | 84.60% (com 92 testes) |
 | **Sprint 7** | 100.00% | 100.00% | 88.30% (com 114 testes) |
+
+> 📌 **Nota sobre a conclusão de issues:** Embora a *Taxa de Conclusão* de algumas Sprints tenha ficado abaixo de 100% (devido a entregas realizadas fora do prazo da iteração original), **todas as issues planejadas ao longo do projeto foram efetivamente concluídas** até o fechamento da Sprint 7. O detalhamento cronológico de cumprimento de prazos de cada issue está registrado no repositório.
 
 ---
 

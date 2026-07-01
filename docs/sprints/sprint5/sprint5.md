@@ -224,7 +224,9 @@ Esta seção apresenta os resultados das métricas de processo, qualidade e test
 
 ### Detalhes das Métricas:
 - **Issues Planejadas (37):** #103, #104, #105, #106, #107, #108, #109, #110, #111, #112, #113, #114, #115, #116, #117, #118, #119, #120, #121, #122, #123, #124, #125, #134, #135, #136, #138, #144, #145, #146, #147, #148, #149, #150, #151, #159, #161
-- **Issues Concluídas (26):** #103, #105, #107, #108, #109, #110, #111, #113, #117, #118, #119, #120, #121, #122, #123, #124, #125, #134, #135, #136, #138, #145, #146, #149, #150, #151
+- **Issues Concluídas no Prazo (26):** #103, #105, #107, #108, #109, #110, #111, #113, #117, #118, #119, #120, #121, #122, #123, #124, #125, #134, #135, #136, #138, #145, #146, #149, #150, #151
+- **Com Atraso (11):** #104, #106, #112, #114, #115, #116, #144, #147, #148, #159, #161
+*Nota: Todas as issues planejadas foram eventualmente concluídas ao longo do projeto.*
 - **Bugs/Erros Reportados:** 1
 - **Bugs/Erros Corrigidos:** 1
 - **Cobertura de Testes (FastAPI backend):** 82.10% (Total de 68 testes automatizados)
