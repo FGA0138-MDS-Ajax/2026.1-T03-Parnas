@@ -352,13 +352,13 @@ Esta seção apresenta os resultados das métricas de processo, qualidade e test
 
 | Métrica | Valor Obtido | Valor Esperado |
 | :--- | :---: | :---: |
-| **Taxa de Conclusão da Sprint (Velocity)** | 68.42% | 90% - 100% |
-| **Taxa de Resolução de Defeitos** | 0.00% | ≥ 80% (não críticos) |
+| **Taxa de Conclusão da Sprint** | 88.89% | 90% - 100% |
+| **Taxa de Resolução de Defeitos** | 100.00% | ≥ 80% (não críticos) |
 | **Cobertura de Código** | 84.60% | ≥ 80% |
 
 ### Detalhes das Métricas:
-- **Issues Planejadas (38):** #103, #104, #106, #112, #113, #114, #115, #116, #117, #118, #119, #144, #145, #146, #147, #148, #150, #151, #159, #161, #171, #172, #173, #174, #175, #176, #177, #179, #180, #181, #182, #183, #184, #185, #186, #187, #188, #189
-- **Issues Concluídas (26):** #103, #104, #106, #112, #113, #114, #115, #116, #117, #118, #119, #144, #145, #146, #147, #148, #150, #151, #159, #161, #175, #176, #185, #186, #187, #189
+- **Issues Planejadas (18):** #171, #172, #173, #174, #175, #176, #177, #179, #180, #181, #182, #183, #184, #185, #186, #187, #188, #189
+- **Issues Concluídas (16):** #171, #172, #173, #174, #175, #176, #177, #179, #180, #181, #182, #183, #185, #186, #187, #189
 - **Bugs/Erros Reportados:** 3
-- **Bugs/Erros Corrigidos:** 0
+- **Bugs/Erros Corrigidos:** 3
 - **Cobertura de Testes (FastAPI backend):** 84.60% (Total de 92 testes automatizados)

@@ -33,7 +33,7 @@ nav:
   - Início: "index.md"
 
   - Como executar:
-      - Primeiros passos: "como-executar/tutorial.md"
+      - Primeiros passos: "como_executar/tutorial.md"
 
   - Documentação:
       - Documento de Visão: "visao/visao.md"
@@ -41,9 +41,8 @@ nav:
       - Comunicação, API e autenticação: "comunicacao/api-e-autenticacao.md"
       - Identidade Visual: "identidade_visual/identidade_visual.md"
       - Padronização: "padronizacao/padronizacao.md"
-      - Sobre o banco de dados: "banco-de-dados/diagrama-relacionamento-inicial.md"
-      - Métricas: "METRICS.md"
-      - Testes: "analise_testes.md"
+      - Sobre o banco de dados: "banco_de_dados/diagrama-relacionamento-inicial.md"
+      - Revisão Banco de Dados: "banco_de_dados/revisao_db.md"
 
   - Sprints:
       - Sprint 0: "sprints/sprint0/sprint0.md"
@@ -54,6 +53,12 @@ nav:
       - Sprint 5: "sprints/sprint5/sprint5.md"
       - Sprint 6: "sprints/sprint6/sprint6.md"
       - Sprint 7: "sprints/sprint7/sprint7.md"
+
+  - Métricas e Testes:
+      - Métricas: "metricas/metricas.md"
+      - Análise de Testes Automatizados: "testes/analise_testes.md"
+      - QA Sprint 4 (Testes de Sistema): "testes/qa4.md"
+      - QA Sprint 7 (Testes de Sistema): "testes/qa7.md"
 
   - Nossa equipe:
       - Membros: "equipe/membros.md"
