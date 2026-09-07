@@ -18,7 +18,7 @@
   </div>
 
   <div class="keepunb-actions">
-    <a class="keepunb-button keepunb-button--primary" href="como-executar/tutorial/">
+    <a class="keepunb-button keepunb-button--primary" href="como_executar/tutorial/">
       <span class="keepunb-button__icon" aria-hidden="true">+</span>
       Começar agora
     </a>
@@ -129,7 +129,7 @@ monitorar indicadores operacionais.
 
     Configure o ambiente local e suba o projeto com Docker Compose.
 
-    [Abrir guia](como-executar/tutorial.md)
+    [Abrir guia](como_executar/tutorial.md)
 
 -   :material-eye-outline: **Visão do Projeto**
 
@@ -147,7 +147,7 @@ monitorar indicadores operacionais.
 
     Confira a modelagem inicial e os relacionamentos entre entidades.
 
-    [Ver modelagem](banco-de-dados/diagrama-relacionamento-inicial.md)
+    [Ver modelagem](banco_de_dados/diagrama-relacionamento-inicial.md)
 
 </div>
 
